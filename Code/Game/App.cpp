@@ -9,7 +9,6 @@
 #include "Engine/Core/WindowContext.hpp"
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Memory/Mem.hpp"
-#include "Engine/Memory/ObjectAllocator.hpp"
 #include "Engine/Tools/Profiler.hpp"
 #include "Engine/Tools/Reports.hpp"
 #include "Scripting/Python/python.hpp"
