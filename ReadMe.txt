@@ -1,7 +1,7 @@
 Project plan
 
 Short Description:
-    Attempting to recreate "Chronicles of Crime" by David Cicurel but as a video game. Instead of having several evidence catagories to choose from, 
+	Attempting to recreate "Chronicles of Crime" by David Cicurel but as a video game. Instead of having several evidence catagories to choose from, 
 	I'd like to learn how to create a dialog system so that player can type in what they see. My version will be a text based visual novel, with an xml
 	level editor, so that other people can create mysteries and quickly iterate. Considering looking into the designers level editor to see how I can add more
 	value to it and easier for the comunity to make more stories.	
@@ -67,47 +67,47 @@ Brake down of what goal entails:
 
 
 Semester Schedule
-    Due Date    Hours    Actual        Task    
-    31-Jan        5        ---            Generic Blackboard: General Settings, Ending Configurations, and Variables
-                4        ---            Generic Entity: ID Number, Name, Starting Status, scanning in a character, Scanning in an item
+    Due Date	Hours	Actual		Task    
+    31-Jan		5		---			Generic Blackboard: General Settings, Ending Configurations, and Variables
+				4		---			Generic Entity: ID Number, Name, Starting Status, scanning in a character, Scanning in an item
     
-    7-Feb        6        ---            Entity::Location: room configuration with images
-                3        ---            Entity::Card (character or item): Image and other metadata
+    7-Feb		6		---			Entity::Location: room configuration with images
+				3		--- 		Entity::Card (character or item): Image and other metadata
     
-    14-Feb        6        ---            Event manager: Handling the "scanning" options
-                3        ---            Event: Call back functions to perform intended results
+    14-Feb		6		---			Event manager: Handling the "scanning" options
+				3		---			Event: Call back functions to perform intended results
     
-    21-Feb        1        ---            Generic Blackboard xml reader    
-                1        ---            Generic Entity xml reader
-                1        ---            Entity::Location xml reader
-                1        ---            Entity::Card (character or item) xml reader
-                1        ---            Event manager xml reader
-                1        ---            Event xml reader
+    21-Feb		1		---			Generic Blackboard xml reader    
+			    1		---			Generic Entity xml reader
+			    1       ---			Entity::Location xml reader
+			    1       ---			Entity::Card (character or item) xml reader
+			    1       ---			Event manager xml reader
+			    1		---			Event xml reader
     
-    28-Feb        9        ---            Player Input: Only one-word responses
+    28-Feb		9		---			Player Input: Only one-word responses
     
-    6-Mar        9        ---            Data base: Quiring Entity blackboard for anything relating to player input
+    6-Mar		9		---			Data base: Quiring Entity blackboard for anything relating to player input
     
-    13-Mar        5        ---            Designer input: printing dialog, as well as variable names from entity blackboard
-                1        ---            Debug log: printing entity states via debug log    
-                3        ---            Player input: via Debug log to traverse and interrogate
+    13-Mar		5		---			Designer input: printing dialog, as well as variable names from entity blackboard
+			    1		---			Debug log: printing entity states via debug log    
+			    3		---			Player input: via Debug log to traverse and interrogate
     
-    20-Mar        ---        ---            GDC    
+    20-Mar		---		---			GDC    
     
-    27-Mar        9        ---            Mobild: This will hold the evidence board, location board, characters, and evidence
+    27-Mar		9		---			Mobile: This will hold the evidence board, location board, characters, and evidence
     
-    3-Apr        3        ---            Seeing the locations and the rooms
-                6        ---            Have plans for the NPC in the story so that they are not staying in one location
-                
-    10-Apr        2        ---            exhaust the game session, find every dialog and asset used
-                2        ---            recreate the tutorial using my xml editor
-                5        ---            check game systems to make sure I can run the game like the board game
-                
-    17-Apr        9        ---            creating apartment rooms, as well as creating images to support the location
+    3-Apr		3		---			Seeing the locations and the rooms
+			    6		---			Have plans for the NPC in the story so that they are not staying in one location
+			    
+    10-Apr		2		---			exhaust the game session, find every dialog and asset used
+			    2		---			recreate the tutorial using my xml editor
+			    5		---			check game systems to make sure I can run the game like the board game
+			    
+    17-Apr		9		---			creating apartment rooms, as well as creating images to support the location
     
-    24-Apr        2        ---            exhaust a different game session, find every dialog and asset used    
-                2        ---            recreate the game using my xml editor
-                5        ---            check game systems to make sure I can run the game like the board game
-                
-    1-May        9        ---            look into tying in thesis, to give replayability
+    24-Apr		2		---			exhaust a different game session, find every dialog and asset used    
+			    2		---			recreate the game using my xml editor
+			    5		---			check game systems to make sure I can run the game like the board game
+			    
+    1-May		9		---			look into tying in thesis, to give replayability
 
