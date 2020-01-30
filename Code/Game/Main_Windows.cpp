@@ -1,9 +1,11 @@
-#include "Game/GameCommon.hpp"
-#include "Game/App.hpp"
 #include "Engine/Core/WindowContext.hpp"
 #include "Engine/Renderer/RenderContext.hpp"
 #include "Engine/Core/DevConsole.hpp"
 #include "Engine/Memory/Mem.hpp"
+
+#include "Game/App.hpp"
+#include "Game/GameCommon.hpp"
+
 #include "ThirdParty/imGUI/imgui.h"
 
 #define WINDOW_TITLE "Protogame3D"
