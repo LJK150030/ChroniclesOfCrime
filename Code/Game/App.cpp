@@ -94,6 +94,7 @@ void App::BeginFrame() const
 	g_theDevConsole->BeginFrame();
 	g_theDebugRenderer->BeginFrame();
 	g_theAudio->BeginFrame();
+	m_theGame->BeginFrame();
 }
 
 
@@ -114,8 +115,6 @@ void App::Render() const
 	// Draw a line from the bottom-left corner of the screen (0,0) to the center of the screen (50,50)
 	m_theGame->Render();
 	g_theDebugRenderer->RenderToScreen();
-
-	m_theGame->RenderImGUI();
 
 	if(DEV_CONSOLE_IN_USE)
 	{
@@ -139,6 +138,7 @@ void App::EndFrame() const
 	g_theDevConsole->EndFrame();
 	g_theDebugRenderer->EndFrame();
 	g_theAudio->EndFrame();
+	m_theGame->EndFrame();
 }
 
 

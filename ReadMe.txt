@@ -1,10 +1,7 @@
 Project plan
 
 Short Description:
-	Attempting to recreate "Chronicles of Crime" by David Cicurel but as a video game. Instead of having several evidence catagories to choose from, 
-	I'd like to learn how to create a dialog system so that player can type in what they see. My version will be a text based visual novel, with an xml
-	level editor, so that other people can create mysteries and quickly iterate. Considering looking into the designers level editor to see how I can add more
-	value to it and easier for the comunity to make more stories.	
+	I am attempting to recreate "Chronicles of Crime" by David Cicurel but as a video game. Instead of having several evidence categories to choose from, I'd like to learn how to create a dialog system so that the player can type in what they see. The evidence board, in the board game, is used as the player's hub to interact with all pieces of the game. I am turning it into a journal that the player has access to anytime during the game. I intend the journal to be the global blackboard for the entire game, showing active states the player set during their playthrough. The journal servers only a reminder of the evidence, locations, and character the player has found. For the player to investigate an item or a character, they must first type in the respective object's name. From there, they can type a different item or character to see if they go together. For instance, if I am interrogating Mary and I type in Knife, I am asking Mary if she knows anything about the knife. Like finding clues, or interrogating a person, each time the player types in a response, they are performing that response which takes up in-game time. If the player missed spelled an object, I would consider that as the player's character fumbling around or flipping through their notes. For a player to examine a location, they would type in investigate, after which the location's background will change from a landscape picture to a detailed subsection of the picture. In this picture, there will be multiple clues embedded in the picture using photoshop. The player can type in those items to see if they are relevant clues. Each inspection costs the same amount of in-game time, and some clues are decoys. It is up to the player to pick clues that are important to the case. My version will be a text-based visual novel, with an XML level editor, so that other people can create mysteries and quickly iterate them. 
 
 
 Goals through the semester:
@@ -13,7 +10,7 @@ Goals through the semester:
         - Goal        Able to set entities like the editor, only through xml
         - Goal        Able to parse player text, as well as read in files with variables
         - Goal        Have moment to moment be a text adventure
-        - Stretch    Use Imgui to set up visual aids.
+        - Stretch     Use Imgui to set up visual aids.
       
     - Goal final turn in     
         - Goal        Have prototype asset images as visual aids for the player

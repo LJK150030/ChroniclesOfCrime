@@ -6,14 +6,12 @@
 #include "Engine/Renderer/Material.hpp"
 #include "Engine/Renderer/Shader.hpp"
 #include "Engine/Renderer/DebugRender.hpp"
-#include "Engine/Math/MathUtils.hpp"
-#include "Engine/Core/Time.hpp"
 #include "Engine/Core/Vertex_Lit.hpp"
 #include "Engine/Core/Callstack.hpp"
-#include "Engine/Renderer/ImGUISystem.hpp"
 
 #include "Game/Game.hpp"
 #include "Game/GameCommon.hpp"
+#include "Game/DialogueSystem.hpp"
 
 #include <vector>
 
@@ -25,14 +23,13 @@ UNITTEST("Is Test", nullptr, 0)
 
 UNITTEST("Is false", nullptr, 2)
 {
-	Callstack cs = Callstack(2);
+	const Callstack cs = Callstack(2);
 
 	const bool result = false;
 
-	if(!result)
+	if constexpr (!result)
 	{
-		std::vector<std::string> callstack_output;
-		callstack_output = ToStringCollection(cs);
+		std::vector<std::string> callstack_output = ToStringCollection(cs);
 		DebugOutputPrintCollection(callstack_output);
 	}
 	
@@ -67,10 +64,19 @@ void Game::Shutdown()
 }
 
 
+void Game::BeginFrame() const
+{
+	// Feed inputs to dear imgui, start new frame
+	m_dialogueSystem->BeginFrame();
+}
+
+
 void Game::Update(const double delta_seconds)
 {
 	m_time += static_cast<float>(delta_seconds);
 	m_currentFrame++;
+
+	m_dialogueSystem->Update(delta_seconds);
 }
 
 
@@ -92,22 +98,16 @@ void Game::Render() const
 	g_theRenderer->BindMaterial(*m_woodMaterial);
 	g_theRenderer->DrawMesh(*m_quad);
 
+	m_dialogueSystem->Render();
+	
 	g_theRenderer->EndCamera(m_gameCamera);
 	g_theDebugRenderer->RenderToCamera(m_gameCamera);
+
 }
 
-void Game::RenderImGUI() const
+void Game::EndFrame() const
 {
-	// Feed inputs to dear imgui, start new frame
-	g_imGUI->BeginFrame();
-	ImGui::NewFrame();
-
-	// Any application code here
-	ImGui::Text("Hello, world!");
-
-	// Render dear imgui into screen
-	g_imGUI->Render();
-	g_imGUI->EndFrame();
+	m_dialogueSystem->EndFrame();
 }
 
 bool Game::HandleKeyPressed(const unsigned char key_code)
@@ -122,8 +122,11 @@ bool Game::HandleKeyPressed(const unsigned char key_code)
 
 bool Game::HandleKeyReleased(const unsigned char key_code)
 {
-	UNUSED(key_code);
-	return true;
+	switch (key_code)
+	{
+	default:
+		return false;
+	}
 }
 
 
@@ -143,7 +146,8 @@ void Game::InitCamera()
 {
 	m_gameCamera = new Camera();
 	m_gameCamera->SetColorTarget(nullptr); // when binding, if nullptr, use the backbuffer
-	m_gameCamera->SetPerspectiveProjection(m_camFOVDegrees, WORLD_ASPECT, 0.1f, 100.0f);
+	//m_gameCamera->SetPerspectiveProjection(m_camFOVDegrees, WORLD_ASPECT, 0.1f, 100.0f);
+	m_gameCamera->SetOrthoView(WORLD_BL_CORNER, WORLD_TR_CORNER);
 }
 
 
@@ -156,7 +160,9 @@ void Game::InitGameObjs()
 
 	//Get the mesh for all the game objs
 	CPUMesh quad_mesh;
-	CpuMeshAddQuad(&quad_mesh, AABB2(-1.0f, -1.0f, 1.0f, 1.0f));
+	CpuMeshAddQuad(&quad_mesh, AABB2(-10.0f, -10.0f, 10.0f, 10.0f));
 	m_quad = new GPUMesh(g_theRenderer);
 	m_quad->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
+
+	m_dialogueSystem = new DialogueSystem();
 }

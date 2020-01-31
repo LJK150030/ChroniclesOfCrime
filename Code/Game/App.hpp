@@ -34,6 +34,7 @@ private:
 	Game* m_theGame;
 
 	Camera* m_devCamera = nullptr;
+
 };
 
 //----------------------------------------

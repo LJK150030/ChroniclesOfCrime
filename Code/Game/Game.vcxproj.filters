@@ -8,6 +8,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{708d39a6-5742-4990-868d-6e953e4ef68b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="General\Blackboard">
+      <UniqueIdentifier>{dda716e7-ea67-4b60-9257-e306e5b9b7fb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main_Windows.cpp">
@@ -25,6 +28,12 @@
     <ClCompile Include="Entity.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="DialogueSystem.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
+    <ClCompile Include="Blackboard.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -40,6 +49,12 @@
       <Filter>General</Filter>
     </ClInclude>
     <ClInclude Include="EngineBuildPreferences.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogueSystem.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Blackboard.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

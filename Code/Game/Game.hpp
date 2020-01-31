@@ -7,6 +7,7 @@ class Camera;
 class Shader;
 class GPUMesh;
 class Material;
+class DialogueSystem;
 
 class Game
 {
@@ -17,11 +18,13 @@ public:
 
 	void Startup();
 	void Shutdown();
-	
+
+	void BeginFrame() const;
 	void Update(double delta_seconds);
 	
 	void Render() const;
-	void RenderImGUI() const;
+
+	void EndFrame() const;
 	
 	bool HandleKeyPressed(unsigned char key_code);
 	bool HandleKeyReleased(unsigned char key_code);
@@ -33,20 +36,21 @@ private:
 	void InitGameObjs();
 
 private:
-	
-	Camera* m_gameCamera = nullptr;
-
-	Material* m_woodMaterial = nullptr;
- 	Shader* m_defaultShader = nullptr;
 
 	bool m_inDevMode = false;
 	float m_time = 0.0f;
 	int m_currentFrame = 0;
 
-	Vec3 m_camPosition		= Vec3(0.0f, 0.0f, -10.0f); // we'll start 10 back; 
-	Vec3 m_camEuler			= Vec3(0.0f, 0.0f, 0.0f); 
-	float m_camFOVDegrees	= 90.0f;
+	Camera* m_gameCamera = nullptr;
+	Vec3 m_camPosition = Vec3(0.0f, 0.0f, 0.0f);
+	Vec3 m_camEuler = Vec3(0.0f, 0.0f, 0.0f);
 
-	GPUMesh* m_quad; 
-	Matrix44 m_quadTransform = Matrix44::IDENTITY; // cube's model matrix
+	Material* m_woodMaterial = nullptr;
+	Shader* m_defaultShader = nullptr;
+	GPUMesh* m_quad;
+	Matrix44 m_quadTransform = Matrix44::IDENTITY; // quad's model matrix
+
+	DialogueSystem* m_dialogueSystem = nullptr;
+	
+	Vec2 m_mousePos = Vec2::ZERO;
 };
