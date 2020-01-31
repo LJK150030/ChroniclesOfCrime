@@ -8,9 +8,6 @@
     <Filter Include="Data">
       <UniqueIdentifier>{708d39a6-5742-4990-868d-6e953e4ef68b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="General\Blackboard">
-      <UniqueIdentifier>{dda716e7-ea67-4b60-9257-e306e5b9b7fb}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main_Windows.cpp">
