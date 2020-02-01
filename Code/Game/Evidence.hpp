@@ -10,7 +10,7 @@ public:
 
 public:
 	static void LoadInScenarioCards();
-	static std::string InvestigateItem(const std::string& name);
+	static std::string InvestigateItem(const char* name);
 
 public:
 	Evidence() = default;

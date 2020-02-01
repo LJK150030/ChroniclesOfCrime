@@ -83,6 +83,10 @@ const Vec2 WORLD_BL_CORNER(-0.5f * WORLD_WIDTH, -0.5f * WORLD_HEIGHT);
 const Vec2 WORLD_TR_CORNER(0.5f * WORLD_WIDTH, 0.5f * WORLD_HEIGHT);
 const AABB2 WORLD_BOUNDS(WORLD_BL_CORNER, WORLD_TR_CORNER);
 
+//Global game const
+constexpr int	MAX_INPUT = 64;
+
+
 //Global functions
 int		StringCompare(const char* str1, const char* str2);
 int		StringNCompare(const char* str1, const char* str2, int first_n_chars);

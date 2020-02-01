@@ -4,6 +4,7 @@
 
 #include "Game/DialogueSystem.hpp"
 #include "Game/GameCommon.hpp"
+#include "Game/Evidence.hpp"
 
 DialogueSystem::DialogueSystem()
 {
@@ -14,7 +15,7 @@ DialogueSystem::DialogueSystem()
 	//Store all valid commands into a list
 	m_commands.push_back("HELP");
 	m_commands.push_back("CLEAR");
-	m_commands.push_back("LOOK AT");
+	m_commands.push_back("VIEW");
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -145,7 +146,7 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringCompare(item, "Found ") == 0) //for play back
+		else if (StringNCompare(item, "Found ", 5) == 0) //for play back
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -230,9 +231,18 @@ void DialogueSystem::ExecCommand(const char* command_line)
 			AddLog("- %s", m_commands[i]);			
 		}
 	}
-	else if (StringCompare(command_line, "LOOK AT") == 0)
+	else if (StringNCompare(command_line, "VIEW ", 5) == 0)
 	{
+		// want everything after the "VIEW "
+		const int command_length = 5;
+		const int input_buff_length = strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+		
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
 
+		AddLog("%s", Evidence::InvestigateItem(sub_input_buff).c_str());
 	}
 	else
 	{

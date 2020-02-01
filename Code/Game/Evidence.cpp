@@ -9,7 +9,7 @@ STATIC void Evidence::LoadInScenarioCards()
 	// leading scenario cards
 	s_evidenceCategories[EVIDENCE_COMPUTER_DEVICES] = Evidence(
 		EVIDENCE_COMPUTER_DEVICES,
-		"computer",
+		"laptop",
 		"The Hackers Laptop"
 	);
 
@@ -26,19 +26,20 @@ STATIC void Evidence::LoadInScenarioCards()
 }
 
 
-STATIC std::string Evidence::InvestigateItem(const std::string& name)
+STATIC std::string Evidence::InvestigateItem(const char* name)
 {
 	//TODO: how can we look up faster with just the name and not the category
 	for(int evidence_idx = 0; evidence_idx < NUM_EVIDENCE; ++evidence_idx)
 	{
-		if(s_evidenceCategories[evidence_idx].m_name.compare(name))
+		if(s_evidenceCategories[evidence_idx].m_name.compare(name) == 0)
 		{
 			s_evidenceCategories[evidence_idx].m_found = true;
 			return "Found: " + s_evidenceCategories[evidence_idx].m_description;
 		}
 	}
 
-	return "";
+	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
+	return s_searchLine[random_dialog_idx];
 }
 
 Evidence::Evidence(e_EvidenceCategory category, const std::string& name, const std::string& desc):
