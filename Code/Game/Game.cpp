@@ -13,6 +13,10 @@
 #include "Game/GameCommon.hpp"
 #include "Game/DialogueSystem.hpp"
 #include "Game/Evidence.hpp"
+#include "Game/Location.hpp"
+#include "Game/Item.hpp"
+#include "Game/Character.hpp"
+#include "Game/Contact.hpp"
 
 #include <vector>
 
@@ -167,5 +171,9 @@ void Game::InitGameObjs()
 
 	m_dialogueSystem = new DialogueSystem();
 
-	Evidence::LoadInScenarioCards();
+	Evidence::LoadInScenarioEvidence();
+	Location::LoadInScenarioLocations();
+	Item::LoadInScenarioItems();
+	Character::LoadInScenarioCharacters();
+	Contact::LoadInScenarioContacts();
 }

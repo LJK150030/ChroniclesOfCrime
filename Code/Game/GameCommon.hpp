@@ -85,6 +85,7 @@ const AABB2 WORLD_BOUNDS(WORLD_BL_CORNER, WORLD_TR_CORNER);
 
 //Global game const
 constexpr int	MAX_INPUT = 64;
+constexpr int	MAX_COMMAND_LENGTH = 16;
 
 
 //Global functions

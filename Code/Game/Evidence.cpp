@@ -2,9 +2,9 @@
 #include "Game/GameCommon.hpp"
 
 STATIC Evidence Evidence::s_evidenceCategories[NUM_EVIDENCE];
-STATIC std::string Evidence::s_searchLine[3];
+STATIC std::string Evidence::s_unknownEvidenceLine[3];
 
-STATIC void Evidence::LoadInScenarioCards()
+STATIC void Evidence::LoadInScenarioEvidence()
 {
 	// leading scenario cards
 	s_evidenceCategories[EVIDENCE_COMPUTER_DEVICES] = Evidence(
@@ -20,9 +20,9 @@ STATIC void Evidence::LoadInScenarioCards()
 	);
 
 	// loading scenario search lines
-	s_searchLine[0] = "I don't think that's relevant";
-	s_searchLine[1] = "I don't know about that";
-	s_searchLine[2] = "I should keep looking";
+	s_unknownEvidenceLine[0] = "I don't think that's relevant";
+	s_unknownEvidenceLine[1] = "I don't know about that";
+	s_unknownEvidenceLine[2] = "I should keep looking";
 }
 
 
@@ -34,22 +34,15 @@ STATIC std::string Evidence::InvestigateItem(const char* name)
 		if(s_evidenceCategories[evidence_idx].m_name.compare(name) == 0)
 		{
 			s_evidenceCategories[evidence_idx].m_found = true;
-			return "Found: " + s_evidenceCategories[evidence_idx].m_description;
+			return g_evidenceHeader + s_evidenceCategories[evidence_idx].m_description;
 		}
 	}
 
 	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-	return s_searchLine[random_dialog_idx];
+	return s_unknownEvidenceLine[random_dialog_idx];
 }
 
-Evidence::Evidence(e_EvidenceCategory category, const std::string& name, const std::string& desc):
+Evidence::Evidence(EvidenceCategory category, const std::string& name, const std::string& desc):
 	m_category(category), m_name(name), m_description(desc)
 {	
 }
-
-e_EvidenceCategory Evidence::GetCategory()
-{
-	return m_category;
-}
-
-

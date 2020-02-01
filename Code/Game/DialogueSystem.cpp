@@ -5,6 +5,10 @@
 #include "Game/DialogueSystem.hpp"
 #include "Game/GameCommon.hpp"
 #include "Game/Evidence.hpp"
+#include "Game/Location.hpp"
+#include "Game/Item.hpp"
+#include "Game/Character.hpp"
+#include "Game/Contact.hpp"
 
 DialogueSystem::DialogueSystem()
 {
@@ -15,7 +19,12 @@ DialogueSystem::DialogueSystem()
 	//Store all valid commands into a list
 	m_commands.push_back("HELP");
 	m_commands.push_back("CLEAR");
-	m_commands.push_back("VIEW");
+	
+	m_commands.push_back(g_evidenceCommand);
+	m_commands.push_back(g_locationCommand);
+	m_commands.push_back(g_contactCommand);
+	m_commands.push_back(g_characterCommand);
+	m_commands.push_back(g_itemCommand);
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -26,6 +35,26 @@ DialogueSystem::DialogueSystem()
 	m_gameResolution[1] = frame_resolution.y;
 	m_dialogWindowSize[0] = frame_resolution.x;
 	m_dialogWindowSize[1] = m_gameResolution[1] * 0.25f;
+
+	memcpy(m_evidenceCommand, g_evidenceCommand, strlen(g_evidenceCommand) + 2);
+	m_evidenceCommand[strlen(g_evidenceCommand)] = ' ';
+	m_evidenceCommand[strlen(g_evidenceCommand) + 1] = '\0';
+
+	memcpy(m_locationCommand, g_locationCommand, strlen(g_locationCommand) + 2);
+	m_locationCommand[strlen(g_locationCommand)] = ' ';
+	m_locationCommand[strlen(g_locationCommand) + 1] = '\0';
+
+	memcpy(m_contactCommand, g_contactCommand, strlen(g_contactCommand) + 2);
+	m_contactCommand[strlen(g_contactCommand)] = ' ';
+	m_contactCommand[strlen(g_contactCommand) + 1] = '\0';
+	
+	memcpy(m_characterCommand, g_characterCommand, strlen(g_characterCommand) + 2);
+	m_characterCommand[strlen(g_characterCommand)] = ' ';
+	m_characterCommand[strlen(g_characterCommand) + 1] = '\0';
+	
+	memcpy(m_itemCommand, g_itemCommand, strlen(g_itemCommand) + 2);
+	m_itemCommand[strlen(g_itemCommand)] = ' ';
+	m_itemCommand[strlen(g_itemCommand) + 1] = '\0';
 }
 
 
@@ -141,20 +170,57 @@ void DialogueSystem::UpdateHistory()
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
-				ImVec4(1.0f, 0.8f, 0.0f, 1.0f)
+				ImVec4(0.9490196078431373f, 0.8000000000000000, 0.7137254901960784f, 1.0f)
 			);
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, "Found ", 5) == 0) //for play back
+		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) //for play back
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
-				ImVec4(0.18431372549f, 0.85098039215f, 0.0f, 1.0f)
+				ImVec4(1.0000000000000000f, 0.0000000000000000f, 0.7647058823529412f, 1.0f)
 			);
 
 			pop_color = true;
 		}
+		else if (StringNCompare(item, g_locationHeader, 5) == 0) //for play back
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.0470588235294118f, 0.9098039215686275f, 0.8941176470588235f, 1.0f)
+			);
+
+			pop_color = true;
+		}
+		else if (StringNCompare(item, g_contactHeader, 5) == 0) //for play back
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.6509803921568627f, 1.0000000000000000f, 0.0000000000000000f, 1.0f)
+			);
+
+			pop_color = true;
+		}
+		else if (StringNCompare(item, g_characterHeader, 5) == 0) //for play back
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.9215686274509804f, 0.5098039215686275f, 0.0000000000000000f, 1.0f)
+			);
+
+			pop_color = true;
+		}
+		else if (StringNCompare(item, g_itemHeader, 5) == 0) //for play back
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.9098039215686275f, 0.2078431372549020f, 0.0470588235294118f, 1.0f)
+			);
+
+			pop_color = true;
+		}
+		
 		
 		ImGui::TextUnformatted(item); // for everything else
 	
@@ -217,6 +283,7 @@ void DialogueSystem::ExecCommand(const char* command_line)
 {
 	AddLog("# %s\n", command_line);
 
+
 	// Process command
 	// TODO: clean this up with map
 	if (StringCompare(command_line, "CLEAR") == 0)
@@ -231,10 +298,12 @@ void DialogueSystem::ExecCommand(const char* command_line)
 			AddLog("- %s", m_commands[i]);			
 		}
 	}
-	else if (StringNCompare(command_line, "VIEW ", 5) == 0)
+	else if (StringNCompare(
+			command_line, 
+			m_evidenceCommand, 
+			static_cast<int>(strlen(m_evidenceCommand))) == 0)
 	{
-		// want everything after the "VIEW "
-		const int command_length = 5;
+		const int command_length = static_cast<int>(strlen(m_evidenceCommand));
 		const int input_buff_length = strlen(command_line);
 		const int sub_input_length = input_buff_length - command_length + 1;
 		
@@ -243,6 +312,66 @@ void DialogueSystem::ExecCommand(const char* command_line)
 		sub_input_buff[sub_input_length - 1] = '\0';
 
 		AddLog("%s", Evidence::InvestigateItem(sub_input_buff).c_str());
+	}
+	else if (StringNCompare(
+			command_line, 
+			m_locationCommand, 
+			static_cast<int>(strlen(m_locationCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_locationCommand));
+		const int input_buff_length = strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT]; 
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		AddLog("%s", Location::TravelToLocation(sub_input_buff).c_str());
+	}
+	else if (StringNCompare(
+			command_line, 
+			m_contactCommand, 
+			static_cast<int>(strlen(m_contactCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_contactCommand));
+		const int input_buff_length = strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		AddLog("%s", Contact::CallSpecialist(sub_input_buff).c_str());
+	}
+	else if (StringNCompare(
+			command_line, 
+			m_characterCommand, 
+			static_cast<int>(strlen(m_characterCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_characterCommand));
+		const int input_buff_length = strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		AddLog("%s", Character::InterrogateCharacter(sub_input_buff).c_str());
+	}
+	else if (StringNCompare(
+		command_line, 
+		m_itemCommand, 
+		static_cast<int>(strlen(m_itemCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_itemCommand));
+		const int input_buff_length = strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		AddLog("%s", Item::InvestigateItem(sub_input_buff).c_str());
 	}
 	else
 	{

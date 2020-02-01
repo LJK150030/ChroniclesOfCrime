@@ -8,6 +8,9 @@
     <Filter Include="Data">
       <UniqueIdentifier>{708d39a6-5742-4990-868d-6e953e4ef68b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="General\Cards">
+      <UniqueIdentifier>{a50bbfea-6f2e-4244-8a1c-392b4aba9072}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main_Windows.cpp">
@@ -29,7 +32,19 @@
       <Filter>General</Filter>
     </ClCompile>
     <ClCompile Include="Evidence.cpp">
-      <Filter>General</Filter>
+      <Filter>General\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="Location.cpp">
+      <Filter>General\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>General\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>General\Cards</Filter>
+    </ClCompile>
+    <ClCompile Include="Contact.cpp">
+      <Filter>General\Cards</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,11 +66,23 @@
     <ClInclude Include="DialogueSystem.hpp">
       <Filter>General</Filter>
     </ClInclude>
-    <ClInclude Include="GameNames.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
     <ClInclude Include="Evidence.hpp">
-      <Filter>General</Filter>
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="GameNames.hpp">
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Location.hpp">
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.hpp">
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.hpp">
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Contact.hpp">
+      <Filter>General\Cards</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

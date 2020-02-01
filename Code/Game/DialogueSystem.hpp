@@ -29,8 +29,14 @@ private:
 	bool						m_autoScrolling = true;
 	bool						m_scrollToBottom = false;
 	
-	bool					m_show = true;
-	bool					m_imguiError = false;
-	float					m_gameResolution[2] = {720.0f, 1080.0f};
-	float					m_dialogWindowSize[2] = { 800.0f, 200.0f };
+	bool	m_show = true;
+	bool	m_imguiError = false;
+	float	m_gameResolution[2] = {720.0f, 1080.0f};
+	float	m_dialogWindowSize[2] = { 800.0f, 200.0f };
+
+	char	m_evidenceCommand[MAX_COMMAND_LENGTH];
+	char	m_locationCommand[MAX_COMMAND_LENGTH];
+	char	m_contactCommand[MAX_COMMAND_LENGTH];
+	char	m_characterCommand[MAX_COMMAND_LENGTH];
+	char	m_itemCommand[MAX_COMMAND_LENGTH];
 }; 
