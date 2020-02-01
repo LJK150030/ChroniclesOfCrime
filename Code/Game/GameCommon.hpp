@@ -1,6 +1,7 @@
 #pragma once
-#include "Engine/Math\Vec2.hpp"
+#include "Engine/EngineCommon.hpp"
 #include "Engine/Math/AABB2.hpp"
+
 
 class App;
 class RenderContext;
@@ -81,3 +82,9 @@ constexpr float WORLD_CENTER_Y = 0.0f;
 const Vec2 WORLD_BL_CORNER(-0.5f * WORLD_WIDTH, -0.5f * WORLD_HEIGHT);
 const Vec2 WORLD_TR_CORNER(0.5f * WORLD_WIDTH, 0.5f * WORLD_HEIGHT);
 const AABB2 WORLD_BOUNDS(WORLD_BL_CORNER, WORLD_TR_CORNER);
+
+//Global functions
+int		StringCompare(const char* str1, const char* str2);
+int		StringNCompare(const char* str1, const char* str2, int first_n_chars);
+char*	StringDuplicate(const char* str);
+void	StringTrim(char* str);

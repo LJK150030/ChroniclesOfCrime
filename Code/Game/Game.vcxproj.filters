@@ -28,7 +28,7 @@
     <ClCompile Include="DialogueSystem.cpp">
       <Filter>General</Filter>
     </ClCompile>
-    <ClCompile Include="Blackboard.cpp">
+    <ClCompile Include="Evidence.cpp">
       <Filter>General</Filter>
     </ClCompile>
   </ItemGroup>
@@ -51,7 +51,10 @@
     <ClInclude Include="DialogueSystem.hpp">
       <Filter>General</Filter>
     </ClInclude>
-    <ClInclude Include="Blackboard.hpp">
+    <ClInclude Include="GameNames.hpp">
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Evidence.hpp">
       <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,7 @@
 #include "Game/Game.hpp"
 #include "Game/GameCommon.hpp"
 #include "Game/DialogueSystem.hpp"
+#include "Game/Evidence.hpp"
 
 #include <vector>
 
@@ -165,4 +166,6 @@ void Game::InitGameObjs()
 	m_quad->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
 
 	m_dialogueSystem = new DialogueSystem();
+
+	Evidence::LoadInScenarioCards();
 }

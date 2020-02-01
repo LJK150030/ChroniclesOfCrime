@@ -1,4 +1,6 @@
 #include "Engine/EngineCommon.hpp"
+#include "Engine/Renderer/ImGUISystem.hpp"
+
 
 #include "Game/DialogueSystem.hpp"
 #include "Game/GameCommon.hpp"
@@ -11,8 +13,8 @@ DialogueSystem::DialogueSystem()
 
 	//Store all valid commands into a list
 	m_commands.push_back("HELP");
-	m_commands.push_back("HISTORY");
 	m_commands.push_back("CLEAR");
+	m_commands.push_back("LOOK AT");
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -29,11 +31,6 @@ DialogueSystem::DialogueSystem()
 DialogueSystem::~DialogueSystem()
 {
 	ClearLog();
-	
-	for (int i = 0; i < m_history.Size; i++)
-	{
-		free(m_history[i]);
-	}
 }
 
 
@@ -95,7 +92,7 @@ void DialogueSystem::EndFrame() const
 
 void DialogueSystem::ClearLog()
 {
-	for (int idx = 0; idx < m_items.Size; idx++)
+	for (int idx = 0; idx < static_cast<int>(m_items.size()); idx++)
 	{
 		free(m_items[idx]);
 	}
@@ -104,18 +101,17 @@ void DialogueSystem::ClearLog()
 }
 
 
-void DialogueSystem::AddLog(const char* format, ...)
+void DialogueSystem::AddLog(const char* messageFormat, ...)
 {
-	char buffer[1024];
+	const int message_max_length = 1024;
+	char message_literal[message_max_length];
+	va_list variable_argument_list;
+	va_start(variable_argument_list, messageFormat);
+	vsnprintf_s(message_literal, message_max_length, _TRUNCATE, messageFormat, variable_argument_list);
+	va_end(variable_argument_list);
+	message_literal[message_max_length - 1] = '\0'; // In case vsnprintf overran (doesn't auto-terminate)
 	
-	va_list args;
-	
-	va_start(args, format);
-	vsnprintf(buffer, IM_ARRAYSIZE(buffer), format, args);
-	buffer[IM_ARRAYSIZE(buffer) - 1] = 0;
-	va_end(args);
-	
-	m_items.push_back(StringDuplicate(buffer));
+	m_items.push_back(StringDuplicate(message_literal));
 }
 
 
@@ -134,26 +130,26 @@ void DialogueSystem::UpdateHistory()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
-	for (int i = 0; i < m_items.Size; i++)
+	for (int i = 0; i < static_cast<int>(m_items.size()); i++)
 	{
 		const char* item = m_items[i];
 
 		// TODO: create a struct that stores the dialog history text.
 		bool pop_color = false;
-		if (strstr(item, "[error]")) //for error messages
+		if (StringNCompare(item, "# ", 2) == 0) //for error messages
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
-				ImVec4(1.0f, 0.4f, 0.4f, 1.0f)
+				ImVec4(1.0f, 0.8f, 0.0f, 1.0f)
 			);
 
 			pop_color = true;
 		}
-		else if (strncmp(item, "# ", 2) == 0) //for play back
+		else if (StringCompare(item, "Found ") == 0) //for play back
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
-				ImVec4(1.0f, 0.8f, 0.6f, 1.0f)
+				ImVec4(0.18431372549f, 0.85098039215f, 0.0f, 1.0f)
 			);
 
 			pop_color = true;
@@ -216,78 +212,12 @@ void DialogueSystem::UpdateInput()
 }
 
 
-int DialogueSystem::StringCompare(const char* str1, const char* str2)
-{
-	int compare;
-	
-	while ((compare = toupper(*str2) - toupper(*str1)) == 0 && *str1)
-	{
-		str1++;
-		str2++;
-	}
-	
-	return compare;
-}
-
-
-int DialogueSystem::SringNCompare(const char* str1, const char* str2, int first_n_chars)
-{
-	int compare = 0;
-
-	while (first_n_chars > 0 && (compare = toupper(*str2) - toupper(*str1)) == 0 && *str1)
-	{
-		str1++;
-		str2++;
-		first_n_chars--;
-	}
-	
-	return compare;
-}
-
-
-char* DialogueSystem::StringDuplicate(const char* str)
-{
-	size_t len = strlen(str) + 1;
-	void* buf = malloc(len);
-	IM_ASSERT(buf);
-	return static_cast<char*>(memcpy(buf, static_cast<const void*>(str), len));
-}
-
-
-void DialogueSystem::StringTrim(char* str)
-{
-	char* str_end = str + strlen(str);
-
-	while (str_end > str && str_end[-1] == ' ')
-	{
-		str_end--;
-	}
-	
-	*str_end = 0;
-}
-
-
 void DialogueSystem::ExecCommand(const char* command_line)
 {
 	AddLog("# %s\n", command_line);
 
-	// Insert into history. First find match and delete it so it can be pushed to the back.
-	// This isn't trying to be smart or optimal.
-	
-	m_historyPos = -1;
-	for (int i = m_history.Size - 1; i >= 0; i--)
-	{
-		if (StringCompare(m_history[i], command_line) == 0)
-		{
-			free(m_history[i]);
-			m_history.erase(m_history.begin() + i);
-			break;
-		}	
-	}
-	
-	m_history.push_back(StringDuplicate(command_line));
-
 	// Process command
+	// TODO: clean this up with map
 	if (StringCompare(command_line, "CLEAR") == 0)
 	{
 		ClearLog();
@@ -295,16 +225,14 @@ void DialogueSystem::ExecCommand(const char* command_line)
 	else if (StringCompare(command_line, "HELP") == 0)
 	{
 		AddLog("Commands:");
-		for (int i = 0; i < m_commands.Size; i++)
-			AddLog("- %s", m_commands[i]);
-	}
-	else if (StringCompare(command_line, "HISTORY") == 0)
-	{
-		int first = m_history.Size - 10;
-		for (int i = first > 0 ? first : 0; i < m_history.Size; i++)
+		for (int i = 0; i < static_cast<int>(m_commands.size()); i++)
 		{
-			AddLog("%3d: %s\n", i, m_history[i]);
+			AddLog("- %s", m_commands[i]);			
 		}
+	}
+	else if (StringCompare(command_line, "LOOK AT") == 0)
+	{
+
 	}
 	else
 	{
