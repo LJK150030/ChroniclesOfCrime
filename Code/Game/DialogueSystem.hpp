@@ -1,5 +1,6 @@
 #pragma once
 #include "Game/GameCommon.hpp"
+#include "Game/GameNames.hpp"
 
 //Wrapper class for ImGui, that makes a console window
 class DialogueSystem
@@ -19,6 +20,7 @@ private:
 	void		UpdateInput();
 	
 	void		ClearLog();
+	void		AddCardTypeCommand(CardType type,  const char* command);
 	void		ExecCommand(const char* command_line);
 	
 

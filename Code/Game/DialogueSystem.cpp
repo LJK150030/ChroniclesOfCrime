@@ -1,5 +1,6 @@
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Renderer/ImGUISystem.hpp"
+#include "Engine/Core/ErrorWarningAssert.hpp"
 
 
 #include "Game/DialogueSystem.hpp"
@@ -17,14 +18,15 @@ DialogueSystem::DialogueSystem()
 	memset(m_inputBuf, 0, sizeof(m_inputBuf));
 
 	//Store all valid commands into a list
+
 	m_commands.push_back("HELP");
 	m_commands.push_back("CLEAR");
-	
-	m_commands.push_back(g_evidenceCommand);
-	m_commands.push_back(g_locationCommand);
-	m_commands.push_back(g_contactCommand);
-	m_commands.push_back(g_characterCommand);
-	m_commands.push_back(g_itemCommand);
+
+ 	AddCardTypeCommand(CARD_EVIDENCE, g_evidenceCommand);
+	AddCardTypeCommand(CARD_LOCATION, g_locationCommand);
+	AddCardTypeCommand(CARD_CONTACT, g_contactCommand);
+	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
+	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -35,26 +37,6 @@ DialogueSystem::DialogueSystem()
 	m_gameResolution[1] = frame_resolution.y;
 	m_dialogWindowSize[0] = frame_resolution.x;
 	m_dialogWindowSize[1] = m_gameResolution[1] * 0.25f;
-
-	memcpy(m_evidenceCommand, g_evidenceCommand, strlen(g_evidenceCommand) + 2);
-	m_evidenceCommand[strlen(g_evidenceCommand)] = ' ';
-	m_evidenceCommand[strlen(g_evidenceCommand) + 1] = '\0';
-
-	memcpy(m_locationCommand, g_locationCommand, strlen(g_locationCommand) + 2);
-	m_locationCommand[strlen(g_locationCommand)] = ' ';
-	m_locationCommand[strlen(g_locationCommand) + 1] = '\0';
-
-	memcpy(m_contactCommand, g_contactCommand, strlen(g_contactCommand) + 2);
-	m_contactCommand[strlen(g_contactCommand)] = ' ';
-	m_contactCommand[strlen(g_contactCommand) + 1] = '\0';
-	
-	memcpy(m_characterCommand, g_characterCommand, strlen(g_characterCommand) + 2);
-	m_characterCommand[strlen(g_characterCommand)] = ' ';
-	m_characterCommand[strlen(g_characterCommand) + 1] = '\0';
-	
-	memcpy(m_itemCommand, g_itemCommand, strlen(g_itemCommand) + 2);
-	m_itemCommand[strlen(g_itemCommand)] = ' ';
-	m_itemCommand[strlen(g_itemCommand) + 1] = '\0';
 }
 
 
@@ -128,6 +110,51 @@ void DialogueSystem::ClearLog()
 	}
 	
 	m_items.clear();
+}
+
+void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
+{
+	m_commands.push_back(command);
+
+	char* stored_command;
+
+	switch(type)
+	{
+	case CARD_LOCATION:
+		{
+			stored_command = m_locationCommand;
+			break;
+		}
+	case CARD_ITEM:
+		{
+			stored_command = m_itemCommand;
+			break;
+		}
+	case CARD_EVIDENCE:
+		{
+			stored_command = m_evidenceCommand;
+			break;
+		}
+	case CARD_CHARACTER:
+		{
+			stored_command = m_characterCommand;
+			break;
+		}
+	case CARD_CONTACT:
+		{
+			stored_command = m_contactCommand;
+			break;
+		}
+	default:
+		{
+			ASSERT_OR_DIE(false, "This card type command has not been added")
+			break;
+		}
+	}
+	
+	memcpy(stored_command, command, strlen(command) + 2);
+	stored_command[strlen(command)] = ' ';
+	stored_command[strlen(command) + 1] = '\0';
 }
 
 

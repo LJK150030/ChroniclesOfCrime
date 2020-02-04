@@ -46,6 +46,9 @@
     <ClCompile Include="Contact.cpp">
       <Filter>General\Cards</Filter>
     </ClCompile>
+    <ClCompile Include="Card.cpp">
+      <Filter>General\Cards</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -82,6 +85,9 @@
       <Filter>General\Cards</Filter>
     </ClInclude>
     <ClInclude Include="Contact.hpp">
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Card.hpp">
       <Filter>General\Cards</Filter>
     </ClInclude>
   </ItemGroup>

@@ -12,6 +12,19 @@ inline char g_contactCommand[]		= "CALL";
 inline char g_characterCommand[]	= "ASK";
 inline char g_itemCommand[]			= "CHECK";
 
+enum CardType
+{
+	UNKNOWN_CARD_TYPE = -1,
+
+	CARD_LOCATION,
+	CARD_ITEM,
+	CARD_EVIDENCE,
+	CARD_CHARACTER,
+	CARD_CONTACT,
+
+	NUM_CARD_TYPES
+};
+
 enum EvidenceCategory
 {
 	UNKNOWN_EVIDENCE = -1,
