@@ -29,7 +29,6 @@ STATIC void Location::LoadInScenarioLocations()
 
 STATIC std::string Location::TravelToLocation(const char* name)
 {
-	//TODO: how can we look up faster with just the name and not the category
 	for (int location_idx = 0; location_idx < NUM_LOCATIONS; ++location_idx)
 	{
 		if (s_locationRegions[location_idx].m_name.compare(name) == 0)

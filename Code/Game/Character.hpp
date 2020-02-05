@@ -2,7 +2,7 @@
 #include "Game/GameNames.hpp"
 #include <string>
 
-class Character
+class Character : GameEntity
 {
 public:
 	static Character		s_characters[NUM_CHARS];

@@ -162,6 +162,7 @@ void DialogueSystem::AddLog(const char* messageFormat, ...)
 {
 	const int message_max_length = 1024;
 	char message_literal[message_max_length];
+
 	va_list variable_argument_list;
 	va_start(variable_argument_list, messageFormat);
 	vsnprintf_s(message_literal, message_max_length, _TRUNCATE, messageFormat, variable_argument_list);
@@ -174,7 +175,6 @@ void DialogueSystem::AddLog(const char* messageFormat, ...)
 
 void DialogueSystem::UpdateHistory()
 {
-	//creating the history
 	const float player_input_height_to_reserve = ImGui::GetStyle().ItemSpacing.y +
 		ImGui::GetFrameHeightWithSpacing();
 
@@ -187,13 +187,14 @@ void DialogueSystem::UpdateHistory()
 
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
+	// for loop through each "Card Dialogue Type"
 	for (int i = 0; i < static_cast<int>(m_items.size()); i++)
 	{
 		const char* item = m_items[i];
-
-		// TODO: create a struct that stores the dialog history text.
 		bool pop_color = false;
-		if (StringNCompare(item, "# ", 2) == 0) //for error messages
+
+		// TODO: create a struct that represent a card type's dialog
+		if (StringNCompare(item, "# ", 2) == 0) //play back messages
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -202,7 +203,7 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) //for play back
+		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) // evidence dialogue struct
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -211,7 +212,7 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, g_locationHeader, 5) == 0) //for play back
+		else if (StringNCompare(item, g_locationHeader, 5) == 0) // location dialogue struct
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -220,7 +221,7 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, g_contactHeader, 5) == 0) //for play back
+		else if (StringNCompare(item, g_contactHeader, 5) == 0) // contact dialogue struct
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -229,7 +230,7 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, g_characterHeader, 5) == 0) //for play back
+		else if (StringNCompare(item, g_characterHeader, 5) == 0) // character reply dialogue struct
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -238,7 +239,7 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, g_itemHeader, 5) == 0) //for play back
+		else if (StringNCompare(item, g_itemHeader, 5) == 0) // item dialogue struct
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
@@ -248,8 +249,7 @@ void DialogueSystem::UpdateHistory()
 			pop_color = true;
 		}
 		
-		
-		ImGui::TextUnformatted(item); // for everything else
+		ImGui::TextUnformatted(item); 
 	
 		if (pop_color)
 		{
@@ -312,7 +312,7 @@ void DialogueSystem::ExecCommand(const char* command_line)
 
 
 	// Process command
-	// TODO: clean this up with map
+	// TODO: Use the event system 
 	if (StringCompare(command_line, "CLEAR") == 0)
 	{
 		ClearLog();

@@ -79,6 +79,6 @@ enum ItemID
 	ITEM_2,
 	ITEM_3,
 	ITEM_4,
-	
+
 	NUM_ITEMS
 };

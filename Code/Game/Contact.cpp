@@ -20,13 +20,13 @@ STATIC void Contact::LoadInScenarioContacts()
 	);
 
 	s_contacts[CONT_HACKER] = Contact(
-		CONT_DOCTOR,
+		CONT_HACKER,
 		"hacker",
 		"Looks like we can trace the call"
 	);
 
 	s_contacts[CONT_SCIENTIST] = Contact(
-		CONT_DOCTOR,
+		CONT_SCIENTIST,
 		"scientist",
 		"Ballistics shows it was a 20 caliber bullet"
 	);
