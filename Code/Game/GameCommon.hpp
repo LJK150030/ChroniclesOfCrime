@@ -2,15 +2,31 @@
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Math/AABB2.hpp"
 
-
 class App;
 class RenderContext;
 class InputSystem;
 class AudioSystem;
+class Location;
+class Item;
+class Evidence;
+class Contact;
+class Character;
+
+// simplifying type definitions
+typedef std::string							String;
+typedef std::vector<String>					StringList;
+typedef std::pair<String, int>				Lookup;
+typedef std::map<String, int>				LookupTable;
+typedef std::map<String, int>::iterator		LookupItr;
+typedef std::vector<Location>				LocationList;
+typedef std::vector<Item>					ItemList;
+typedef std::vector<Evidence>				EvidenceList;
+typedef std::vector<Contact>				ContactList;
+typedef std::vector<Character>				CharacterList;
+
 
 extern App* g_theApp;
 extern AudioSystem* g_theAudio;
-
 
 // key codes
 constexpr int SHIFT_KEY = 16;
@@ -91,5 +107,7 @@ constexpr int	MAX_COMMAND_LENGTH = 16;
 //Global functions
 int		StringCompare(const char* str1, const char* str2);
 int		StringNCompare(const char* str1, const char* str2, int first_n_chars);
-char*	StringDuplicate(const char* str);
 void	StringTrim(char* str);
+
+char	ToLowercase(char c);
+String	StringToLower(String str); 

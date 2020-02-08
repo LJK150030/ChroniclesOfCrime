@@ -22,11 +22,11 @@ DialogueSystem::DialogueSystem()
 	m_commands.push_back("HELP");
 	m_commands.push_back("CLEAR");
 
- 	AddCardTypeCommand(CARD_EVIDENCE, g_evidenceCommand);
 	AddCardTypeCommand(CARD_LOCATION, g_locationCommand);
-	AddCardTypeCommand(CARD_CONTACT, g_contactCommand);
-	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
-	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
+//  AddCardTypeCommand(CARD_EVIDENCE, g_evidenceCommand);
+// 	AddCardTypeCommand(CARD_CONTACT, g_contactCommand);
+// 	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
+// 	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -87,6 +87,7 @@ void DialogueSystem::Update(double delta_seconds)
 	UpdateHistory();
 	ImGui::Separator();
 	UpdateInput();
+	ImGui::End();
 }
 
 
@@ -127,23 +128,23 @@ void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
 		}
 	case CARD_ITEM:
 		{
-			stored_command = m_itemCommand;
-			break;
+			//stored_command = m_itemCommand;
+			//break;
 		}
 	case CARD_EVIDENCE:
 		{
-			stored_command = m_evidenceCommand;
-			break;
+			//stored_command = m_evidenceCommand;
+			//break;
 		}
 	case CARD_CHARACTER:
 		{
-			stored_command = m_characterCommand;
-			break;
+			//stored_command = m_characterCommand;
+			//break;
 		}
 	case CARD_CONTACT:
 		{
-			stored_command = m_contactCommand;
-			break;
+			//stored_command = m_contactCommand;
+			//break;
 		}
 	default:
 		{
@@ -198,16 +199,7 @@ void DialogueSystem::UpdateHistory()
 		{
 			ImGui::PushStyleColor(
 				ImGuiCol_Text,
-				ImVec4(0.9490196078431373f, 0.8000000000000000, 0.7137254901960784f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) // evidence dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(1.0000000000000000f, 0.0000000000000000f, 0.7647058823529412f, 1.0f)
+				ImVec4(0.9490196078431373f, 0.8000000000000000f, 0.7137254901960784f, 1.0f)
 			);
 
 			pop_color = true;
@@ -221,33 +213,42 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-		else if (StringNCompare(item, g_contactHeader, 5) == 0) // contact dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.6509803921568627f, 1.0000000000000000f, 0.0000000000000000f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		else if (StringNCompare(item, g_characterHeader, 5) == 0) // character reply dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.9215686274509804f, 0.5098039215686275f, 0.0000000000000000f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		else if (StringNCompare(item, g_itemHeader, 5) == 0) // item dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.9098039215686275f, 0.2078431372549020f, 0.0470588235294118f, 1.0f)
-			);
-
-			pop_color = true;
-		}
+// 		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) // evidence dialogue struct
+// 		{
+// 			ImGui::PushStyleColor(
+// 				ImGuiCol_Text,
+// 				ImVec4(1.0000000000000000f, 0.0000000000000000f, 0.7647058823529412f, 1.0f)
+// 			);
+// 
+// 			pop_color = true;
+// 		}
+// 		else if (StringNCompare(item, g_contactHeader, 5) == 0) // contact dialogue struct
+// 		{
+// 			ImGui::PushStyleColor(
+// 				ImGuiCol_Text,
+// 				ImVec4(0.6509803921568627f, 1.0000000000000000f, 0.0000000000000000f, 1.0f)
+// 			);
+// 
+// 			pop_color = true;
+// 		}
+// 		else if (StringNCompare(item, g_characterHeader, 5) == 0) // character reply dialogue struct
+// 		{
+// 			ImGui::PushStyleColor(
+// 				ImGuiCol_Text,
+// 				ImVec4(0.9215686274509804f, 0.5098039215686275f, 0.0000000000000000f, 1.0f)
+// 			);
+// 
+// 			pop_color = true;
+// 		}
+// 		else if (StringNCompare(item, g_itemHeader, 5) == 0) // item dialogue struct
+// 		{
+// 			ImGui::PushStyleColor(
+// 				ImGuiCol_Text,
+// 				ImVec4(0.9098039215686275f, 0.2078431372549020f, 0.0470588235294118f, 1.0f)
+// 			);
+// 
+// 			pop_color = true;
+// 		}
 		
 		ImGui::TextUnformatted(item); 
 	
@@ -301,8 +302,6 @@ void DialogueSystem::UpdateInput()
 	{
 		ImGui::SetKeyboardFocusHere(-1);
 	}
-
-	ImGui::End();
 }
 
 
@@ -327,26 +326,11 @@ void DialogueSystem::ExecCommand(const char* command_line)
 	}
 	else if (StringNCompare(
 			command_line, 
-			m_evidenceCommand, 
-			static_cast<int>(strlen(m_evidenceCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_evidenceCommand));
-		const int input_buff_length = strlen(command_line);
-		const int sub_input_length = input_buff_length - command_length + 1;
-		
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		AddLog("%s", Evidence::InvestigateItem(sub_input_buff).c_str());
-	}
-	else if (StringNCompare(
-			command_line, 
 			m_locationCommand, 
 			static_cast<int>(strlen(m_locationCommand))) == 0)
 	{
 		const int command_length = static_cast<int>(strlen(m_locationCommand));
-		const int input_buff_length = strlen(command_line);
+		const int input_buff_length = static_cast<int>(strlen(command_line));
 		const int sub_input_length = input_buff_length - command_length + 1;
 
 		char sub_input_buff[MAX_INPUT]; 
@@ -355,51 +339,66 @@ void DialogueSystem::ExecCommand(const char* command_line)
 
 		AddLog("%s", Location::TravelToLocation(sub_input_buff).c_str());
 	}
-	else if (StringNCompare(
-			command_line, 
-			m_contactCommand, 
-			static_cast<int>(strlen(m_contactCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_contactCommand));
-		const int input_buff_length = strlen(command_line);
-		const int sub_input_length = input_buff_length - command_length + 1;
-
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		AddLog("%s", Contact::CallSpecialist(sub_input_buff).c_str());
-	}
-	else if (StringNCompare(
-			command_line, 
-			m_characterCommand, 
-			static_cast<int>(strlen(m_characterCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_characterCommand));
-		const int input_buff_length = strlen(command_line);
-		const int sub_input_length = input_buff_length - command_length + 1;
-
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		AddLog("%s", Character::InterrogateCharacter(sub_input_buff).c_str());
-	}
-	else if (StringNCompare(
-		command_line, 
-		m_itemCommand, 
-		static_cast<int>(strlen(m_itemCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_itemCommand));
-		const int input_buff_length = strlen(command_line);
-		const int sub_input_length = input_buff_length - command_length + 1;
-
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		AddLog("%s", Item::InvestigateItem(sub_input_buff).c_str());
-	}
+// 	else if (StringNCompare(
+// 			command_line, 
+// 			m_evidenceCommand, 
+// 			static_cast<int>(strlen(m_evidenceCommand))) == 0)
+// 	{
+// 		const int command_length = static_cast<int>(strlen(m_evidenceCommand));
+// 		const int input_buff_length = strlen(command_line);
+// 		const int sub_input_length = input_buff_length - command_length + 1;
+// 		
+// 		char sub_input_buff[MAX_INPUT];
+// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+// 		sub_input_buff[sub_input_length - 1] = '\0';
+// 
+// 		AddLog("%s", Evidence::InvestigateItem(sub_input_buff).c_str());
+// 	}
+// 	else if (StringNCompare(
+// 			command_line, 
+// 			m_contactCommand, 
+// 			static_cast<int>(strlen(m_contactCommand))) == 0)
+// 	{
+// 		const int command_length = static_cast<int>(strlen(m_contactCommand));
+// 		const int input_buff_length = strlen(command_line);
+// 		const int sub_input_length = input_buff_length - command_length + 1;
+// 
+// 		char sub_input_buff[MAX_INPUT];
+// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+// 		sub_input_buff[sub_input_length - 1] = '\0';
+// 
+// 		AddLog("%s", Contact::CallSpecialist(sub_input_buff).c_str());
+// 	}
+// 	else if (StringNCompare(
+// 			command_line, 
+// 			m_characterCommand, 
+// 			static_cast<int>(strlen(m_characterCommand))) == 0)
+// 	{
+// 		const int command_length = static_cast<int>(strlen(m_characterCommand));
+// 		const int input_buff_length = strlen(command_line);
+// 		const int sub_input_length = input_buff_length - command_length + 1;
+// 
+// 		char sub_input_buff[MAX_INPUT];
+// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+// 		sub_input_buff[sub_input_length - 1] = '\0';
+// 
+// 		AddLog("%s", Character::InterrogateCharacter(sub_input_buff).c_str());
+// 	}
+// 	else if (StringNCompare(
+// 		command_line, 
+// 		m_itemCommand, 
+// 		static_cast<int>(strlen(m_itemCommand))) == 0)
+// 	{
+// 		const int command_length = static_cast<int>(strlen(m_itemCommand));
+// 		const int input_buff_length = strlen(command_line);
+// 		const int sub_input_length = input_buff_length - command_length + 1;
+// 
+// 		char sub_input_buff[MAX_INPUT];
+// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+// 		sub_input_buff[sub_input_length - 1] = '\0';
+// 
+// 		AddLog("%s", Item::InvestigateItem(sub_input_buff).c_str());
+//	}
 	else
 	{
 		AddLog("Unknown command: '%s'\n", command_line);
@@ -407,5 +406,16 @@ void DialogueSystem::ExecCommand(const char* command_line)
 
 	// On commad input, we scroll to bottom even if AutoScroll==false
 	m_scrollToBottom = true;
+}
+
+
+char* DialogueSystem::StringDuplicate(const char* str)
+{
+	const size_t len = strlen(str) + 1;
+	void* buf = malloc(len);
+
+	ASSERT_OR_DIE(buf, "could not duplicate c-style string");
+
+	return static_cast<char*>(memcpy(buf, static_cast<const void*>(str), len));
 }
 

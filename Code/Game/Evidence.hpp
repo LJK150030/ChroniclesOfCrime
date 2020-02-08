@@ -1,28 +1,27 @@
-#pragma once
-#include "Game/GameNames.hpp"
-#include <string>
-
-class Evidence
-{
-public:
-	static Evidence s_evidenceCategories[NUM_EVIDENCE];
-	static std::string s_unknownEvidenceLine[3];
-
-public:
-	static void LoadInScenarioEvidence();
-	static std::string InvestigateItem(const char* name);
-
-public:
-	Evidence() = default;
-	Evidence(EvidenceCategory category, const std::string& name, const std::string& desc);
-	
-	~Evidence() = default;
-
-
-private:
-	EvidenceCategory	m_category = UNKNOWN_EVIDENCE;
-	bool				m_found = false;
-	std::string			m_name = "";
-	std::string			m_description = "";
-	
-};
+// #pragma once
+// #include "Game\Card.hpp"
+// 
+// 
+// class Evidence : public Card
+// {
+// public:
+// 	static std::vector<Evidence>		s_evidenceCategories;
+// 	static LookupContainer				s_evidenceLookup;
+// 	static std::vector<std::string>		s_unknownEvidenceLine;
+// 
+// public:
+// 	static void LoadInScenarioEvidence();
+// 	static std::string InvestigateItem(const char* name);
+// 
+// public:
+// 	Evidence();
+// 	explicit Evidence(Game* the_game);
+// 	explicit Evidence(Game* the_game, const std::string& name, const std::vector<std::string>& list_of_nicknames, const std::string& desc);
+// 	~Evidence() = default;
+// 
+// 	// ACCESSORS
+// 
+// 	// MUTATORS 
+// 
+// 	
+// };

@@ -1,28 +1,32 @@
-#pragma once
-#include "Game/GameNames.hpp"
-#include <string>
-
-//TODO: this card is only given to a player
-class Item
-{
-public:
-	static Item			s_Items[NUM_ITEMS];
-	static std::string	s_unknownItemLine[3];
-
-public:
-	static void LoadInScenarioItems();
-	static std::string InvestigateItem(const char* name);
-
-public:
-	Item() = default;
-	Item(ItemID item_id, const std::string& name, const std::string& desc);
-
-	~Item() = default;
-
-private:
-	ItemID				m_category = UNKNOWN_ITEM;
-	bool				m_found = false;
-	std::string			m_name = "";
-	std::string			m_description = "";
-
-};
+// #pragma once
+// #include "Game\Card.hpp"
+// 
+// //TODO: this card is only given to a player
+// class Item : public Card
+// {
+// public:
+// 	static ItemList		s_items;
+// 	static LookupTable	s_itemLookup;
+// 	static StringList	s_unknownItemLine;
+// 
+// public:
+// 	// Setup Scenario
+// 	static void LoadInScenarioItems();
+// 	static void ManuallySetItems();
+// 	static void ReadItemsXml();
+// 	static void SetupItemLookup();
+// 
+// 	// Scenario interaction functions
+// 	static String InvestigateItem(const char* name);
+// 
+// public:
+// 	Item();
+// 	explicit Item(Game* the_game);
+// 	explicit Item(Game* the_game, const String& name, const StringList& list_of_nicknames, const String& desc);
+// 	~Item() = default;
+// 
+// 	// ACCESSORS
+// 
+// 	// MUTATORS 
+// 
+// };

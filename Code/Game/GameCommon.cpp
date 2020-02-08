@@ -1,5 +1,5 @@
 #include "Game/GameCommon.hpp"
-#include "Engine/Core/ErrorWarningAssert.hpp"
+
 
 int StringCompare(const char* str1, const char* str2)
 {
@@ -30,17 +30,6 @@ int StringNCompare(const char* str1, const char* str2, int first_n_chars)
 }
 
 
-char* StringDuplicate(const char* str)
-{
-	const size_t len = strlen(str) + 1;
-	void* buf = malloc(len);
-	
-	ASSERT_OR_DIE(buf, "could not duplicate c-style string");
-	
-	return static_cast<char*>(memcpy(buf, static_cast<const void*>(str), len));
-}
-
-
 void StringTrim(char* str)
 {
 	char* str_end = str + strlen(str);
@@ -51,4 +40,27 @@ void StringTrim(char* str)
 	}
 
 	*str_end = 0;
+}
+
+
+char ToLowercase(const char c)
+{
+	if (c >= 'A' && c <= 'Z')
+	{
+		return static_cast<char>(c + 32);
+	}
+
+	return c;
+}
+
+
+String StringToLower(String str)
+{
+	const int num_chars = static_cast<int>(str.length());
+	for (int c_idx = 0; c_idx < num_chars; ++c_idx)
+	{
+		str[c_idx] = ToLowercase(str[c_idx]);
+	}
+
+	return str;
 }

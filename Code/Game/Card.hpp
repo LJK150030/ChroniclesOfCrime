@@ -1,32 +1,34 @@
 #pragma once
+#include "Game/GameCommon.hpp"
 #include "Game/GameNames.hpp"
+
 #include <string>
+#include <vector>
+#include <map>
+
+class Game;
 
 class Card
 {
 public:
-	static Card*		s_decks[NUM_CARD_TYPES];
-	static std::string	s_unknownCardLine[NUM_CARD_TYPES][3];
-	// for each card type, there should be three (for now)
-	// "I don't know" lines
+	Card();
+	explicit Card(Game* the_game, CardType type);
+	explicit Card(Game* the_game, CardType type, const String& name, const StringList& list_of_nicknames,
+		const String& desc);
+	~Card();
 
 public:
-	static void LoadInScenarioCards();
-	// TODO: LoadInScenarioCardsFromXML();
+	bool		IsDiscovered() const;
+	String&		GetName();
+	StringList&	GetListOfNicknames();
+	String&		GetDescription();
+	
+protected:
+	Game*		m_theGame = nullptr;
+	CardType	m_type = UNKNOWN_CARD_TYPE;
 
-public:
-	Card() = default;
-	~Card() = default;
-
-	std::string InteractWithCard(CardType type, const char* name);
-
-private:
-	//TODO: CardDefinition*		m_cardDef = nullptr;
-	CardType			m_type = UNKNOWN_CARD_TYPE;
-	//LocationDistrict	m_category = UNKNOWN_LOC; this is a subcategory
-
-	bool				m_found = false;
-	std::string			m_name = "";
-	std::string			m_description = "";
-
+	bool		m_found = false;
+	String		m_name = "";
+	StringList	m_nickNames;
+	String		m_description = "";
 };

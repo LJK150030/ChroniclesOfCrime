@@ -171,9 +171,9 @@ void Game::InitGameObjs()
 
 	m_dialogueSystem = new DialogueSystem();
 
-	Evidence::LoadInScenarioEvidence();
-	Location::LoadInScenarioLocations();
-	Item::LoadInScenarioItems();
-	Character::LoadInScenarioCharacters();
-	Contact::LoadInScenarioContacts();
+	Location::LoadInScenarioLocations(this);
+//	Evidence::LoadInScenarioEvidence();
+// 	Item::LoadInScenarioItems();
+// 	Character::LoadInScenarioCharacters();
+// 	Contact::LoadInScenarioContacts();
 }

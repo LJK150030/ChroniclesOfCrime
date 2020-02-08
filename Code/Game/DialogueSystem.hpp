@@ -16,13 +16,13 @@ public:
 	void	AddLog(const char* format, ...);
 
 private:
-	void		UpdateHistory();
-	void		UpdateInput();
+	void	UpdateHistory();
+	void	UpdateInput();
 	
-	void		ClearLog();
-	void		AddCardTypeCommand(CardType type,  const char* command);
-	void		ExecCommand(const char* command_line);
-	
+	void	ClearLog();
+	void	AddCardTypeCommand(CardType type,  const char* command);
+	void	ExecCommand(const char* command_line);
+	char*	StringDuplicate(const char* str);
 
 private:
 	char						m_inputBuf[MAX_INPUT];
@@ -36,9 +36,9 @@ private:
 	float	m_gameResolution[2] = {720.0f, 1080.0f};
 	float	m_dialogWindowSize[2] = { 800.0f, 200.0f };
 
-	char	m_evidenceCommand[MAX_COMMAND_LENGTH];
 	char	m_locationCommand[MAX_COMMAND_LENGTH];
-	char	m_contactCommand[MAX_COMMAND_LENGTH];
-	char	m_characterCommand[MAX_COMMAND_LENGTH];
-	char	m_itemCommand[MAX_COMMAND_LENGTH];
+// 	char	m_evidenceCommand[MAX_COMMAND_LENGTH];
+// 	char	m_contactCommand[MAX_COMMAND_LENGTH];
+// 	char	m_characterCommand[MAX_COMMAND_LENGTH];
+// 	char	m_itemCommand[MAX_COMMAND_LENGTH];
 }; 
