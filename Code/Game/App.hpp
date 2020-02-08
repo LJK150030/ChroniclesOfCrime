@@ -1,7 +1,10 @@
 #pragma once
-#include "Game/Game.hpp"
+#include "Engine/Core/EventSystem.hpp"
 
 struct Rgba;
+class Game;
+class Camera;
+class EventSystem;
 
 class App
 {
@@ -20,6 +23,9 @@ public:
 	static bool QuitRequest(EventArgs& args);
 	static bool PrintMemAlloc(EventArgs& args);
 	static bool LogMemAlloc(EventArgs& args);
+
+	//TODO: hacky solution to get the scenario
+	Game* GetTheGame() const;
 	
 private:
 	void BeginFrame() const;

@@ -11,6 +11,11 @@
 #include "Game/Character.hpp"
 #include "Game/Contact.hpp"
 
+//TODO: hacky solution to get the Scenario
+#include "Game/App.hpp"
+#include "Game/Game.hpp"
+#include "Game/Scenario.hpp"
+
 DialogueSystem::DialogueSystem()
 {
 	ClearLog();
@@ -337,7 +342,10 @@ void DialogueSystem::ExecCommand(const char* command_line)
 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
 		sub_input_buff[sub_input_length - 1] = '\0';
 
-		AddLog("%s", Location::TravelToLocation(sub_input_buff).c_str());
+		//TODO: really bad!!!!!!! Use Function Callback
+		AddLog("%s", Scenario::TravelToLocation(
+			g_theApp->GetTheGame()->GetCurrentScenario(),
+			sub_input_buff).c_str());
 	}
 // 	else if (StringNCompare(
 // 			command_line, 

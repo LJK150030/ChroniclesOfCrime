@@ -1,14 +1,13 @@
 #pragma once
 #include "Engine/Math/Vec3.hpp"
 #include "Engine/Math/Matrix44.hpp"
-#include "Engine/Renderer/RenderContext.hpp"
-
 
 class Camera;
+class DialogueSystem;
+class Scenario;
+class Material;
 class Shader;
 class GPUMesh;
-class Material;
-class DialogueSystem;
 
 class Game
 {
@@ -31,6 +30,9 @@ public:
 	bool HandleKeyReleased(unsigned char key_code);
 	void SetDeveloperMode(bool on_or_off);
 
+	//TODO: hacky solution to get the current scenario
+	Scenario* GetCurrentScenario() const;
+
 private:
 	void GarbageCollection() const;
 	void InitCamera();
@@ -46,12 +48,13 @@ private:
 	Vec3 m_camPosition = Vec3(0.0f, 0.0f, 0.0f);
 	Vec3 m_camEuler = Vec3(0.0f, 0.0f, 0.0f);
 
-	
+	// Game objects
+	DialogueSystem* m_dialogueSystem = nullptr;
+	Scenario* m_currentScenario = nullptr;
+
+	// TODO: put in a Background obj
 	Material* m_woodMaterial = nullptr;
 	Shader* m_defaultShader = nullptr;
-	GPUMesh* m_quad;
+	GPUMesh* m_quad = nullptr;
 	Matrix44 m_quadTransform = Matrix44::IDENTITY; // quad's model matrix
-
-	
-	DialogueSystem* m_dialogueSystem = nullptr;
 };

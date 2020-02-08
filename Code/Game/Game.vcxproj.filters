@@ -49,6 +49,9 @@
     <ClCompile Include="Card.cpp">
       <Filter>General\Cards</Filter>
     </ClCompile>
+    <ClCompile Include="Scenario.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -88,6 +91,9 @@
       <Filter>General\Cards</Filter>
     </ClInclude>
     <ClInclude Include="Card.hpp">
+      <Filter>General\Cards</Filter>
+    </ClInclude>
+    <ClInclude Include="Scenario.hpp">
       <Filter>General\Cards</Filter>
     </ClInclude>
   </ItemGroup>

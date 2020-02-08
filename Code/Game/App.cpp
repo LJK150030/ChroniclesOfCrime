@@ -1,5 +1,7 @@
-#include "Game/App.hpp"
 #include "Game/GameCommon.hpp"
+#include "Game/App.hpp"
+#include "Game/Game.hpp"
+
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Renderer/RenderContext.hpp"
 #include "Engine/Renderer/DebugRender.hpp"
@@ -9,7 +11,6 @@
 #include "Engine/Core/WindowContext.hpp"
 #include "Engine/Core/Clock.hpp"
 #include "Engine/Memory/Mem.hpp"
-
 
 STATIC bool App::QuitRequest(EventArgs& args)
 {
@@ -32,6 +33,11 @@ STATIC bool App::LogMemAlloc(EventArgs& args)
 	UNUSED(args);
 	MemTrackLogLiveAllocations();
 	return true;
+}
+
+Game* App::GetTheGame() const
+{
+	return m_theGame;
 }
 
 

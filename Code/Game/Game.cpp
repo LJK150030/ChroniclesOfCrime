@@ -1,22 +1,14 @@
-#include "Engine/Core/Vertex_PCU.hpp"
-#include "Engine/Core/WindowContext.hpp"
-#include "Engine/Math/Matrix44.hpp"
-#include "Engine/Core/CPUMesh.hpp"
-#include "Engine/Renderer/GPUMesh.hpp"
-#include "Engine/Renderer/Material.hpp"
-#include "Engine/Renderer/Shader.hpp"
-#include "Engine/Renderer/DebugRender.hpp"
-#include "Engine/Core/Vertex_Lit.hpp"
-#include "Engine/Core/Callstack.hpp"
-
 #include "Game/Game.hpp"
 #include "Game/GameCommon.hpp"
+#include "Game/Scenario.hpp"
 #include "Game/DialogueSystem.hpp"
-#include "Game/Evidence.hpp"
-#include "Game/Location.hpp"
-#include "Game/Item.hpp"
-#include "Game/Character.hpp"
-#include "Game/Contact.hpp"
+
+#include "Engine/Math/Matrix44.hpp"
+#include "Engine/Renderer/RenderContext.hpp"
+#include "Engine/Renderer/DebugRender.hpp"
+#include "Engine/Renderer/GPUMesh.hpp"
+#include "Engine/Renderer/Shader.hpp"
+#include "Engine/Renderer/Material.hpp"
 
 #include <vector>
 
@@ -42,14 +34,8 @@ UNITTEST("Is false", nullptr, 2)
 }
 
 
-Game::Game()
-{
-}
-
-
-Game::~Game()
-{
-}
+Game::Game() = default;
+Game::~Game() = default;
 
 
 void Game::Startup()
@@ -61,11 +47,17 @@ void Game::Startup()
 
 void Game::Shutdown()
 {
-	delete m_gameCamera;
-	m_gameCamera = nullptr;
+	delete m_currentScenario;
+	m_currentScenario = nullptr;
 
 	delete m_quad;
 	m_quad = nullptr;
+	
+	delete m_dialogueSystem;
+	m_dialogueSystem = nullptr;
+	
+	delete m_gameCamera;
+	m_gameCamera = nullptr;
 }
 
 
@@ -99,7 +91,8 @@ void Game::Render() const
 	g_theRenderer->ClearScreen(Rgba::BLACK);
 	g_theRenderer->ClearDepthStencilTarget(1.0f);
 
- 	g_theRenderer->BindModelMatrix(m_quadTransform);
+	//TODO: example code to draw an obj. Use in 
+	g_theRenderer->BindModelMatrix(m_quadTransform);
 	g_theRenderer->BindMaterial(*m_woodMaterial);
 	g_theRenderer->DrawMesh(*m_quad);
 
@@ -141,6 +134,12 @@ void Game::SetDeveloperMode(const bool on_or_off)
 }
 
 
+Scenario* Game::GetCurrentScenario() const
+{
+	return m_currentScenario;
+}
+
+
 void Game::GarbageCollection() const
 {
 	// USED TO CLEAN UP UNUSED ENTITIES
@@ -158,22 +157,21 @@ void Game::InitCamera()
 
 void Game::InitGameObjs()
 {
-	//Get all the materials for the game objs
+	// Get all the materials for the game objs
 	m_woodMaterial = g_theRenderer->CreateOrGetMaterial("wood.mat");
 	m_woodMaterial->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
 	m_defaultShader = g_theRenderer->CreateOrGetShader("default_lit.hlsl");
 
-	//Get the mesh for all the game objs
+	// Get the mesh for all the game objs
 	CPUMesh quad_mesh;
 	CpuMeshAddQuad(&quad_mesh, AABB2(-10.0f, -10.0f, 10.0f, 10.0f));
 	m_quad = new GPUMesh(g_theRenderer);
 	m_quad->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
 
+	// Create the Game objects
 	m_dialogueSystem = new DialogueSystem();
+	m_currentScenario = new Scenario(this);
 
-	Location::LoadInScenarioLocations(this);
-//	Evidence::LoadInScenarioEvidence();
-// 	Item::LoadInScenarioItems();
-// 	Character::LoadInScenarioCharacters();
-// 	Contact::LoadInScenarioContacts();
+	// TODO: load from XML different scenarios
+	m_currentScenario->LoadInScenario();
 }

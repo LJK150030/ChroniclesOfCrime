@@ -1,27 +1,38 @@
 // #pragma once
-// #include "Game\Card.hpp"
+// #include "Game/Card.hpp"
 // 
 // 
-// //TODO: you can talk to these characters at any time
 // class Contact : public Card
 // {
 // public:
-// 	static std::vector<Contact>			s_contacts;
-// 	static LookupContainer				s_contactsLookup;
-// 	static std::vector<std::string>		s_unknownContactLine;
+// 	static ContactList	s_contacts;
+// 	static LookupTable	s_contactsLookup;
+// 	static StringList	s_unknownContactLine;
 // 
 // public:
-// 	static void LoadInScenarioContacts();
-// 	static std::string CallSpecialist(const char* name);
+// 
+// 	static void LoadInScenarioContacts(Game* the_game);
+// 	static void ManuallySetContacts(Game* the_game);
+// 	static void ReadContactsXml();
+// 	static void SetupContactLookupTable();
+// 	
+// 	// Scenario interaction functions
+// 	static String CallSpecialist(const char* name);
+// 
+// private:
+// 	static void AddToContactLookupTable(const String& key_loc_name, int value_idx);
+// 	static bool IsContactInLookupTable(LookupItr& out, const String& name);
 // 
 // public:
 // 	Contact();
 // 	explicit Contact(Game* the_game);
-// 	explicit Contact(Game* the_game, const std::string& name, const std::vector<std::string>& list_of_nicknames, const std::string& desc);
+// 	explicit Contact(Game* the_game, const String& name, const StringList& list_of_nicknames,
+// 		const String& desc);
 // 	~Contact() = default;
 // 
 // 	// ACCESSORS
 // 
-// 	// MUTATORS 
+// 
+// 	// MUTATORS
 // 
 // };

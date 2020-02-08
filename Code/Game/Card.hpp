@@ -4,29 +4,35 @@
 
 #include <string>
 #include <vector>
-#include <map>
 
-class Game;
+class Scenario;
 
 class Card
 {
 public:
 	Card();
-	explicit Card(Game* the_game, CardType type);
-	explicit Card(Game* the_game, CardType type, const String& name, const StringList& list_of_nicknames,
+	explicit Card(Scenario* the_scene, CardType type);
+	explicit Card(Scenario* the_scene, CardType type, const String& name, const StringList& list_of_nicknames,
 		const String& desc);
 	~Card();
 
 public:
+	// ACCESSORS
 	bool		IsDiscovered() const;
 	String&		GetName();
 	StringList&	GetListOfNicknames();
 	String&		GetDescription();
 	
-protected:
-	Game*		m_theGame = nullptr;
-	CardType	m_type = UNKNOWN_CARD_TYPE;
+	// MUTATORS
+	void SetDiscovery(bool discovered);
 
+	
+protected:
+	// owner
+	Scenario*	m_theScenario = nullptr;
+
+	// common variables
+	CardType	m_type = UNKNOWN_CARD_TYPE;
 	bool		m_found = false;
 	String		m_name = "";
 	StringList	m_nickNames;

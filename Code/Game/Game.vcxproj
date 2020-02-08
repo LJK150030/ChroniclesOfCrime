@@ -209,6 +209,7 @@
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ShowIncludes>
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ShowIncludes>
     </ClCompile>
+    <ClCompile Include="Scenario.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp" />
@@ -224,6 +225,7 @@
     <ClInclude Include="GameNames.hpp" />
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="Location.hpp" />
+    <ClInclude Include="Scenario.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Run\Data\GameConfig.xml" />
