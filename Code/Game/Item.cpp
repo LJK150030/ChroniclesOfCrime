@@ -1,6 +1,11 @@
-// #include "Engine/EngineCommon.hpp"
-// #include "Game/Item.hpp"
-// 
+#include "Game/Item.hpp"
+
+Item::Item() { m_type = CARD_ITEM; }
+Item::Item(Scenario* the_setup) : Card(the_setup, CARD_ITEM) { }
+Item::Item(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
+	const String& desc) : Card(the_setup, CARD_ITEM, name, list_of_nicknames, desc) { }
+
+ 
 // STATIC ItemList		Item::s_items = ItemList();
 // STATIC LookupTable	Item::s_itemLookup = LookupTable();
 // STATIC StringList	Item::s_unknownItemLine = StringList();

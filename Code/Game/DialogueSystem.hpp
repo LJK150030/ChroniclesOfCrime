@@ -38,7 +38,7 @@ private:
 
 	char	m_locationCommand[MAX_COMMAND_LENGTH];
  	char	m_contactCommand[MAX_COMMAND_LENGTH];
-// 	char	m_evidenceCommand[MAX_COMMAND_LENGTH];
-// 	char	m_characterCommand[MAX_COMMAND_LENGTH];
-// 	char	m_itemCommand[MAX_COMMAND_LENGTH];
+ 	char	m_characterCommand[MAX_COMMAND_LENGTH];
+ 	char	m_evidenceCommand[MAX_COMMAND_LENGTH];
+ 	char	m_itemCommand[MAX_COMMAND_LENGTH];
 }; 

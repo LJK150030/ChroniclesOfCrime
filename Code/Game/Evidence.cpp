@@ -1,5 +1,11 @@
-// #include "Game/Evidence.hpp"
-// #include "Game/GameCommon.hpp"
+#include "Game/Evidence.hpp"
+
+Evidence::Evidence() { m_type = CARD_EVIDENCE; }
+Evidence::Evidence(Scenario* the_setup) : Card(the_setup, CARD_EVIDENCE) { }
+Evidence::Evidence(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
+	const String& desc) : Card(the_setup, CARD_CHARACTER, name, list_of_nicknames, desc) { }
+
+
 // 
 // STATIC std::vector<Evidence>		Evidence::s_evidenceCategories = std::vector<Evidence>();
 // STATIC LookupContainer				Evidence::s_evidenceLookup = std::map<std::string, int>();

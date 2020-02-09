@@ -75,9 +75,6 @@
     <ClInclude Include="Evidence.hpp">
       <Filter>General\Cards</Filter>
     </ClInclude>
-    <ClInclude Include="GameNames.hpp">
-      <Filter>General\Cards</Filter>
-    </ClInclude>
     <ClInclude Include="Location.hpp">
       <Filter>General\Cards</Filter>
     </ClInclude>
@@ -94,7 +91,10 @@
       <Filter>General\Cards</Filter>
     </ClInclude>
     <ClInclude Include="Scenario.hpp">
-      <Filter>General\Cards</Filter>
+      <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="GameNames.hpp">
+      <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

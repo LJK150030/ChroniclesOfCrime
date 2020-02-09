@@ -24,9 +24,9 @@ DialogueSystem::DialogueSystem()
 
 	AddCardTypeCommand(CARD_LOCATION, g_locationCommand);
 	AddCardTypeCommand(CARD_CONTACT, g_contactCommand);
-//  AddCardTypeCommand(CARD_EVIDENCE, g_evidenceCommand);
-// 	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
-// 	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
+ 	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
+	AddCardTypeCommand(CARD_EVIDENCE, g_evidenceCommand);
+ 	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -131,20 +131,20 @@ void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
 			stored_command = m_contactCommand;
 			break;
 		}
-	case CARD_ITEM:
+	case CARD_CHARACTER:
 		{
-			//stored_command = m_itemCommand;
-			//break;
+			stored_command = m_characterCommand;
+			break;
 		}
 	case CARD_EVIDENCE:
 		{
-			//stored_command = m_evidenceCommand;
-			//break;
+			stored_command = m_evidenceCommand;
+			break;
 		}
-	case CARD_CHARACTER:
+	case CARD_ITEM:
 		{
-			//stored_command = m_characterCommand;
-			//break;
+			stored_command = m_itemCommand;
+			break;
 		}
 	default:
 		{
@@ -222,33 +222,33 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
-// 		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) // evidence dialogue struct
-// 		{
-// 			ImGui::PushStyleColor(
-// 				ImGuiCol_Text,
-// 				ImVec4(1.0000000000000000f, 0.0000000000000000f, 0.7647058823529412f, 1.0f)
-// 			);
-// 
-// 			pop_color = true;
-// 		}
-// 		else if (StringNCompare(item, g_characterHeader, 5) == 0) // character reply dialogue struct
-// 		{
-// 			ImGui::PushStyleColor(
-// 				ImGuiCol_Text,
-// 				ImVec4(0.9215686274509804f, 0.5098039215686275f, 0.0000000000000000f, 1.0f)
-// 			);
-// 
-// 			pop_color = true;
-// 		}
-// 		else if (StringNCompare(item, g_itemHeader, 5) == 0) // item dialogue struct
-// 		{
-// 			ImGui::PushStyleColor(
-// 				ImGuiCol_Text,
-// 				ImVec4(0.9098039215686275f, 0.2078431372549020f, 0.0470588235294118f, 1.0f)
-// 			);
-// 
-// 			pop_color = true;
-// 		}
+		else if (StringNCompare(item, g_characterHeader, 5) == 0) // character reply dialogue struct
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.9215686274509804f, 0.5098039215686275f, 0.0000000000000000f, 1.0f)
+			);
+
+			pop_color = true;
+		}
+		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) // evidence dialogue struct
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(1.0000000000000000f, 0.0000000000000000f, 0.7647058823529412f, 1.0f)
+			);
+
+			pop_color = true;
+		}
+		else if (StringNCompare(item, g_itemHeader, 5) == 0) // item dialogue struct
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.9098039215686275f, 0.2078431372549020f, 0.0470588235294118f, 1.0f)
+			);
+
+			pop_color = true;
+		}
 		
 		ImGui::TextUnformatted(item); 
 	
@@ -340,7 +340,8 @@ void DialogueSystem::ExecCommand(const char* command_line)
 		//TODO: really bad!!!!!!! Use Function Callback
 		AddLog("%s", Scenario::TravelToLocation(
 			g_theApp->GetTheGame()->GetCurrentScenario(),
-			sub_input_buff).c_str());
+			sub_input_buff).c_str()
+		);
 	}
 	else if (StringNCompare(
 			command_line, 
@@ -348,7 +349,7 @@ void DialogueSystem::ExecCommand(const char* command_line)
 			static_cast<int>(strlen(m_contactCommand))) == 0)
 	{
 		const int command_length = static_cast<int>(strlen(m_contactCommand));
-		const int input_buff_length = strlen(command_line);
+		const int input_buff_length = static_cast<int>(strlen(command_line));
 		const int sub_input_length = input_buff_length - command_length + 1;
 
 		char sub_input_buff[MAX_INPUT];
@@ -358,53 +359,66 @@ void DialogueSystem::ExecCommand(const char* command_line)
 		//TODO: really bad!!!!!!! Use Function Callback
 		AddLog("%s", Scenario::CallSpecialist(
 			g_theApp->GetTheGame()->GetCurrentScenario(),
-			sub_input_buff).c_str());
+			sub_input_buff).c_str()
+		);
 	}
-// 	else if (StringNCompare(
-// 			command_line, 
-// 			m_evidenceCommand, 
-// 			static_cast<int>(strlen(m_evidenceCommand))) == 0)
-// 	{
-// 		const int command_length = static_cast<int>(strlen(m_evidenceCommand));
-// 		const int input_buff_length = strlen(command_line);
-// 		const int sub_input_length = input_buff_length - command_length + 1;
-// 		
-// 		char sub_input_buff[MAX_INPUT];
-// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-// 		sub_input_buff[sub_input_length - 1] = '\0';
-// 
-// 		AddLog("%s", Evidence::InvestigateItem(sub_input_buff).c_str());
-// 	}
-// 	else if (StringNCompare(
-// 			command_line, 
-// 			m_characterCommand, 
-// 			static_cast<int>(strlen(m_characterCommand))) == 0)
-// 	{
-// 		const int command_length = static_cast<int>(strlen(m_characterCommand));
-// 		const int input_buff_length = strlen(command_line);
-// 		const int sub_input_length = input_buff_length - command_length + 1;
-// 
-// 		char sub_input_buff[MAX_INPUT];
-// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-// 		sub_input_buff[sub_input_length - 1] = '\0';
-// 
-// 		AddLog("%s", Character::InterrogateCharacter(sub_input_buff).c_str());
-// 	}
-// 	else if (StringNCompare(
-// 		command_line, 
-// 		m_itemCommand, 
-// 		static_cast<int>(strlen(m_itemCommand))) == 0)
-// 	{
-// 		const int command_length = static_cast<int>(strlen(m_itemCommand));
-// 		const int input_buff_length = strlen(command_line);
-// 		const int sub_input_length = input_buff_length - command_length + 1;
-// 
-// 		char sub_input_buff[MAX_INPUT];
-// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-// 		sub_input_buff[sub_input_length - 1] = '\0';
-// 
-// 		AddLog("%s", Item::InvestigateItem(sub_input_buff).c_str());
-//	}
+	else if (StringNCompare(
+			command_line, 
+			m_characterCommand, 
+			static_cast<int>(strlen(m_characterCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_characterCommand));
+		const int input_buff_length = static_cast<int>(strlen(command_line));
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		//TODO: really bad!!!!!!! Use Function Callback
+		AddLog("%s", Scenario::InterrogateCharacter(
+			g_theApp->GetTheGame()->GetCurrentScenario(),
+			sub_input_buff).c_str()
+		);
+	}
+	else if (StringNCompare(
+			command_line, 
+			m_evidenceCommand, 
+			static_cast<int>(strlen(m_evidenceCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_evidenceCommand));
+		const int input_buff_length = static_cast<int>(strlen(command_line));
+		const int sub_input_length = input_buff_length - command_length + 1;
+		
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		//TODO: really bad!!!!!!! Use Function Callback
+		AddLog("%s", Scenario::InvestigateEvidence(
+			g_theApp->GetTheGame()->GetCurrentScenario(),
+			sub_input_buff).c_str()
+		);
+	}
+	else if (StringNCompare(
+		command_line, 
+		m_itemCommand, 
+		static_cast<int>(strlen(m_itemCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_itemCommand));
+		const int input_buff_length = (int) strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		//TODO: really bad!!!!!!! Use Function Callback
+		AddLog("%s", Scenario::InvestigateItem(
+			g_theApp->GetTheGame()->GetCurrentScenario(),
+			sub_input_buff).c_str()
+		);
+	}
 	else
 	{
 		AddLog("Unknown command: '%s'\n", command_line);
