@@ -11,8 +11,8 @@ class Card
 {
 public:
 	Card();
-	explicit Card(Scenario* the_scene, CardType type);
-	explicit Card(Scenario* the_scene, CardType type, const String& name, const StringList& list_of_nicknames,
+	explicit Card(Scenario* the_setup, CardType type);
+	explicit Card(Scenario* the_setup, CardType type, const String& name, const StringList& list_of_nicknames,
 		const String& desc);
 	~Card();
 

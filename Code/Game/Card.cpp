@@ -3,13 +3,13 @@
 Card::Card() = default;
 Card::~Card() = default;
 
-Card::Card(Scenario* the_scene, CardType type) : m_theScenario(the_scene), m_type(type)
+Card::Card(Scenario* the_setup, CardType type) : m_theScenario(the_setup), m_type(type)
 {
 	m_nickNames = StringList();
 }
 
-Card::Card(Scenario* the_scene, const CardType type, const String& name, const StringList& list_of_nicknames,
-	const String& desc)	: m_theScenario(the_scene), m_type(type), m_name(name), m_nickNames(list_of_nicknames),
+Card::Card(Scenario* the_setup, const CardType type, const String& name, const StringList& list_of_nicknames,
+	const String& desc)	: m_theScenario(the_setup), m_type(type), m_name(name), m_nickNames(list_of_nicknames),
 	m_description(desc) { }
 
 

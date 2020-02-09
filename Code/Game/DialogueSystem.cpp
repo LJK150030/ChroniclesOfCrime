@@ -5,11 +5,6 @@
 
 #include "Game/DialogueSystem.hpp"
 #include "Game/GameCommon.hpp"
-#include "Game/Evidence.hpp"
-#include "Game/Location.hpp"
-#include "Game/Item.hpp"
-#include "Game/Character.hpp"
-#include "Game/Contact.hpp"
 
 //TODO: hacky solution to get the Scenario
 #include "Game/App.hpp"
@@ -28,8 +23,8 @@ DialogueSystem::DialogueSystem()
 	m_commands.push_back("CLEAR");
 
 	AddCardTypeCommand(CARD_LOCATION, g_locationCommand);
+	AddCardTypeCommand(CARD_CONTACT, g_contactCommand);
 //  AddCardTypeCommand(CARD_EVIDENCE, g_evidenceCommand);
-// 	AddCardTypeCommand(CARD_CONTACT, g_contactCommand);
 // 	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
 // 	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
 
@@ -131,6 +126,11 @@ void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
 			stored_command = m_locationCommand;
 			break;
 		}
+	case CARD_CONTACT:
+		{
+			stored_command = m_contactCommand;
+			break;
+		}
 	case CARD_ITEM:
 		{
 			//stored_command = m_itemCommand;
@@ -144,11 +144,6 @@ void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
 	case CARD_CHARACTER:
 		{
 			//stored_command = m_characterCommand;
-			//break;
-		}
-	case CARD_CONTACT:
-		{
-			//stored_command = m_contactCommand;
 			//break;
 		}
 	default:
@@ -218,20 +213,20 @@ void DialogueSystem::UpdateHistory()
 
 			pop_color = true;
 		}
+		else if (StringNCompare(item, g_contactHeader, 5) == 0) // contact dialogue struct
+		{
+			ImGui::PushStyleColor(
+				ImGuiCol_Text,
+				ImVec4(0.6509803921568627f, 1.0000000000000000f, 0.0000000000000000f, 1.0f)
+			);
+
+			pop_color = true;
+		}
 // 		else if (StringNCompare(item, g_evidenceHeader, 5) == 0) // evidence dialogue struct
 // 		{
 // 			ImGui::PushStyleColor(
 // 				ImGuiCol_Text,
 // 				ImVec4(1.0000000000000000f, 0.0000000000000000f, 0.7647058823529412f, 1.0f)
-// 			);
-// 
-// 			pop_color = true;
-// 		}
-// 		else if (StringNCompare(item, g_contactHeader, 5) == 0) // contact dialogue struct
-// 		{
-// 			ImGui::PushStyleColor(
-// 				ImGuiCol_Text,
-// 				ImVec4(0.6509803921568627f, 1.0000000000000000f, 0.0000000000000000f, 1.0f)
 // 			);
 // 
 // 			pop_color = true;
@@ -347,6 +342,24 @@ void DialogueSystem::ExecCommand(const char* command_line)
 			g_theApp->GetTheGame()->GetCurrentScenario(),
 			sub_input_buff).c_str());
 	}
+	else if (StringNCompare(
+			command_line, 
+			m_contactCommand, 
+			static_cast<int>(strlen(m_contactCommand))) == 0)
+	{
+		const int command_length = static_cast<int>(strlen(m_contactCommand));
+		const int input_buff_length = strlen(command_line);
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		//TODO: really bad!!!!!!! Use Function Callback
+		AddLog("%s", Scenario::CallSpecialist(
+			g_theApp->GetTheGame()->GetCurrentScenario(),
+			sub_input_buff).c_str());
+	}
 // 	else if (StringNCompare(
 // 			command_line, 
 // 			m_evidenceCommand, 
@@ -361,21 +374,6 @@ void DialogueSystem::ExecCommand(const char* command_line)
 // 		sub_input_buff[sub_input_length - 1] = '\0';
 // 
 // 		AddLog("%s", Evidence::InvestigateItem(sub_input_buff).c_str());
-// 	}
-// 	else if (StringNCompare(
-// 			command_line, 
-// 			m_contactCommand, 
-// 			static_cast<int>(strlen(m_contactCommand))) == 0)
-// 	{
-// 		const int command_length = static_cast<int>(strlen(m_contactCommand));
-// 		const int input_buff_length = strlen(command_line);
-// 		const int sub_input_length = input_buff_length - command_length + 1;
-// 
-// 		char sub_input_buff[MAX_INPUT];
-// 		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-// 		sub_input_buff[sub_input_length - 1] = '\0';
-// 
-// 		AddLog("%s", Contact::CallSpecialist(sub_input_buff).c_str());
 // 	}
 // 	else if (StringNCompare(
 // 			command_line, 

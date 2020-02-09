@@ -6,6 +6,7 @@ class App;
 class RenderContext;
 class InputSystem;
 class AudioSystem;
+class Card;
 class Location;
 class Item;
 class Evidence;
