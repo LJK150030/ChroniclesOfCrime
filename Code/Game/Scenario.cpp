@@ -130,9 +130,13 @@ void Scenario::LoadInScenarioManually()
 
 void Scenario::LoadInScenarioFile(const char* folder_dir)
 {
-	String location_file = String(folder_dir) + "/Locations.xml";
+	const String location_file = String(folder_dir) + "/Locations.xml";
 	ReadLocationsXml(location_file);
 	SetupLocationLookupTable();
+
+	const String contact_file = String(folder_dir) + "/Contacts.xml";
+	ReadContactsXml(contact_file);
+	SetupContactLookupTable();
 
 	ManuallySetScenarioSettings();
 }
@@ -314,7 +318,18 @@ void Scenario::ReadLocationsXml(const String& file_path)
 
 void Scenario::ReadContactsXml(const String& file_path)
 {
-	ASSERT_OR_DIE(false, "ReadContactsXML has not been implemented yet!")
+	tinyxml2::XMLDocument contact_doc;
+	OpenXmlFile(&contact_doc, file_path);
+	XmlElement* root_contact = contact_doc.RootElement();
+
+	for (const XmlElement* contact_element = root_contact->FirstChildElement();
+		contact_element;
+		contact_element = contact_element->NextSiblingElement()
+		)
+	{
+		//m_definitions[map_definition_element->FirstAttribute()->Value()] = new MapDefinition(*map_definition_element);
+		m_contacts.emplace_back(this, contact_element);
+	}
 }
 
 

@@ -67,16 +67,6 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 			ERROR_RECOVERABLE("Unknown Element in location xml file, '%S', skipping element", child_element->Name())
 		}
 	}
-	
-// 	
-// 
-// 	
-// 	StringList laptop_nicknames;
-// 	laptop_nicknames.emplace_back("laptop");
-// 	laptop_nicknames.emplace_back("computer");
-// 	laptop_nicknames.emplace_back("PC");
-// 	String laptop_desc = "The Hacker's laptop";
-// 	m_evidence.emplace_back(this, "lnd1_i01", laptop_nicknames, laptop_desc);
 }
 
 
