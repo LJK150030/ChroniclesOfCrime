@@ -41,26 +41,3 @@ void StringTrim(char* str)
 
 	*str_end = 0;
 }
-
-
-char ToLowercase(const char c)
-{
-	if (c >= 'A' && c <= 'Z')
-	{
-		return static_cast<char>(c + 32);
-	}
-
-	return c;
-}
-
-
-String StringToLower(String str)
-{
-	const int num_chars = static_cast<int>(str.length());
-	for (int c_idx = 0; c_idx < num_chars; ++c_idx)
-	{
-		str[c_idx] = ToLowercase(str[c_idx]);
-	}
-
-	return str;
-}

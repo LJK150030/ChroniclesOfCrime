@@ -172,6 +172,6 @@ void Game::InitGameObjs()
 	m_dialogueSystem = new DialogueSystem();
 	m_currentScenario = new Scenario(this);
 
-	// TODO: load from XML different scenarios
-	m_currentScenario->LoadInScenario();
+	//m_currentScenario->LoadInScenarioManually();
+	m_currentScenario->LoadInScenarioFile("Data/Scenarios/Tutorial");
 }

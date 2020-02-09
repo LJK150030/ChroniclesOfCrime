@@ -29,31 +29,25 @@ public:
 	void Startup();
 	void Shutdown();
 
-	void LoadInScenario();
+	void LoadInScenarioManually();
+	void LoadInScenarioFile(const char* folder_dir);
 
 private:
 	// setup Scenario
-	void LoadInScenarioSettings();
-	void LoadInScenarioLocations();
-	void LoadInScenarioContacts();
-	void LoadInScenarioCharacters();
-	void LoadInScenarioEvidence();
-	void LoadInScenarioItems();
-
-	
 	void ManuallySetLocations();
 	void ManuallySetContacts();
 	void ManuallySetCharacters();
 	void ManuallySetEvidence();
 	void ManuallySetItems();
+	void ManuallySetScenarioSettings();
 
 	
-	void ReadLocationsXml();
-	void ReadContactsXml();
-	void ReadCharactersXml();
-	void ReadEvidenceXml();
-	void ReadItemsXml();
-
+	void ReadLocationsXml(const String& file_path);
+	void ReadContactsXml(const String& file_path);
+	void ReadCharactersXml(const String& file_path);
+	void ReadEvidenceXml(const String& file_path);
+	void ReadItemsXml(const String& file_path);
+	void ReadSettingsXml(const String& file_path);
 	
 	// Database manipulation
 	void SetupLocationLookupTable();
@@ -75,6 +69,8 @@ private:
 	bool IsEvidenceInLookupTable(LookupItr& out, const String& name);
 	bool IsItemInLookupTable(LookupItr& out, const String& name);
 	
+
+	void OpenXmlFile(tinyxml2::XMLDocument* out, const String& file_path);
 	
 private:
 	// Owner

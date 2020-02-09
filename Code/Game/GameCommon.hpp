@@ -109,6 +109,3 @@ constexpr int	MAX_COMMAND_LENGTH = 16;
 int		StringCompare(const char* str1, const char* str2);
 int		StringNCompare(const char* str1, const char* str2, int first_n_chars);
 void	StringTrim(char* str);
-
-char	ToLowercase(char c);
-String	StringToLower(String str); 

@@ -107,24 +107,44 @@ void Scenario::Shutdown()
 }
 
 
-void Scenario::LoadInScenario()
+void Scenario::LoadInScenarioManually()
 {
-	LoadInScenarioLocations();
-	LoadInScenarioContacts();
-	LoadInScenarioCharacters();
-	LoadInScenarioEvidence();
-	LoadInScenarioItems();
-	LoadInScenarioSettings();
+	ManuallySetLocations();
+	SetupLocationLookupTable();
+	
+	ManuallySetContacts();
+	SetupContactLookupTable();
+	
+	ManuallySetCharacters();
+	SetupCharacterLookupTable();
+	
+	ManuallySetEvidence();
+	SetupEvidenceLookupTable();
+	
+	ManuallySetItems();
+	SetupItemLookupTable();
+
+	ManuallySetScenarioSettings();
 }
 
 
-void Scenario::LoadInScenarioSettings()
+void Scenario::LoadInScenarioFile(const char* folder_dir)
+{
+	String location_file = String(folder_dir) + "/Locations.xml";
+	ReadLocationsXml(location_file);
+	SetupLocationLookupTable();
+
+	ManuallySetScenarioSettings();
+}
+
+
+void Scenario::ManuallySetScenarioSettings()
 {
 	m_currentHourMilitary = 9;
 	m_currentMinute = 0;
 
 	LookupItr loc_itr;
-	bool home = IsLocationInLookupTable(loc_itr, "home");
+	bool home = IsLocationInLookupTable(loc_itr, "Scotland Yard");
 	if(home)
 	{
 		m_currentLocation = &m_locations[loc_itr->second];
@@ -132,51 +152,31 @@ void Scenario::LoadInScenarioSettings()
 
 	ASSERT_OR_DIE(home, "Need to have a valid starting position");
 
-}
+	m_unknownLocationLine.emplace_back("Where is that again?");
+	m_unknownLocationLine.emplace_back("...I think I'm lost...");
+	m_unknownLocationLine.emplace_back("What city are we in again?");
 
 
-void Scenario::LoadInScenarioLocations()
-{
-	ManuallySetLocations();
-	SetupLocationLookupTable();
-}
+	m_unknownContactLine.emplace_back("*** Busy signal ***");
+	m_unknownContactLine.emplace_back("*Sorry the number your trying to reach has been disconnected or no longer in service*");
+	m_unknownContactLine.emplace_back("what was that number again...");
 
+	m_unknownCharacterLine.emplace_back("Sorry, give me a minute");
+	m_unknownCharacterLine.emplace_back("I'm at a lost for words");
+	m_unknownCharacterLine.emplace_back("............");
 
-void Scenario::LoadInScenarioContacts()
-{
-	ManuallySetContacts();
-	SetupContactLookupTable();
-}
+	m_unknownEvidenceLine.emplace_back("I don't think that's relevant");
+	m_unknownEvidenceLine.emplace_back("I don't know about that");
+	m_unknownEvidenceLine.emplace_back("I should keep looking");
 
-
-void Scenario::LoadInScenarioCharacters()
-{
-	ManuallySetCharacters();
-	SetupCharacterLookupTable();
-}
-
-
-void Scenario::LoadInScenarioEvidence()
-{
-	ManuallySetEvidence();
-	SetupEvidenceLookupTable();
-}
-
-
-void Scenario::LoadInScenarioItems()
-{
-	ManuallySetItems();
-	SetupItemLookupTable();
+	m_unknownItemLine.emplace_back("oh, where did I put it...");
+	m_unknownItemLine.emplace_back("I know it is here somewhere.");
+	m_unknownItemLine.emplace_back("what was I looking for again?");
 }
 
 
 void Scenario::ManuallySetLocations()
 {
-	// loading scenario unknown search lines
-	m_unknownLocationLine.emplace_back("Where is that again?");
-	m_unknownLocationLine.emplace_back("...I think I'm lost...");
-	m_unknownLocationLine.emplace_back("What city are we in again?");
-
 	// Home location 
 	StringList home_nicknames;
 	home_nicknames.emplace_back("Scotland Yard");
@@ -205,12 +205,6 @@ void Scenario::ManuallySetLocations()
 
 void Scenario::ManuallySetContacts()
 {
-
-	// loading scenario search lines
-	m_unknownContactLine.emplace_back("*** Busy signal ***");
-	m_unknownContactLine.emplace_back("*Sorry the number your trying to reach has been disconnected or no longer in service*");
-	m_unknownContactLine.emplace_back("what was that number again...");
-	
 	// Criminologist contact 
 	StringList hacker_nicknames;
 	hacker_nicknames.emplace_back("Hacker");
@@ -248,11 +242,6 @@ void Scenario::ManuallySetContacts()
 
 void Scenario::ManuallySetCharacters()
 {
-	// loading scenario search lines
-	m_unknownCharacterLine.emplace_back("Sorry, give me a minute");
-	m_unknownCharacterLine.emplace_back("I'm at a lost for words");
-	m_unknownCharacterLine.emplace_back("............");
-
 	StringList cally_nicknames;
 	cally_nicknames.emplace_back("Cally");
 	cally_nicknames.emplace_back("Rivera");
@@ -275,11 +264,6 @@ void Scenario::ManuallySetCharacters()
 
 void Scenario::ManuallySetEvidence()
 {
-	// loading scenario search lines
-	m_unknownEvidenceLine.emplace_back("I don't think that's relevant");
-	m_unknownEvidenceLine.emplace_back("I don't know about that");
-	m_unknownEvidenceLine.emplace_back("I should keep looking");
-
 	StringList laptop_nicknames;
 	laptop_nicknames.emplace_back("laptop");
 	laptop_nicknames.emplace_back("computer");
@@ -296,11 +280,6 @@ void Scenario::ManuallySetEvidence()
 
 void Scenario::ManuallySetItems()
 {
-	// loading scenario search lines
-	m_unknownItemLine.emplace_back("oh, where did I put it...");
-	m_unknownItemLine.emplace_back("I know it is here somewhere.");
-	m_unknownItemLine.emplace_back("what was I looking for again?");
-
 	// Items used in the game
 	StringList money_nicknames;
 	money_nicknames.emplace_back("cash");
@@ -316,30 +295,41 @@ void Scenario::ManuallySetItems()
 }
 
 
-void Scenario::ReadLocationsXml()
+void Scenario::ReadLocationsXml(const String& file_path)
 {
-	ASSERT_OR_DIE(false, "ReadLocationsXml has not been implemented yet!")
+	tinyxml2::XMLDocument loc_doc;
+	OpenXmlFile(&loc_doc, file_path);
+	XmlElement* root_loc = loc_doc.RootElement();
+
+	for (const XmlElement* loc_element = root_loc->FirstChildElement(); 
+		loc_element; 
+		loc_element = loc_element->NextSiblingElement()
+		)
+	{
+		//m_definitions[map_definition_element->FirstAttribute()->Value()] = new MapDefinition(*map_definition_element);
+		m_locations.emplace_back(this, loc_element);
+	}
 }
 
 
-void Scenario::ReadContactsXml()
+void Scenario::ReadContactsXml(const String& file_path)
 {
 	ASSERT_OR_DIE(false, "ReadContactsXML has not been implemented yet!")
 }
 
 
-void Scenario::ReadCharactersXml()
+void Scenario::ReadCharactersXml(const String& file_path)
 {
 	ASSERT_OR_DIE(false, "ReadCharactersXml has not been implemented yet!")
 }
 
-void Scenario::ReadEvidenceXml()
+void Scenario::ReadEvidenceXml(const String& file_path)
 {
 	ASSERT_OR_DIE(false, "ReacdEvidenceXml has not been implemented yet!")
 }
 
 
-void Scenario::ReadItemsXml()
+void Scenario::ReadItemsXml(const String& file_path)
 {
 	ASSERT_OR_DIE(false, "ReacdEvidenceXml has not been implemented yet!")
 }
@@ -556,4 +546,22 @@ bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
 	}
 
 	return false;
+}
+
+void Scenario::OpenXmlFile(tinyxml2::XMLDocument* out, const String& file_path)
+{
+	const char* file_path_c_str = file_path.c_str();
+	out->LoadFile(file_path_c_str);
+
+	if (out->ErrorID() != tinyxml2::XML_SUCCESS)
+	{
+		std::string error_message = "\n";
+
+		error_message.append(Stringf(">> ERROR loading XML doc \"%s\"\n", file_path_c_str));
+		error_message.append(Stringf(">> errorID = %i\n", out->ErrorID()));
+		error_message.append(Stringf(">> errorLineNum = %i\n", out->ErrorLineNum()));
+		error_message.append(Stringf(">> errorName = \"%s\"\n", out->ErrorName()));
+
+		ERROR_AND_DIE(error_message);
+	}
 }
