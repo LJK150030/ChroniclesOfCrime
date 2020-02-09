@@ -7,7 +7,7 @@ Character::Character(Scenario* the_setup) : Card(the_setup, CARD_CHARACTER) { }
 Character::Character(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
 	const String& desc) : Card(the_setup, CARD_CHARACTER, name, list_of_nicknames, desc) { }
 
-Character::Character(Scenario* the_setup, const XmlElement* element)
+Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CARD_CHARACTER)
 {
 	for (const XmlAttribute* attribute = element->FirstAttribute();
 		attribute;

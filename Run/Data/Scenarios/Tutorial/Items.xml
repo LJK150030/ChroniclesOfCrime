@@ -1,0 +1,14 @@
+<Items>
+	<Item  Name="Furniture" StartingState="Not Found" >
+		<Nicknames List="Well tried, but the furniture here is old and uninteresting." />
+		<State Name="Found" des="" />
+	</Item>
+	<Item  Name="Books & Magazines" StartingState="Not Found" >
+		<Nicknames List="Books" />
+		<State Name="Found" des="Books about card games and Bridge. No real evidence for the investigation." />
+	</Item>
+	<Item  Name="Plants" StartingState="Not Found" >
+		<Nicknames List="Flowers" />
+		<State Name="Found" des="These flowers are dried out and are not of any interest for the investigation." />
+	</Item>
+</Items>

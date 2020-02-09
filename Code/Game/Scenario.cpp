@@ -141,6 +141,14 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	const String characters_file = String(folder_dir) + "/Characters.xml";
 	ReadCharactersXml(characters_file);
 	SetupCharacterLookupTable();
+
+	const String evidence_file = String(folder_dir) + "/Evidence.xml";
+	ReadEvidenceXml(evidence_file);
+	SetupEvidenceLookupTable();
+
+	const String item_file = String(folder_dir) + "/Items.xml";
+	ReadItemsXml(item_file);
+	SetupItemLookupTable();
 	
 	ManuallySetScenarioSettings();
 }
@@ -353,13 +361,33 @@ void Scenario::ReadCharactersXml(const String& file_path)
 
 void Scenario::ReadEvidenceXml(const String& file_path)
 {
-	ASSERT_OR_DIE(false, "ReacdEvidenceXml has not been implemented yet!")
+	tinyxml2::XMLDocument evidence_doc;
+	OpenXmlFile(&evidence_doc, file_path);
+	XmlElement* root_evidence = evidence_doc.RootElement();
+
+	for (const XmlElement* evidence_element = root_evidence->FirstChildElement();
+		evidence_element;
+		evidence_element = evidence_element->NextSiblingElement()
+		)
+	{
+		m_evidence.emplace_back(this, evidence_element);
+	}
 }
 
 
 void Scenario::ReadItemsXml(const String& file_path)
 {
-	ASSERT_OR_DIE(false, "ReacdEvidenceXml has not been implemented yet!")
+	tinyxml2::XMLDocument items_doc;
+	OpenXmlFile(&items_doc, file_path);
+	XmlElement* root_items = items_doc.RootElement();
+
+	for (const XmlElement* item_element = root_items->FirstChildElement();
+		item_element;
+		item_element = item_element->NextSiblingElement()
+		)
+	{
+		m_items.emplace_back(this, item_element);
+	}
 }
 
 

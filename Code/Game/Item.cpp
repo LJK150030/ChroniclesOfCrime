@@ -1,75 +1,71 @@
 #include "Game/Item.hpp"
+#include "Engine/Core/StringUtils.hpp"
+#include "Engine/Core/ErrorWarningAssert.hpp"
 
 Item::Item() { m_type = CARD_ITEM; }
 Item::Item(Scenario* the_setup) : Card(the_setup, CARD_ITEM) { }
 Item::Item(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
 	const String& desc) : Card(the_setup, CARD_ITEM, name, list_of_nicknames, desc) { }
 
+Item::Item(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CARD_ITEM)
+{
+	for (const XmlAttribute* attribute = element->FirstAttribute();
+		attribute;
+		attribute = attribute->Next()
+		)
+	{
+		String attribute_name = StringToLower(attribute->Name());
+
+		if (attribute_name.compare("name") == 0)
+		{
+			m_name = attribute->Value();
+		}
+		else if (attribute_name.compare("startingstate") == 0)
+		{
+			String state = StringToLower(String(attribute->Value()));
+			m_found = state.compare("found") == 0;
+		}
+		else
+		{
+			ERROR_RECOVERABLE("Unknown Attribute in location xml file, '%S', skipping attribute", attribute->Name())
+		}
+	}
+
+
+	for (const XmlElement* child_element = element->FirstChildElement();
+		child_element;
+		child_element = child_element->NextSiblingElement()
+		)
+	{
+		String element_name = StringToLower(child_element->Name());
+
+		if (element_name.compare("nicknames") == 0)
+		{
+			const XmlAttribute* child_attribute = child_element->FirstAttribute();
+			const char* nickname_list_c_str = child_attribute->Name();
+			ASSERT_OR_DIE(nickname_list_c_str, "Could not get list of nicknames for location %S", m_name.c_str());
+
+			String nickname_list(child_attribute->Value());
+			m_nickNames = SplitStringOnDelimiter(nickname_list, ',');
+		}
+		else if (element_name.compare("state") == 0)
+		{
+			const XmlAttribute* child_attribute = child_element->FirstAttribute();
+			const char* state_c_str = child_attribute->Name();
+			ASSERT_OR_DIE(state_c_str, "Could not get State for location %S", m_name.c_str());
+
+			String state(child_attribute->Value());
+			if (state.compare("Found") == 0)
+			{
+				const XmlAttribute* sibling_attribute = child_attribute->Next();
+				m_description = sibling_attribute->Value();
+			}
+		}
+		else
+		{
+			ERROR_RECOVERABLE("Unknown Element in location xml file, '%S', skipping element", child_element->Name())
+		}
+	}
+}
+
  
-// STATIC ItemList		Item::s_items = ItemList();
-// STATIC LookupTable	Item::s_itemLookup = LookupTable();
-// STATIC StringList	Item::s_unknownItemLine = StringList();
-// 
-// STATIC void Item::LoadInScenarioItems()
-// {
-// 	ManuallySetItems();
-// 	SetupItemLookup();
-// }
-// 
-// STATIC void Item::ManuallySetItems()
-// {
-// 	// loading scenario search lines
-// 	s_unknownItemLine.emplace_back("oh, where did I put it...");
-// 	s_unknownItemLine.emplace_back("I know it is here somewhere.");
-// 	s_unknownItemLine.emplace_back("what was I looking for again?");
-// 
-// 	// Items used in the game
-// 	StringList money_nicknames;
-// 	money_nicknames.emplace_back("cash");
-// 	money_nicknames.emplace_back("dough");
-// 	money_nicknames.emplace_back("wad");
-// 	std::string money_des = "A wad of cash";
-// 	s_items.emplace_back("money", home_nicknames, home_des);
-// 
-// 	s_Items[ITEM_2] = Item(
-// 		ITEM_2,
-// 		"badge",
-// 		"A Security badge"
-// 	);
-// 
-// 	s_Items[ITEM_4] = Item(
-// 		ITEM_4,
-// 		"poison",
-// 		"A bottle of hydrochloric acid"
-// 	);
-// }
-// 
-// STATIC void Item::ReadItemsXml()
-// {
-// }
-// 
-// STATIC void Item::SetupItemLookup()
-// {
-// }
-// 
-// STATIC std::string Item::InvestigateItem(const char* name)
-// {
-// 	//TODO: how can we look up faster with just the name and not the category
-// 	for (int item_idx = 0; item_idx < NUM_ITEMS; ++item_idx)
-// 	{
-// 		if (s_Items[item_idx].m_name.compare(name) == 0)
-// 		{
-// 			s_Items[item_idx].m_found = true;
-// 			return g_itemHeader + s_Items[item_idx].m_description;
-// 		}
-// 	}
-// 
-// 	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-// 	return s_unknownItemLine[random_dialog_idx];
-// }
-// 
-// 
-// Item::Item() { m_type = CARD_ITEM; }
-// Item::Item(Game* the_game) : Card(the_game, CARD_ITEM) { }
-// Item::Item(Game* the_game, const String& name, const StringList& list_of_nicknames,
-// 	const String& desc) : Card(the_game, CARD_ITEM, name, list_of_nicknames, desc) { }
