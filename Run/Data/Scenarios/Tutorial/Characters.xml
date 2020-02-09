@@ -1,0 +1,18 @@
+<Contacts>
+	<Contact  Name="Chief" StartingState="init" >
+		<Nicknames List="Officer Doyle,Doyle" />
+		<State Name="init" des="Ah, at last you're here. I have a case for you! An old woman <char=07> has been found dead. I need you to find out if it's a natural death or an homicide." />
+	</Contact>
+	<Contact Name="Anna" StartingState="init" >
+		<Nicknames List="Mrs. Taylor,Taylor,victim" />
+		<State Name="init" des="The elderly woman died on her rocking chair with no obvious signs of struggle." />
+	</Contact>
+	<Contact Name="Rose" StartingState="init" >
+		<Nicknames List="Butterfly,Ms. Butterfly" />
+		<State Name="init" des="We're practicing for a big Bridge tournament right now. How can I help you?" />
+	</Contact>
+	<Contact Name="Jenny" StartingState="init" >
+		<Nicknames List="May,Ms. May" />
+		<State Name="init" des="I'm new to the club, but if I can help you, please let me know." />
+	</Contact>
+</Contacts>

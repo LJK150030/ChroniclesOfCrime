@@ -8,7 +8,7 @@ Contact::Contact(Scenario* the_setup) : Card(the_setup, CARD_CONTACT) { }
 Contact::Contact(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
 	const String& desc) : Card(the_setup, CARD_CONTACT, name, list_of_nicknames, desc) { }
 
-Contact::Contact(Scenario* the_setup, const XmlElement* element)
+Contact::Contact(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CARD_CONTACT)
 {
 	for (const XmlAttribute* attribute = element->FirstAttribute();
 		attribute;
@@ -24,7 +24,7 @@ Contact::Contact(Scenario* the_setup, const XmlElement* element)
 		else if (attribute_name.compare("startingstate") == 0)
 		{
 			String state = StringToLower(String(attribute->Value()));
-			m_found = state.compare("open") == 0;
+			m_found = state.compare("init") == 0;
 		}
 		else
 		{
@@ -56,7 +56,7 @@ Contact::Contact(Scenario* the_setup, const XmlElement* element)
 			ASSERT_OR_DIE(state_c_str, "Could not get State for location %S", m_name.c_str());
 
 			String state(child_attribute->Value());
-			if (state.compare("Open") == 0)
+			if (state.compare("init") == 0)
 			{
 				const XmlAttribute* sibling_attribute = child_attribute->Next();
 				m_description = sibling_attribute->Value();

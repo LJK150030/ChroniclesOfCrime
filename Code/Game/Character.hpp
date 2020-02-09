@@ -7,6 +7,7 @@ public:
 	Character();
 	explicit Character(Scenario* the_setup);
 	explicit Character(Scenario* the_setup, const std::string& name, const std::vector<std::string>& list_of_nicknames, const std::string& desc);
+	explicit Character(Scenario* the_setup, const XmlElement* element);
 	~Character() = default;
 
 	// ACCESSORS

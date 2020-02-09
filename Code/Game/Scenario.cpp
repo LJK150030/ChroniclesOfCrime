@@ -134,10 +134,14 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	ReadLocationsXml(location_file);
 	SetupLocationLookupTable();
 
-	const String contact_file = String(folder_dir) + "/Contacts.xml";
-	ReadContactsXml(contact_file);
+	const String contacts_file = String(folder_dir) + "/Contacts.xml";
+	ReadContactsXml(contacts_file);
 	SetupContactLookupTable();
 
+	const String characters_file = String(folder_dir) + "/Characters.xml";
+	ReadCharactersXml(characters_file);
+	SetupCharacterLookupTable();
+	
 	ManuallySetScenarioSettings();
 }
 
@@ -318,16 +322,15 @@ void Scenario::ReadLocationsXml(const String& file_path)
 
 void Scenario::ReadContactsXml(const String& file_path)
 {
-	tinyxml2::XMLDocument contact_doc;
-	OpenXmlFile(&contact_doc, file_path);
-	XmlElement* root_contact = contact_doc.RootElement();
+	tinyxml2::XMLDocument contacts_doc;
+	OpenXmlFile(&contacts_doc, file_path);
+	XmlElement* root_contact = contacts_doc.RootElement();
 
 	for (const XmlElement* contact_element = root_contact->FirstChildElement();
 		contact_element;
 		contact_element = contact_element->NextSiblingElement()
 		)
 	{
-		//m_definitions[map_definition_element->FirstAttribute()->Value()] = new MapDefinition(*map_definition_element);
 		m_contacts.emplace_back(this, contact_element);
 	}
 }
@@ -335,7 +338,17 @@ void Scenario::ReadContactsXml(const String& file_path)
 
 void Scenario::ReadCharactersXml(const String& file_path)
 {
-	ASSERT_OR_DIE(false, "ReadCharactersXml has not been implemented yet!")
+	tinyxml2::XMLDocument characters_doc;
+	OpenXmlFile(&characters_doc, file_path);
+	XmlElement* root_characters = characters_doc.RootElement();
+
+	for (const XmlElement* character_element = root_characters->FirstChildElement();
+		character_element;
+		character_element = character_element->NextSiblingElement()
+		)
+	{
+		m_characters.emplace_back(this, character_element);
+	}
 }
 
 void Scenario::ReadEvidenceXml(const String& file_path)

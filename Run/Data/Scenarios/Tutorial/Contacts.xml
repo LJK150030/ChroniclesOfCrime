@@ -1,18 +1,18 @@
 <Contacts>
-	<Contact  Name="Hacker" StartingState="Open" >
-		<Nicknames List="Eric,Mr. Gloomerry" />
-		<State Name="Open" des="<i>You are calling the IT department:</i> Internet and Technology, that's my thing! What can I do to help you?" />
+	<Contact  Name="Hacker" StartingState="init" >
+		<Nicknames List="Eric,Mr. Gloomerry,Gloomerry" />
+		<State Name="init" des="<i> You are calling the IT department:</i> Internet and Technology, that's my thing! What can I do to help you?"/>
 	</Contact>
-	<Contact Name="Doctor" StartingState="Open" >
-		<Nicknames List="Jeremy,Dr. King" />
-		<State Name="Open" des="<i>You are calling the Morgue:</i> Who should I autopsy?" />
+	<Contact Name="Doctor" StartingState="init" >
+		<Nicknames List="Jeremy,Dr. King,King" />
+		<State Name="init" des="<i> You are calling the Morgue </i> Who should I autopsy?" />
 	</Contact>
-	<Contact Name="Criminologist" StartingState="Open" >
-		<Nicknames List="Harvey,Mr. Marshall" />
-		<State Name="Open" des="<i>You are calling the Crimiology Center:</i> I study the psychological profiles of killers and the history of crime. Can I help you with anything?" />
+	<Contact Name="Criminologist" StartingState="init" >
+		<Nicknames List="Harvey,Mr. Marshall,Marshall" />
+		<State Name="init" des="<i> You are calling the Criminology Center: </i> I study the psychological profiles of killers and the history of crime. Can I help you with anything?" />
 	</Contact>
-	<Contact Name="Scientist" StartingState="Open" >
-		<Nicknames List="Lou,Ms. Chin" />
-		<State Name="Open" des="<i>You are calling the Laboratory</i> Scientific analysis is the basis of modern investigation. Do you have any evidence for me?" />
+	<Contact Name="Scientist" StartingState="init" >
+		<Nicknames List="Lou,Ms. Chin,Chin" />
+		<State Name="init" des="<i>You are calling the Laboratory: </i> Scientific analysis is the basis of modern investigation. Do you have any evidence for me?" />
 	</Contact>
 </Contacts>
