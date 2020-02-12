@@ -15,4 +15,20 @@
 		<Nicknames List="May,Ms. May" />
 		<State Name="init" des="I'm new to the club, but if I can help you, please let me know." />
 	</Character>
+	<Character  Name="Hacker" StartingState="init" >
+		<Nicknames List="Eric,Mr. Gloomerry,Gloomerry" />
+		<State Name="init" des="<i> You are calling the IT department:</i> Internet and Technology, that's my thing! What can I do to help you?"/>
+	</Character>
+	<Character Name="Doctor" StartingState="init" >
+		<Nicknames List="Jeremy,Dr. King,King" />
+		<State Name="init" des="<i> You are calling the Morgue </i> Who should I autopsy?" />
+	</Character>
+	<Character Name="Criminologist" StartingState="init" >
+		<Nicknames List="Harvey,Mr. Marshall,Marshall" />
+		<State Name="init" des="<i> You are calling the Criminology Center: </i> I study the psychological profiles of killers and the history of crime. Can I help you with anything?" />
+	</Character>
+	<Character Name="Scientist" StartingState="init" >
+		<Nicknames List="Lou,Ms. Chin,Chin" />
+		<State Name="init" des="<i>You are calling the Laboratory: </i> Scientific analysis is the basis of modern investigation. Do you have any evidence for me?" />
+	</Character>
 </Characters>

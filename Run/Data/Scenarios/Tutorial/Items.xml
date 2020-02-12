@@ -1,4 +1,28 @@
 <Items>
+	<Item  Name="Animals" StartingState="Not Found" >
+		<Nicknames List="Cat,Cats,Dead Cats" />
+		<State Name="Found" des="The victim's cats are dead." />
+	</Item>
+	<Item  Name="Food" StartingState="Not Found" >
+		<Nicknames List="Cake" />
+		<State Name="Found" des="You pick up a cream cake that's been partially eaten." />
+	</Item>
+	<Item  Name="Games & Toys" StartingState="Not Found" >
+		<Nicknames List="Game,Cards,Card Game,Bridge" />
+		<State Name="Found" des="You find a classic deck of 52 playing cards, apparently a usual pastime for the victim." />
+	</Item>
+	<Item  Name="Communication Device" StartingState="Not Found" >
+		<Nicknames List="Phone,Old Phone" />
+		<State Name="Found" des="An old corded telephone that still works." />
+	</Item>
+	<Item  Name="Papers" StartingState="Not Found" >
+		<Nicknames List="Letter" />
+		<State Name="Found" des='A letter with the following text: <b><i>"Give up on the tournament! You are not as strong as you were before. For the good of the club, leave your spot to someone younger. </i></b>' />
+	</Item>
+	<Item  Name="Digitalis" StartingState="Not Found" >
+		<Nicknames List="Officer Doyle,Doyle" />
+		<State Name="Found" des="Traces of Digitalis found from the crime scene" />
+	</Item>
 	<Item  Name="Furniture" StartingState="Not Found" >
 		<Nicknames List="Well tried, but the furniture here is old and uninteresting." />
 		<State Name="Found" des="" />
