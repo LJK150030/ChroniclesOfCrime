@@ -47,6 +47,8 @@ void Game::Startup()
 
 void Game::Shutdown()
 {
+	m_currentScenario->Shutdown();
+
 	delete m_currentScenario;
 	m_currentScenario = nullptr;
 
@@ -139,6 +141,11 @@ Scenario* Game::GetCurrentScenario() const
 	return m_currentScenario;
 }
 
+DialogueSystem* Game::GetDialogueSystem() const
+{
+	return m_dialogueSystem;
+}
+
 
 void Game::GarbageCollection() const
 {
@@ -169,9 +176,10 @@ void Game::InitGameObjs()
 	m_quad->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
 
 	// Create the Game objects
-	m_dialogueSystem = new DialogueSystem();
+	m_dialogueSystem = new DialogueSystem(this);
 	m_currentScenario = new Scenario(this);
 
 	//m_currentScenario->LoadInScenarioManually();
 	m_currentScenario->LoadInScenarioFile("Data/Scenarios/Tutorial");
+	m_currentScenario->Startup();
 }

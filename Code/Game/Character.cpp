@@ -16,18 +16,18 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 	{
 		String attribute_name = StringToLower(attribute->Name());
 
-		if (attribute_name.compare("name") == 0)
+		if (attribute_name == "name")
 		{
 			m_name = attribute->Value();
 		}
-		else if (attribute_name.compare("startingstate") == 0)
+		else if (attribute_name == "startingstate")
 		{
 			String state = StringToLower(String(attribute->Value()));
-			m_found = state.compare("init") == 0;
+			m_found = state == "init";
 		}
 		else
 		{
-			ERROR_RECOVERABLE("Unknown Attribute in location xml file, '%S', skipping attribute", attribute->Name())
+			ERROR_RECOVERABLE(Stringf("Unknown Attribute in location xml file, '%S', skipping attribute", attribute->Name()))
 		}
 	}
 
@@ -39,23 +39,23 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 	{
 		String element_name = StringToLower(child_element->Name());
 
-		if (element_name.compare("nicknames") == 0)
+		if (element_name == "nicknames")
 		{
 			const XmlAttribute* child_attribute = child_element->FirstAttribute();
 			const char* nickname_list_c_str = child_attribute->Name();
-			ASSERT_OR_DIE(nickname_list_c_str, "Could not get list of nicknames for location %S", m_name.c_str());
+			ASSERT_OR_DIE(nickname_list_c_str, Stringf("Could not get list of nicknames for location %S", m_name.c_str()));
 
 			String nickname_list(child_attribute->Value());
 			m_nickNames = SplitStringOnDelimiter(nickname_list, ',');
 		}
-		else if (element_name.compare("state") == 0)
+		else if (element_name == "state")
 		{
 			const XmlAttribute* child_attribute = child_element->FirstAttribute();
 			const char* state_c_str = child_attribute->Name();
-			ASSERT_OR_DIE(state_c_str, "Could not get State for location %S", m_name.c_str());
+			ASSERT_OR_DIE(state_c_str, Stringf("Could not get State for location %S", m_name.c_str()));
 
 			String state(child_attribute->Value());
-			if (state.compare("init") == 0)
+			if (state == "init")
 			{
 				const XmlAttribute* sibling_attribute = child_attribute->Next();
 				m_description = sibling_attribute->Value();
@@ -63,7 +63,7 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 		}
 		else
 		{
-			ERROR_RECOVERABLE("Unknown Element in location xml file, '%S', skipping element", child_element->Name())
+			ERROR_RECOVERABLE(Stringf("Unknown Element in location xml file, '%S', skipping element", child_element->Name()))
 		}
 	}
 }

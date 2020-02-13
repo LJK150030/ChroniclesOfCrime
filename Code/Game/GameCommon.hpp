@@ -9,9 +9,8 @@ class AudioSystem;
 class Card;
 class Location;
 class Item;
-class Evidence;
-class Contact;
 class Character;
+class EventSystem;
 
 // simplifying type definitions
 typedef std::string							String;
@@ -26,6 +25,7 @@ typedef std::vector<Character>				CharacterList;
 
 extern App* g_theApp;
 extern AudioSystem* g_theAudio;
+extern EventSystem* g_theGamesEventSystem;
 
 // key codes
 constexpr int SHIFT_KEY = 16;

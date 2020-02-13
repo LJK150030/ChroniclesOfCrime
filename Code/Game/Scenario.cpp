@@ -4,58 +4,121 @@
 #include "Game/Character.hpp"
 #include "Game/Item.hpp"
 
+#include "Game/App.hpp"
+#include "Game/Game.hpp"
+#include "Game/DialogueSystem.hpp"
 
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
 
 
-STATIC String Scenario::TravelToLocation(Scenario* the_setup, const char* name)
+STATIC bool InterrogateCharacter(EventArgs& args)
 {
-	LookupItr loc_itr;
-	const bool is_in_list = the_setup->IsLocationInLookupTable(loc_itr, String(name));
-
-	if (is_in_list)
-	{
-		the_setup->m_locations[loc_itr->second].SetDiscovery(true);
-		the_setup->m_currentLocation = &the_setup->m_locations[loc_itr->second];
-		return g_locationHeader + the_setup->m_locations[loc_itr->second].GetDescription();
-	}
-
-	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-	return the_setup->m_unknownLocationLine[random_dialog_idx];
-}
-
-
-
-STATIC String Scenario::InterrogateCharacter(Scenario* the_setup, const char* name)
-{
+	// args will be card = "character name"
+	String		name = args.GetValue("card", String("something and nothing"));
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+	
 	LookupItr char_itr;
-	const bool is_in_list = the_setup->IsCharacterInLookupTable(char_itr, String(name));
+	String log;
+	const bool is_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(name));
 
 	if (is_in_list)
 	{
-		the_setup->m_characters[char_itr->second].SetDiscovery(true);
-		return g_characterHeader + the_setup->m_characters[char_itr->second].GetDescription();
+		current_scenario->GetCharacterFromList(char_itr->second).SetDiscovery(true);
+		log = g_characterHeader + current_scenario->GetCharacterFromList(char_itr->second).GetDescription();
+	}
+	else
+	{
+		log = current_scenario->GetUnknownCharacter();	
 	}
 
-	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-	return the_setup->m_unknownCharacterLine[random_dialog_idx];
+	ds->AddLog(log);
+	
+	return true;
 }
 
 
-String Scenario::InvestigateItem(Scenario* the_setup, const char* name)
+STATIC bool InvestigateItem(EventArgs& args)
 {
+	// args will be card = "item name"
+	String name = args.GetValue("card", String("something and nothing"));
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
 	LookupItr item_itr;
-	const bool is_in_list = the_setup->IsItemInLookupTable(item_itr, String(name));
+	String log;
+	const bool is_in_list = current_scenario->IsItemInLookupTable(item_itr, String(name));
 
 	if (is_in_list)
 	{
-		the_setup->m_items[item_itr->second].SetDiscovery(true);
-		return g_itemHeader + the_setup->m_items[item_itr->second].GetDescription();
+		current_scenario->GetItemFromList(item_itr->second).SetDiscovery(true);
+		log = g_characterHeader + current_scenario->GetItemFromList(item_itr->second).GetDescription();
+	}
+	else
+	{
+		log = current_scenario->GetUnknownItem();	
 	}
 
-	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-	return the_setup->m_unknownItemLine[random_dialog_idx];
+	ds->AddLog(log);
+
+	return true;
+}
+
+STATIC bool TravelToLocation(EventArgs& args)
+{
+	// args will be card = "item name"
+	String name = args.GetValue("card", String("something and nothing"));
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	LookupItr loc_itr;
+	String log;
+	const bool is_in_list = current_scenario->IsLocationInLookupTable(loc_itr, String(name));
+
+	if (is_in_list)
+	{
+		current_scenario->GetLocationFromList(loc_itr->second).SetDiscovery(true);
+		log = g_characterHeader + current_scenario->GetLocationFromList(loc_itr->second).GetDescription();
+	}
+	else
+	{
+		log = current_scenario->GetUnknownItem();	
+	}
+
+	ds->AddLog(log);
+
+	return true;
+}
+
+
+STATIC bool ClearCommandDs(EventArgs& args)
+{
+	UNUSED(args);
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+	ds->ClearLog();
+
+	return true;
+}
+
+
+STATIC bool HelpCommandDs(EventArgs& args)
+{
+	UNUSED(args);
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+	StringList event_names;
+	g_theGamesEventSystem->GetSubscribedEventsList(event_names);
+
+	String log = "Valid Commands: \n";
+	int num_events = static_cast<int>(event_names.size());
+	for(int name_id = 0; name_id < num_events; ++name_id)
+	{
+		log += "\t" + event_names[name_id] + "\n";
+	}
+
+	ds->AddLog(log);
+
+	return true;
 }
 
 
@@ -65,13 +128,20 @@ Scenario::~Scenario() = default;
 
 void Scenario::Startup()
 {
+	g_theGamesEventSystem = new EventSystem();
 
+	g_theGamesEventSystem->SubscribeEventCallbackFunction("goto", TravelToLocation);
+	g_theGamesEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
+	g_theGamesEventSystem->SubscribeEventCallbackFunction("view", InvestigateItem);
+	g_theGamesEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
+	g_theGamesEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
 }
 
 
 void Scenario::Shutdown()
 {
-
+	delete g_theGamesEventSystem;
+	g_theGamesEventSystem = nullptr;
 }
 
 
@@ -106,6 +176,88 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	
 	ManuallySetScenarioSettings();
 }
+
+
+
+bool Scenario::IsLocationInLookupTable(LookupItr& out, const String& name)
+{
+	const String name_to_lower = StringToLower(name);
+	out = m_locationLookup.find(name_to_lower);
+
+	if (out != m_locationLookup.end())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool Scenario::IsCharacterInLookupTable(LookupItr& out, const String& name)
+{
+	const String name_to_lower = StringToLower(name);
+	out = m_characterLookup.find(name_to_lower);
+
+	if (out != m_characterLookup.end())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
+{
+	const String name_to_lower = StringToLower(name);
+	out = m_itemLookup.find(name_to_lower);
+
+	if (out != m_itemLookup.end())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+Location& Scenario::GetLocationFromList(const int idx)
+{
+	return m_locations[idx];
+}
+
+
+Character& Scenario::GetCharacterFromList(const int idx)
+{
+	return m_characters[idx];
+}
+
+
+Item& Scenario::GetItemFromList(const int idx)
+{
+	return m_items[idx];
+}
+
+
+String& Scenario::GetUnknownLocation()
+{
+	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
+	return m_unknownLocationLine[random_dialog_idx];
+}
+
+
+String& Scenario::GetUnknownCharacter()
+{
+	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
+	return m_unknownCharacterLine[random_dialog_idx];
+}
+
+String& Scenario::GetUnknownItem()
+{
+	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
+	return m_unknownItemLine[random_dialog_idx];
+}
+
 
 
 void Scenario::ManuallySetScenarioSettings()
@@ -339,47 +491,6 @@ void Scenario::AddToItemLookupTable(const String& key_loc_name, int value_idx)
 	m_itemLookup.insert(Lookup(name_to_lower, value_idx));
 }
 
-
-bool Scenario::IsLocationInLookupTable(LookupItr& out, const String& name)
-{
-	const String name_to_lower = StringToLower(name);
-	out = m_locationLookup.find(name_to_lower);
-
-	if (out != m_locationLookup.end())
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool Scenario::IsCharacterInLookupTable(LookupItr& out, const String& name)
-{
-	const String name_to_lower = StringToLower(name);
-	out = m_characterLookup.find(name_to_lower);
-
-	if (out != m_characterLookup.end())
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
-bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
-{
-	const String name_to_lower = StringToLower(name);
-	out = m_itemLookup.find(name_to_lower);
-
-	if (out != m_itemLookup.end())
-	{
-		return true;
-	}
-
-	return false;
-}
 
 void Scenario::OpenXmlFile(tinyxml2::XMLDocument* out, const String& file_path)
 {

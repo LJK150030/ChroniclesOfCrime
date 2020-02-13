@@ -10,8 +10,9 @@
 #include "Game/App.hpp"
 #include "Game/Game.hpp"
 #include "Game/Scenario.hpp"
+#include "Engine/Core/StringUtils.hpp"
 
-DialogueSystem::DialogueSystem()
+DialogueSystem::DialogueSystem(Game* owner) : m_theGame(owner)
 {
 	ClearLog();
 	
@@ -21,10 +22,6 @@ DialogueSystem::DialogueSystem()
 
 	m_commands.push_back("HELP");
 	m_commands.push_back("CLEAR");
-
-	AddCardTypeCommand(CARD_LOCATION, g_locationCommand);
- 	AddCardTypeCommand(CARD_CHARACTER, g_characterCommand);
- 	AddCardTypeCommand(CARD_ITEM, g_itemCommand);
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -147,18 +144,9 @@ void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
 }
 
 
-void DialogueSystem::AddLog(const char* messageFormat, ...)
+void DialogueSystem::AddLog(const String& log)
 {
-	const int message_max_length = 1024;
-	char message_literal[message_max_length];
-
-	va_list variable_argument_list;
-	va_start(variable_argument_list, messageFormat);
-	vsnprintf_s(message_literal, message_max_length, _TRUNCATE, messageFormat, variable_argument_list);
-	va_end(variable_argument_list);
-	message_literal[message_max_length - 1] = '\0'; // In case vsnprintf overran (doesn't auto-terminate)
-	
-	m_items.push_back(StringDuplicate(message_literal));
+	m_items.push_back(StringDuplicate(log.c_str()));
 }
 
 
@@ -258,7 +246,7 @@ void DialogueSystem::UpdateInput()
 		
 		if (s[0])
 		{
-			ExecCommand(s);
+			ExecuteCommand(s);
 		}
 
 		strcpy_s(s, sizeof s, "");
@@ -275,88 +263,43 @@ void DialogueSystem::UpdateInput()
 }
 
 
-void DialogueSystem::ExecCommand(const char* command_line)
+void DialogueSystem::ExecuteCommand(const char* command_line)
 {
-	AddLog("# %s\n", command_line);
+	AddLog(Stringf("# %s\n", command_line));
 
+	EventArgs args;
+	std::vector<std::string> event_and_args = SplitStringOnDelimiter(command_line, ' ');
+	int num_args = static_cast<int>(event_and_args.size());
+	int num_functions_called = 0;
+	
+	const std::string event_name = StringToLower(event_and_args[0]);
 
-	// Process command
-	// TODO: Use the event system 
-	if (StringCompare(command_line, "CLEAR") == 0)
+	if(num_args == 1)
 	{
-		ClearLog();
-	}
-	else if (StringCompare(command_line, "HELP") == 0)
-	{
-		AddLog("Commands:");
-		for (int i = 0; i < static_cast<int>(m_commands.size()); i++)
-		{
-			AddLog("- %s", m_commands[i]);			
-		}
-	}
-	else if (StringNCompare(
-			command_line, 
-			m_locationCommand, 
-			static_cast<int>(strlen(m_locationCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_locationCommand));
-		const int input_buff_length = static_cast<int>(strlen(command_line));
-		const int sub_input_length = input_buff_length - command_length + 1;
-
-		char sub_input_buff[MAX_INPUT]; 
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		//TODO: really bad!!!!!!! Use Function Callback
-		AddLog("%s", Scenario::TravelToLocation(
-			g_theApp->GetTheGame()->GetCurrentScenario(),
-			sub_input_buff).c_str()
-		);
-	}
-	else if (StringNCompare(
-			command_line, 
-			m_characterCommand, 
-			static_cast<int>(strlen(m_characterCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_characterCommand));
-		const int input_buff_length = static_cast<int>(strlen(command_line));
-		const int sub_input_length = input_buff_length - command_length + 1;
-
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		//TODO: really bad!!!!!!! Use Function Callback
-		AddLog("%s", Scenario::InterrogateCharacter(
-			g_theApp->GetTheGame()->GetCurrentScenario(),
-			sub_input_buff).c_str()
-		);
-	}
-	else if (StringNCompare(
-		command_line, 
-		m_itemCommand, 
-		static_cast<int>(strlen(m_itemCommand))) == 0)
-	{
-		const int command_length = static_cast<int>(strlen(m_itemCommand));
-		const int input_buff_length = (int) strlen(command_line);
-		const int sub_input_length = input_buff_length - command_length + 1;
-
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
-
-		//TODO: really bad!!!!!!! Use Function Callback
-		AddLog("%s", Scenario::InvestigateItem(
-			g_theApp->GetTheGame()->GetCurrentScenario(),
-			sub_input_buff).c_str()
-		);
+		num_functions_called  = g_theGamesEventSystem->FireEvent(event_name, args);
 	}
 	else
 	{
-		AddLog("Unknown command: '%s'\n", command_line);
+		const int command_length = static_cast<int>(event_name.length());
+		const int input_buff_length = static_cast<int>(strlen(command_line));
+		const int sub_input_length = input_buff_length - command_length + 1;
+
+		char sub_input_buff[MAX_INPUT];
+		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
+		sub_input_buff[sub_input_length - 1] = '\0';
+
+		//Setting up 
+		args.SetValue("card", event_and_args[1]); //comparing just the first word
+		args.SetValue("scenario", m_theGame->GetCurrentScenario());
+		args.SetValue("dialoguesystem", this);
+		num_functions_called = g_theGamesEventSystem->FireEvent(event_name, args);
 	}
 
-	// On commad input, we scroll to bottom even if AutoScroll==false
+	if (num_functions_called == 0)
+	{
+		AddLog(Stringf("Unknown command: '%s'\n", command_line));
+	}
+	
 	m_scrollToBottom = true;
 }
 

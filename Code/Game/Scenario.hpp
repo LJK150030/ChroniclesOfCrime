@@ -2,6 +2,7 @@
 #include "Game/GameCommon.hpp"
 
 #include "Engine/Math/Matrix44.hpp"
+#include "Engine/Core/EventSystem.hpp"
 
 
 class Game;
@@ -10,15 +11,18 @@ class Shader;
 class GPUMesh;
 class DialogueSystem;
 
+// Scenario interaction functions
+static bool TravelToLocation(EventArgs& args);
+static bool InterrogateCharacter(EventArgs& args);
+static bool InvestigateItem(EventArgs& args);
+
+//Don't like these here, but reducing too many includes
+static bool ClearCommandDs(EventArgs& args);
+static bool HelpCommandDs(EventArgs& args);
+
 class Scenario
 {
 	friend class DialogueSystem;
-public:
-	// Scenario interaction functions
-	//TODO: only static so that DialogueSystem can get to it. Use EventSystem
-	static String TravelToLocation(Scenario* the_setup, const char* name);
-	static String InterrogateCharacter(Scenario* the_setup, const char* name);
-	static String InvestigateItem(Scenario* the_setup, const char* name);
 	
 public:
 	Scenario(Game* the_game);
@@ -30,6 +34,18 @@ public:
 	void LoadInScenarioManually();
 	void LoadInScenarioFile(const char* folder_dir);
 
+	bool IsLocationInLookupTable(LookupItr& out, const String& name);
+	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
+	bool IsItemInLookupTable(LookupItr& out, const String& name);
+
+	Location&	GetLocationFromList( int idx );
+	Character&	GetCharacterFromList(int idx);
+	Item&		GetItemFromList(int idx);
+
+	String& GetUnknownLocation();
+	String& GetUnknownCharacter();
+	String& GetUnknownItem();
+	
 private:
 	// setup Scenario
 	void ManuallySetLocations();
@@ -52,10 +68,6 @@ private:
 	void AddToLocationLookupTable(const String& key_loc_name, int value_idx);
 	void AddToCharacterLookupTable(const String& key_loc_name, int value_idx);
 	void AddToItemLookupTable(const String& key_loc_name, int value_idx);
-	
-	bool IsLocationInLookupTable(LookupItr& out, const String& name);
-	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
-	bool IsItemInLookupTable(LookupItr& out, const String& name);
 	
 
 	void OpenXmlFile(tinyxml2::XMLDocument* out, const String& file_path);

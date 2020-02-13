@@ -31,7 +31,8 @@ public:
 	void SetDeveloperMode(bool on_or_off);
 
 	//TODO: hacky solution to get the current scenario
-	Scenario* GetCurrentScenario() const;
+	Scenario*		GetCurrentScenario() const;
+	DialogueSystem* GetDialogueSystem() const;
 
 private:
 	void GarbageCollection() const;

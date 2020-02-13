@@ -2,29 +2,35 @@
 #include "Game/GameCommon.hpp"
 #include "Game/GameNames.hpp"
 
+class Game;
+
+
 //Wrapper class for ImGui, that makes a console window
 class DialogueSystem
 {
 public:
-	DialogueSystem();
+	DialogueSystem(Game* owner);
 	~DialogueSystem();
 
 	void	BeginFrame();
 	void	Update(double delta_seconds);
 	void	Render() const;
 	void	EndFrame() const;
-	void	AddLog(const char* format, ...);
+	void	AddLog(const String& log);
+	void	ClearLog();
 
 private:
 	void	UpdateHistory();
 	void	UpdateInput();
 	
-	void	ClearLog();
 	void	AddCardTypeCommand(CardType type,  const char* command);
-	void	ExecCommand(const char* command_line);
+	void	ExecuteCommand(const char* command_line);
 	char*	StringDuplicate(const char* str);
 
 private:
+	// Owner
+	Game*						m_theGame = nullptr;
+	
 	char						m_inputBuf[MAX_INPUT];
 	std::vector<char*>			m_items;
 	std::vector<const char*>	m_commands;
