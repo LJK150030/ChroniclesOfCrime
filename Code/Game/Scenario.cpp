@@ -1,9 +1,7 @@
 #include "Game/Scenario.hpp"
 #include "Game/DialogueSystem.hpp"
 #include "Game/Location.hpp"
-#include "Game/Contact.hpp"
 #include "Game/Character.hpp"
-#include "Game/Evidence.hpp"
 #include "Game/Item.hpp"
 
 
@@ -28,21 +26,6 @@ STATIC String Scenario::TravelToLocation(Scenario* the_setup, const char* name)
 }
 
 
-STATIC String Scenario::CallSpecialist(Scenario* the_setup, const char* name)
-{
-	LookupItr cont_itr;
-	const bool is_in_list = the_setup->IsContactInLookupTable(cont_itr, String(name));
-	
-	if (is_in_list)
-	{
-		the_setup->m_contacts[cont_itr->second].SetDiscovery(true);
-		return g_contactHeader + the_setup->m_contacts[cont_itr->second].GetDescription();
-	}
-
-	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-	return the_setup->m_unknownContactLine[random_dialog_idx];
-}
-
 
 STATIC String Scenario::InterrogateCharacter(Scenario* the_setup, const char* name)
 {
@@ -59,21 +42,6 @@ STATIC String Scenario::InterrogateCharacter(Scenario* the_setup, const char* na
 	return the_setup->m_unknownCharacterLine[random_dialog_idx];
 }
 
-
-String Scenario::InvestigateEvidence(Scenario* the_setup, const char* name)
-{
-	LookupItr evid_itr;
-	const bool is_in_list = the_setup->IsEvidenceInLookupTable(evid_itr, String(name));
-
-	if (is_in_list)
-	{
-		the_setup->m_evidence[evid_itr->second].SetDiscovery(true);
-		return g_evidenceHeader + the_setup->m_evidence[evid_itr->second].GetDescription();
-	}
-
-	const int random_dialog_idx = g_randomNumberGenerator.GetRandomIntInRange(0, 2);
-	return the_setup->m_unknownEvidenceLine[random_dialog_idx];
-}
 
 String Scenario::InvestigateItem(Scenario* the_setup, const char* name)
 {
@@ -112,14 +80,8 @@ void Scenario::LoadInScenarioManually()
 	ManuallySetLocations();
 	SetupLocationLookupTable();
 	
-	ManuallySetContacts();
-	SetupContactLookupTable();
-	
 	ManuallySetCharacters();
 	SetupCharacterLookupTable();
-	
-	ManuallySetEvidence();
-	SetupEvidenceLookupTable();
 	
 	ManuallySetItems();
 	SetupItemLookupTable();
@@ -134,17 +96,9 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	ReadLocationsXml(location_file);
 	SetupLocationLookupTable();
 
-	const String contacts_file = String(folder_dir) + "/Contacts.xml";
-	ReadContactsXml(contacts_file);
-	SetupContactLookupTable();
-
 	const String characters_file = String(folder_dir) + "/Characters.xml";
 	ReadCharactersXml(characters_file);
 	SetupCharacterLookupTable();
-
-	const String evidence_file = String(folder_dir) + "/Evidence.xml";
-	ReadEvidenceXml(evidence_file);
-	SetupEvidenceLookupTable();
 
 	const String item_file = String(folder_dir) + "/Items.xml";
 	ReadItemsXml(item_file);
@@ -173,17 +127,9 @@ void Scenario::ManuallySetScenarioSettings()
 	m_unknownLocationLine.emplace_back("What city are we in again?");
 
 
-	m_unknownContactLine.emplace_back("*** Busy signal ***");
-	m_unknownContactLine.emplace_back("*Sorry the number your trying to reach has been disconnected or no longer in service*");
-	m_unknownContactLine.emplace_back("what was that number again...");
-
 	m_unknownCharacterLine.emplace_back("Sorry, give me a minute");
 	m_unknownCharacterLine.emplace_back("I'm at a lost for words");
 	m_unknownCharacterLine.emplace_back("............");
-
-	m_unknownEvidenceLine.emplace_back("I don't think that's relevant");
-	m_unknownEvidenceLine.emplace_back("I don't know about that");
-	m_unknownEvidenceLine.emplace_back("I should keep looking");
 
 	m_unknownItemLine.emplace_back("oh, where did I put it...");
 	m_unknownItemLine.emplace_back("I know it is here somewhere.");
@@ -219,43 +165,6 @@ void Scenario::ManuallySetLocations()
 }
 
 
-void Scenario::ManuallySetContacts()
-{
-	// Criminologist contact 
-	StringList hacker_nicknames;
-	hacker_nicknames.emplace_back("Hacker");
-	hacker_nicknames.emplace_back("Eric");
-	hacker_nicknames.emplace_back("Gloomerry");
-	hacker_nicknames.emplace_back("Intelligence Bureau");
-	String hacker_des = "Hey this is Eric, from the Intelligence Bureau, how can I help?";
-	m_contacts.emplace_back(this, "lnd1_p01", hacker_nicknames, hacker_des);
-
-	StringList doctor_nicknames;
-	doctor_nicknames.emplace_back("Doctor");
-	doctor_nicknames.emplace_back("Jeremy");
-	doctor_nicknames.emplace_back("Dr. King");
-	doctor_nicknames.emplace_back("Morgue");
-	String doctor_des = "Hello, this is Dr. King, from the Morgue, how can I help?";
-	m_contacts.emplace_back(this, "lnd1_p02", doctor_nicknames, doctor_des);
-
-	StringList criminologist_nicknames;
-	criminologist_nicknames.emplace_back("Criminologist");
-	criminologist_nicknames.emplace_back("Harvey");
-	criminologist_nicknames.emplace_back("Marshall");
-	criminologist_nicknames.emplace_back("Criminology Center");
-	String criminologist_des = "Hello, this is Harvey, from the Criminology Center, how can I help?";
-	m_contacts.emplace_back(this, "lnd1_p03", criminologist_nicknames, criminologist_des);
-
-	StringList scientist_nicknames;
-	scientist_nicknames.emplace_back("Scientist");
-	scientist_nicknames.emplace_back("Lou");
-	scientist_nicknames.emplace_back("Chin");
-	scientist_nicknames.emplace_back("Forensic Laboratory");
-	String scientist_des = "Hello, this is Lou, from the Forensic Laboratory, how can I help?";
-	m_contacts.emplace_back(this, "lnd1_p04", scientist_nicknames, scientist_des);
-}
-
-
 void Scenario::ManuallySetCharacters()
 {
 	StringList cally_nicknames;
@@ -275,22 +184,6 @@ void Scenario::ManuallySetCharacters()
 	james_nicknames.emplace_back("Bond");
 	String james_desc = "shaken not stirred";
 	m_characters.emplace_back(this, "lnd1_c03", james_nicknames, james_desc);
-}
-
-
-void Scenario::ManuallySetEvidence()
-{
-	StringList laptop_nicknames;
-	laptop_nicknames.emplace_back("laptop");
-	laptop_nicknames.emplace_back("computer");
-	laptop_nicknames.emplace_back("PC");
-	String laptop_desc = "The Hacker's laptop";
-	m_evidence.emplace_back(this, "lnd1_i01", laptop_nicknames, laptop_desc);
-
-	StringList camera_nicknames;
-	camera_nicknames.emplace_back("camera");
-	String camera_desc = "a disposable camera";
-	m_evidence.emplace_back(this, "lnd1_i02", camera_nicknames, camera_desc);
 }
 
 
@@ -328,22 +221,6 @@ void Scenario::ReadLocationsXml(const String& file_path)
 }
 
 
-void Scenario::ReadContactsXml(const String& file_path)
-{
-	tinyxml2::XMLDocument contacts_doc;
-	OpenXmlFile(&contacts_doc, file_path);
-	XmlElement* root_contact = contacts_doc.RootElement();
-
-	for (const XmlElement* contact_element = root_contact->FirstChildElement();
-		contact_element;
-		contact_element = contact_element->NextSiblingElement()
-		)
-	{
-		m_contacts.emplace_back(this, contact_element);
-	}
-}
-
-
 void Scenario::ReadCharactersXml(const String& file_path)
 {
 	tinyxml2::XMLDocument characters_doc;
@@ -356,21 +233,6 @@ void Scenario::ReadCharactersXml(const String& file_path)
 		)
 	{
 		m_characters.emplace_back(this, character_element);
-	}
-}
-
-void Scenario::ReadEvidenceXml(const String& file_path)
-{
-	tinyxml2::XMLDocument evidence_doc;
-	OpenXmlFile(&evidence_doc, file_path);
-	XmlElement* root_evidence = evidence_doc.RootElement();
-
-	for (const XmlElement* evidence_element = root_evidence->FirstChildElement();
-		evidence_element;
-		evidence_element = evidence_element->NextSiblingElement()
-		)
-	{
-		m_evidence.emplace_back(this, evidence_element);
 	}
 }
 
@@ -410,25 +272,6 @@ void Scenario::SetupLocationLookupTable()
 }
 
 
-void Scenario::SetupContactLookupTable()
-{
-	const int num_contacts = static_cast<int>(m_contacts.size());
-	for (int cont_idx = 0; cont_idx < num_contacts; ++cont_idx)
-	{
-		//reference to the name itself
-		AddToContactLookupTable(m_contacts[cont_idx].GetName(), cont_idx);
-
-		//reference for every nickname
-		StringList nickname_list = m_contacts[cont_idx].GetListOfNicknames();
-		const int num_nicknames = static_cast<int>(nickname_list.size());
-		for (int nn_idx = 0; nn_idx < num_nicknames; ++nn_idx)
-		{
-			AddToContactLookupTable(nickname_list[nn_idx], cont_idx);
-		}
-	}
-}
-
-
 void Scenario::SetupCharacterLookupTable()
 {
 	const int num_characters = static_cast<int>(m_characters.size());
@@ -443,25 +286,6 @@ void Scenario::SetupCharacterLookupTable()
 		for (int nn_idx = 0; nn_idx < num_nicknames; ++nn_idx)
 		{
 			AddToCharacterLookupTable(nickname_list[nn_idx], char_idx);
-		}
-	}
-}
-
-
-void Scenario::SetupEvidenceLookupTable()
-{
-	const int num_evidences = static_cast<int>(m_evidence.size());
-	for (int evid_idx = 0; evid_idx < num_evidences; ++evid_idx)
-	{
-		//reference to the name itself
-		AddToEvidenceLookupTable(m_evidence[evid_idx].GetName(), evid_idx);
-
-		//reference for every nickname
-		StringList nickname_list = m_evidence[evid_idx].GetListOfNicknames();
-		const int num_nicknames = static_cast<int>(nickname_list.size());
-		for (int nn_idx = 0; nn_idx < num_nicknames; ++nn_idx)
-		{
-			AddToEvidenceLookupTable(nickname_list[nn_idx], evid_idx);
 		}
 	}
 }
@@ -496,16 +320,6 @@ void Scenario::AddToLocationLookupTable(const String& key_loc_name, int value_id
 }
 
 
-void Scenario::AddToContactLookupTable(const String& key_loc_name, int value_idx)
-{
-	LookupItr cont_itr;
-	String name_to_lower = StringToLower(key_loc_name);
-	const bool in_list_already = IsContactInLookupTable(cont_itr, name_to_lower);
-	ASSERT_OR_DIE(!in_list_already, Stringf("Duplicate Contact name: %s", cont_itr->first.c_str()));
-	m_contactLookup.insert(Lookup(name_to_lower, value_idx));
-}
-
-
 void Scenario::AddToCharacterLookupTable(const String& key_loc_name, int value_idx)
 {
 	LookupItr char_itr;
@@ -513,16 +327,6 @@ void Scenario::AddToCharacterLookupTable(const String& key_loc_name, int value_i
 	const bool in_list_already = IsCharacterInLookupTable(char_itr, name_to_lower);
 	ASSERT_OR_DIE(!in_list_already, Stringf("Duplicate Character name: %s", char_itr->first.c_str()));
 	m_characterLookup.insert(Lookup(name_to_lower, value_idx));
-}
-
-
-void Scenario::AddToEvidenceLookupTable(const String& key_loc_name, int value_idx)
-{
-	LookupItr evid_itr;
-	String name_to_lower = StringToLower(key_loc_name);
-	const bool in_list_already = IsEvidenceInLookupTable(evid_itr, name_to_lower);
-	ASSERT_OR_DIE(!in_list_already, Stringf("Duplicate Evidence name: %s", evid_itr->first.c_str()));
-	m_evidenceLookup.insert(Lookup(name_to_lower, value_idx));
 }
 
 
@@ -550,39 +354,12 @@ bool Scenario::IsLocationInLookupTable(LookupItr& out, const String& name)
 }
 
 
-bool Scenario::IsContactInLookupTable(LookupItr& out, const String& name)
-{
-	const String name_to_lower = StringToLower(name);
-	out = m_contactLookup.find(name_to_lower);
-
-	if (out != m_contactLookup.end())
-	{
-		return true;
-	}
-
-	return false;
-}
-
-
 bool Scenario::IsCharacterInLookupTable(LookupItr& out, const String& name)
 {
 	const String name_to_lower = StringToLower(name);
 	out = m_characterLookup.find(name_to_lower);
 
 	if (out != m_characterLookup.end())
-	{
-		return true;
-	}
-
-	return false;
-}
-
-bool Scenario::IsEvidenceInLookupTable(LookupItr& out, const String& name)
-{
-	const String name_to_lower = StringToLower(name);
-	out = m_evidenceLookup.find(name_to_lower);
-
-	if (out != m_evidenceLookup.end())
 	{
 		return true;
 	}

@@ -21,8 +21,6 @@ typedef std::map<String, int>				LookupTable;
 typedef std::map<String, int>::iterator		LookupItr;
 typedef std::vector<Location>				LocationList;
 typedef std::vector<Item>					ItemList;
-typedef std::vector<Evidence>				EvidenceList;
-typedef std::vector<Contact>				ContactList;
 typedef std::vector<Character>				CharacterList;
 
 

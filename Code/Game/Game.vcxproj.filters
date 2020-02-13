@@ -31,9 +31,6 @@
     <ClCompile Include="DialogueSystem.cpp">
       <Filter>General</Filter>
     </ClCompile>
-    <ClCompile Include="Evidence.cpp">
-      <Filter>General\Cards</Filter>
-    </ClCompile>
     <ClCompile Include="Location.cpp">
       <Filter>General\Cards</Filter>
     </ClCompile>
@@ -41,9 +38,6 @@
       <Filter>General\Cards</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
-      <Filter>General\Cards</Filter>
-    </ClCompile>
-    <ClCompile Include="Contact.cpp">
       <Filter>General\Cards</Filter>
     </ClCompile>
     <ClCompile Include="Card.cpp">
@@ -72,9 +66,6 @@
     <ClInclude Include="DialogueSystem.hpp">
       <Filter>General</Filter>
     </ClInclude>
-    <ClInclude Include="Evidence.hpp">
-      <Filter>General\Cards</Filter>
-    </ClInclude>
     <ClInclude Include="Location.hpp">
       <Filter>General\Cards</Filter>
     </ClInclude>
@@ -82,9 +73,6 @@
       <Filter>General\Cards</Filter>
     </ClInclude>
     <ClInclude Include="Character.hpp">
-      <Filter>General\Cards</Filter>
-    </ClInclude>
-    <ClInclude Include="Contact.hpp">
       <Filter>General\Cards</Filter>
     </ClInclude>
     <ClInclude Include="Card.hpp">
