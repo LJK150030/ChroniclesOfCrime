@@ -276,23 +276,29 @@ void DialogueSystem::ExecuteCommand(const char* command_line)
 
 	if(num_args == 1)
 	{
-		num_functions_called  = g_theGamesEventSystem->FireEvent(event_name, args);
+		num_functions_called  = g_theDialogueEventSystem->FireEvent(event_name, args);
 	}
 	else
 	{
-		const int command_length = static_cast<int>(event_name.length());
-		const int input_buff_length = static_cast<int>(strlen(command_line));
-		const int sub_input_length = input_buff_length - command_length + 1;
+		String sub_string = "";
 
-		char sub_input_buff[MAX_INPUT];
-		memcpy(sub_input_buff, &command_line[command_length], sub_input_length);
-		sub_input_buff[sub_input_length - 1] = '\0';
+		for(int str_idx = 1; str_idx < num_args; ++str_idx)
+		{
+			if(str_idx != num_args - 1)
+			{
+				sub_string += event_and_args[str_idx] + " ";	
+			}
+			else
+			{
+				sub_string += event_and_args[str_idx];
+			}
+		}
 
 		//Setting up 
-		args.SetValue("card", event_and_args[1]); //comparing just the first word
+		args.SetValue("card", sub_string); //comparing just the first word
 		args.SetValue("scenario", m_theGame->GetCurrentScenario());
 		args.SetValue("dialoguesystem", this);
-		num_functions_called = g_theGamesEventSystem->FireEvent(event_name, args);
+		num_functions_called = g_theDialogueEventSystem->FireEvent(event_name, args);
 	}
 
 	if (num_functions_called == 0)

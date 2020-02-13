@@ -25,7 +25,7 @@ typedef std::vector<Character>				CharacterList;
 
 extern App* g_theApp;
 extern AudioSystem* g_theAudio;
-extern EventSystem* g_theGamesEventSystem;
+extern EventSystem* g_theDialogueEventSystem;
 
 // key codes
 constexpr int SHIFT_KEY = 16;

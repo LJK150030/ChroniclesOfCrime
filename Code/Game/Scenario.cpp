@@ -107,7 +107,7 @@ STATIC bool HelpCommandDs(EventArgs& args)
 	UNUSED(args);
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 	StringList event_names;
-	g_theGamesEventSystem->GetSubscribedEventsList(event_names);
+	g_theDialogueEventSystem->GetSubscribedEventsList(event_names);
 
 	String log = "Valid Commands: \n";
 	int num_events = static_cast<int>(event_names.size());
@@ -128,20 +128,20 @@ Scenario::~Scenario() = default;
 
 void Scenario::Startup()
 {
-	g_theGamesEventSystem = new EventSystem();
+	g_theDialogueEventSystem = new EventSystem();
 
-	g_theGamesEventSystem->SubscribeEventCallbackFunction("goto", TravelToLocation);
-	g_theGamesEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
-	g_theGamesEventSystem->SubscribeEventCallbackFunction("view", InvestigateItem);
-	g_theGamesEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
-	g_theGamesEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goto", TravelToLocation);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("view", InvestigateItem);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
 }
 
 
 void Scenario::Shutdown()
 {
-	delete g_theGamesEventSystem;
-	g_theGamesEventSystem = nullptr;
+	delete g_theDialogueEventSystem;
+	g_theDialogueEventSystem = nullptr;
 }
 
 

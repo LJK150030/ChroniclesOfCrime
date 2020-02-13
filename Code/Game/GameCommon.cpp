@@ -1,6 +1,6 @@
 #include "Game/GameCommon.hpp"
 
-EventSystem* g_theGamesEventSystem = nullptr;
+EventSystem* g_theDialogueEventSystem = nullptr;
 
 int StringCompare(const char* str1, const char* str2)
 {
