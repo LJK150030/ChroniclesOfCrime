@@ -2,15 +2,22 @@
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Math/AABB2.hpp"
 
-class App;
+//Engine related classes
 class RenderContext;
 class InputSystem;
 class AudioSystem;
+
+//Game related classes
+class App;
+
+//Scenario related classes 
 class Card;
 class Location;
 class Item;
 class Character;
 class EventSystem;
+struct State;
+struct Dialogue;
 
 // simplifying type definitions
 typedef std::string							String;
@@ -21,7 +28,8 @@ typedef std::map<String, int>::iterator		LookupItr;
 typedef std::vector<Location>				LocationList;
 typedef std::vector<Item>					ItemList;
 typedef std::vector<Character>				CharacterList;
-
+typedef std::vector<State>					StateList;
+typedef std::vector<Dialogue>				DialogueList;
 
 extern App* g_theApp;
 extern AudioSystem* g_theAudio;

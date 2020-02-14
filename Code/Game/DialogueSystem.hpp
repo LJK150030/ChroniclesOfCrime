@@ -4,6 +4,13 @@
 
 class Game;
 
+struct LogEntry
+{
+	String		m_message = "";
+	LogType		m_type = LOG_ERROR;
+	Vec4		m_color;
+};
+
 
 //Wrapper class for ImGui, that makes a console window
 class DialogueSystem
@@ -16,7 +23,7 @@ public:
 	void	Update(double delta_seconds);
 	void	Render() const;
 	void	EndFrame() const;
-	void	AddLog(const String& log);
+	void	AddLog(LogType type, const String& log_message);
 	void	ClearLog();
 
 private:
@@ -25,14 +32,13 @@ private:
 	
 	void	AddCardTypeCommand(CardType type,  const char* command);
 	void	ExecuteCommand(const char* command_line);
-	char*	StringDuplicate(const char* str);
 
 private:
 	// Owner
 	Game*						m_theGame = nullptr;
 	
 	char						m_inputBuf[MAX_INPUT];
-	std::vector<char*>			m_items;
+	std::vector<LogEntry*>		m_items;
 	std::vector<const char*>	m_commands;
 	bool						m_autoScrolling = true;
 	bool						m_scrollToBottom = false;

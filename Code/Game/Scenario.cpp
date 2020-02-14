@@ -25,15 +25,15 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 
 	if (is_in_list)
 	{
-		current_scenario->GetCharacterFromList(char_itr->second).SetDiscovery(true);
-		log = g_characterHeader + current_scenario->GetCharacterFromList(char_itr->second).GetDescription();
+		current_scenario->GetCharacterFromList(char_itr->second)->SetDiscovery(true);
+		log = current_scenario->GetCharacterFromList(char_itr->second)->GetDescription();
 	}
 	else
 	{
 		log = current_scenario->GetUnknownCharacter();	
 	}
 
-	ds->AddLog(log);
+	ds->AddLog(LOG_CHARACTER, log);
 	
 	return true;
 }
@@ -52,15 +52,15 @@ STATIC bool InvestigateItem(EventArgs& args)
 
 	if (is_in_list)
 	{
-		current_scenario->GetItemFromList(item_itr->second).SetDiscovery(true);
-		log = g_characterHeader + current_scenario->GetItemFromList(item_itr->second).GetDescription();
+		current_scenario->GetItemFromList(item_itr->second)->SetDiscovery(true);
+		log = current_scenario->GetItemFromList(item_itr->second)->GetDescription();
 	}
 	else
 	{
 		log = current_scenario->GetUnknownItem();	
 	}
 
-	ds->AddLog(log);
+	ds->AddLog(LOG_ITEM, log);
 
 	return true;
 }
@@ -78,15 +78,14 @@ STATIC bool TravelToLocation(EventArgs& args)
 
 	if (is_in_list)
 	{
-		current_scenario->GetLocationFromList(loc_itr->second).SetDiscovery(true);
-		log = g_characterHeader + current_scenario->GetLocationFromList(loc_itr->second).GetDescription();
+		log = current_scenario->GetLocationFromList(loc_itr->second)->GetBestDialogue();
 	}
 	else
 	{
 		log = current_scenario->GetUnknownItem();	
 	}
 
-	ds->AddLog(log);
+	ds->AddLog(LOG_LOCATION, log);
 
 	return true;
 }
@@ -113,10 +112,10 @@ STATIC bool HelpCommandDs(EventArgs& args)
 	int num_events = static_cast<int>(event_names.size());
 	for(int name_id = 0; name_id < num_events; ++name_id)
 	{
-		log += "\t" + event_names[name_id] + "\n";
+		log += "\t" + StringToUpper(event_names[name_id]) + "\n";
 	}
 
-	ds->AddLog(log);
+	ds->AddLog(LOG_MESSAGE, log);
 
 	return true;
 }
@@ -221,21 +220,21 @@ bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
 }
 
 
-Location& Scenario::GetLocationFromList(const int idx)
+Location* Scenario::GetLocationFromList(const int idx)
 {
-	return m_locations[idx];
+	return &(m_locations[idx]);
 }
 
 
-Character& Scenario::GetCharacterFromList(const int idx)
+Character* Scenario::GetCharacterFromList(const int idx)
 {
-	return m_characters[idx];
+	return &(m_characters[idx]);
 }
 
 
-Item& Scenario::GetItemFromList(const int idx)
+Item* Scenario::GetItemFromList(const int idx)
 {
-	return m_items[idx];
+	return &(m_items[idx]);
 }
 
 

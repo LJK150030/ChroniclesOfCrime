@@ -38,13 +38,16 @@ public:
 	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
 	bool IsItemInLookupTable(LookupItr& out, const String& name);
 
-	Location&	GetLocationFromList( int idx );
-	Character&	GetCharacterFromList(int idx);
-	Item&		GetItemFromList(int idx);
+	Location*	GetLocationFromList( int idx );
+	Character*	GetCharacterFromList(int idx);
+	Item*		GetItemFromList(int idx);
 
 	String& GetUnknownLocation();
 	String& GetUnknownCharacter();
 	String& GetUnknownItem();
+
+	int AddMinutesToTime();
+	int AddHoursToTime();
 	
 private:
 	// setup Scenario

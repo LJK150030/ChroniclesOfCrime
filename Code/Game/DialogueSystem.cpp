@@ -1,27 +1,21 @@
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Renderer/ImGUISystem.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "Engine/Core/StringUtils.hpp"
 
-
-#include "Game/DialogueSystem.hpp"
 #include "Game/GameCommon.hpp"
-
-//TODO: hacky solution to get the Scenario
-#include "Game/App.hpp"
+#include "Game/DialogueSystem.hpp"
 #include "Game/Game.hpp"
 #include "Game/Scenario.hpp"
-#include "Engine/Core/StringUtils.hpp"
+
 
 DialogueSystem::DialogueSystem(Game* owner) : m_theGame(owner)
 {
 	ClearLog();
-	
+
+	m_items = std::vector<LogEntry*>();
 	memset(m_inputBuf, 0, sizeof(m_inputBuf));
-
-	//Store all valid commands into a list
-
-	m_commands.push_back("HELP");
-	m_commands.push_back("CLEAR");
+		
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
 		"Screensize",
@@ -102,7 +96,8 @@ void DialogueSystem::ClearLog()
 {
 	for (int idx = 0; idx < static_cast<int>(m_items.size()); idx++)
 	{
-		free(m_items[idx]);
+		delete m_items[idx];
+		m_items[idx] = nullptr;
 	}
 	
 	m_items.clear();
@@ -144,9 +139,53 @@ void DialogueSystem::AddCardTypeCommand(CardType type, const char* command)
 }
 
 
-void DialogueSystem::AddLog(const String& log)
+void DialogueSystem::AddLog(LogType type, const String& log_message)
 {
-	m_items.push_back(StringDuplicate(log.c_str()));
+	LogEntry* log = new LogEntry();
+	
+	log->m_message = log_message;
+	Vec4 color;
+	switch(type)
+	{
+		case LOG_ERROR:
+		{
+			color = Vec4(0.95686275f, 0.10980392f, 0.32941176f, 1.0f);
+			break;
+		}
+		case LOG_MESSAGE:
+		{
+			color = Vec4(0.80000000f, 0.80000000f, 0.80000000f, 1.0f);
+			break;
+		}
+		case LOG_ECHO:
+		{
+			color = Vec4(1.00000000f, 0.62352941f, 0.00000000f, 1.0f);
+			break;
+		}
+		case LOG_LOCATION:
+		{
+			color = Vec4(0.98431373f, 0.83529412f, 0.02352941f, 1.0f);
+			break;
+		}
+		case LOG_CHARACTER:
+		{
+			color = Vec4(0.65882353f, 0.74901961f, 0.07058824f, 1.0f);
+			break;
+		}
+		case LOG_ITEM:
+		{
+			color = Vec4(0.00000000f, 0.66666667f, 0.70980392f, 1.0f);
+			break;
+		}
+		default:
+		{
+			color = Vec4(1.0f, 1.0f, 1.0f, 1.0f);
+			break;
+		};
+	}
+	log->m_color = color;
+	
+	m_items.push_back(log);
 }
 
 
@@ -167,53 +206,11 @@ void DialogueSystem::UpdateHistory()
 	// for loop through each "Card Dialogue Type"
 	for (int i = 0; i < static_cast<int>(m_items.size()); i++)
 	{
-		const char* item = m_items[i];
-		bool pop_color = false;
-
-		// TODO: create a struct that represent a card type's dialog
-		if (StringNCompare(item, "# ", 2) == 0) //play back messages
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.9490196078431373f, 0.8000000000000000f, 0.7137254901960784f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		else if (StringNCompare(item, g_locationHeader, 5) == 0) // location dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.0470588235294118f, 0.9098039215686275f, 0.8941176470588235f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		else if (StringNCompare(item, g_characterHeader, 5) == 0) // character reply dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.9215686274509804f, 0.5098039215686275f, 0.0000000000000000f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		else if (StringNCompare(item, g_itemHeader, 5) == 0) // item dialogue struct
-		{
-			ImGui::PushStyleColor(
-				ImGuiCol_Text,
-				ImVec4(0.9098039215686275f, 0.2078431372549020f, 0.0470588235294118f, 1.0f)
-			);
-
-			pop_color = true;
-		}
-		
-		ImGui::TextUnformatted(item); 
-	
-		if (pop_color)
-		{
-			ImGui::PopStyleColor();
-		}
+		const char* item = m_items[i]->m_message.c_str();
+		ImVec4 color(m_items[i]->m_color.x, m_items[i]->m_color.y, m_items[i]->m_color.z, m_items[i]->m_color.w);
+		ImGui::PushStyleColor(ImGuiCol_Text, color);
+		ImGui::TextUnformatted(item);
+		ImGui::PopStyleColor();
 	}
 
 	//Auto scroll to the bottom when the player hits enter
@@ -265,7 +262,7 @@ void DialogueSystem::UpdateInput()
 
 void DialogueSystem::ExecuteCommand(const char* command_line)
 {
-	AddLog(Stringf("# %s\n", command_line));
+	AddLog(LOG_ECHO,Stringf("# %s\n", command_line));
 
 	EventArgs args;
 	std::vector<std::string> event_and_args = SplitStringOnDelimiter(command_line, ' ');
@@ -303,20 +300,9 @@ void DialogueSystem::ExecuteCommand(const char* command_line)
 
 	if (num_functions_called == 0)
 	{
-		AddLog(Stringf("Unknown command: '%s'\n", command_line));
+		AddLog(LOG_ERROR, Stringf("Unknown command: '%s'\n", command_line));
 	}
 	
 	m_scrollToBottom = true;
-}
-
-
-char* DialogueSystem::StringDuplicate(const char* str)
-{
-	const size_t len = strlen(str) + 1;
-	void* buf = malloc(len);
-
-	ASSERT_OR_DIE(buf, "could not duplicate c-style string");
-
-	return static_cast<char*>(memcpy(buf, static_cast<const void*>(str), len));
 }
 

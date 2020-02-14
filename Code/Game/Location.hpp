@@ -12,8 +12,13 @@ public:
 	~Location() = default;
 
 	// ACCESSORS
-
+	bool		IsCharacterInLocation(const Character* character) const;
+	String		GetBestDialogue() const;
 	
 	// MUTATORS
-
+	void AddCharacterToLocation(const Character* character);
+	void RemoveCharacterFromLocation(const Character* character);
+	
+private:
+	std::vector<const Character*> m_charsInLoc;
 };

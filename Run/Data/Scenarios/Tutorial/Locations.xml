@@ -1,16 +1,56 @@
 <Locations>
+
 	<Location  Name="Scotland Yard" StartingState="Open" >
+
 		<Nicknames List="Station,Home,HQ" />
-		<State Name="Open" des="If you need any help, the Chief Officer's office <char=33> is open." />
-		<State Name="Close case" des='If you are ready to give your report, press the "Solve the case" button.' />
+
+		<States>
+			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
+			<State Name="Open" CanMoveHere="true" AddGameTime="true"/>
+			<State Name="Close case" CanMoveHere="true" AddGameTime="true"/>
+		</States>
+
+		<Dialogue>
+			<Line State="Open" Line="If you need any help, the Chief Officer's office (char=33) is open."/>
+			<Line State="Close case" Line='If you are ready to give your report, press the "Solve the case" button.'/>
+		</Dialogue>
+
 	</Location>
+
+
+
 	<Location Name="Notting Hill" StartingState="Closed" >
+
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
-		<State Name="Open" des="<ui=Tutorial>You are now in Notting Hill, inside the victim's apartment, as indicated at the top of the screen." />
-		<State Name="2ndpassage" des="You are back in Notting Hill, inside the victim's apartment." />
+
+		<States>
+			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
+			<State Name="Open" CanMoveHere="true" AddGameTime="true"/>
+			<State Name="Close case" CanMoveHere="true" AddGameTime="true"/>
+		</States>
+
+		<Dialogue>
+			<Line State="Open" Line="(ui=Tutorial)You are now in Notting Hill, inside the victim's apartment, as indicated at the top of the screen."/>
+			<Line State="Close case" Line="You are back in Notting Hill, inside the victim's apartment."/>
+		</Dialogue>
+
 	</Location>
+
+
+
 	<Location Name="Leicester Square" StartingState="Closed" >
+
 		<Nicknames List="Bridge Club,Club Meeting" />
-		<State Name="Open" des="A woman <char=04> welcomes you at the Bridge club." />
+
+		<States>
+			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
+			<State Name="Open" CanMoveHere="true" AddGameTime="true"/>
+		</States>
+
+		<Dialogue>
+			<Line State="Open" Line="A woman (char=04) welcomes you at the Bridge club."/>
+		</Dialogue>
+
 	</Location>
+
 </Locations>
