@@ -11,8 +11,15 @@ class Shader;
 class GPUMesh;
 class DialogueSystem;
 
+//Debugging
+static bool DumpLocations(EventArgs& args);
+static bool DumpCharacter(EventArgs& args);
+static bool DumpItems(EventArgs& args);
+
 // Scenario interaction functions
 static bool TravelToLocation(EventArgs& args);
+static bool AskLocationForCharacter(EventArgs& args);
+static bool AskLocationForItem(EventArgs& args);
 static bool InterrogateCharacter(EventArgs& args);
 static bool InvestigateItem(EventArgs& args);
 
@@ -38,7 +45,7 @@ public:
 	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
 	bool IsItemInLookupTable(LookupItr& out, const String& name);
 
-	Location*	GetLocationFromList( int idx );
+	Location	GetLocationFromList( int idx );
 	Character*	GetCharacterFromList(int idx);
 	Item*		GetItemFromList(int idx);
 
@@ -46,8 +53,16 @@ public:
 	String& GetUnknownCharacter();
 	String& GetUnknownItem();
 
+	Location*	GetCurrentLocation();
+	Card*		GetCurrentInterest();
+
 	int AddMinutesToTime();
 	int AddHoursToTime();
+
+	//Helpper
+	LocationList GetLocationList();
+	CharacterList GetCharacterList();
+	ItemList GetItemList();
 	
 private:
 	// setup Scenario
@@ -80,9 +95,13 @@ private:
 	Game*			m_theGame = nullptr;
 	
 	// Game state data
-	Location*		m_currentLocation = nullptr;
 	int				m_currentHourMilitary = 0;
 	int				m_currentMinute = 0;
+	
+	Location*		m_currentLocation = nullptr;
+	Card*			m_currentInterest = nullptr;
+	Card*			m_currentSubject = nullptr;
+	
 
 	
 	// Physical representation of Entities in the game

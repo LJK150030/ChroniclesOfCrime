@@ -1,34 +1,85 @@
 <Characters>
-	<Character  Name="Chief" StartingState="init" StartLoc="Scotland Yard">
-		<Nicknames List="Officer Doyle,Doyle" />
-		<State Name="init" des="Ah, at last you're here. I have a case for you! An old woman (char=07) has been found dead. I need you to find out if it's a natural death or an homicide." />
+
+	<Character  Name="Chief Officer Doyle" StartingState="First-time" StartLoc="Scotland Yard">
+		<Nicknames List="Chief,Doyle" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="Other-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>	
 	</Character>
-	<Character Name="Anna" StartingState="init" StartLoc="Notting Hill">
-		<Nicknames List="Mrs. Taylor,Taylor,victim" />
-		<State Name="init" des="The elderly woman died on her rocking chair with no obvious signs of struggle." />
+
+	<Character Name="Anna Taylor" StartingState="First-time" StartLoc="Notting Hill">
+		<Nicknames List="Mrs. Taylor,Anna,Taylor,victim" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="Found" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>		
 	</Character>
-	<Character Name="Rose" StartingState="init" StartLoc="Leicester Square">
-		<Nicknames List="Butterfly,Ms. Butterfly" />
-		<State Name="init" des="We're practicing for a big Bridge tournament right now. How can I help you?" />
+
+	<Character Name="Rose Butterfly" StartingState="First-time" StartLoc="Leicester Square">
+		<Nicknames List="Rose,Butterfly,Ms. Butterfly" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>	
 	</Character>
-	<Character Name="Jenny" StartingState="init" StartLoc="Leicester Square">
-		<Nicknames List="May,Ms. May" />
-		<State Name="init" des="I'm new to the club, but if I can help you, please let me know." />
+
+	<Character Name="Jenny May" StartingState="First-time" StartLoc="Leicester Square">
+		<Nicknames List="Jenny,May,Ms. May" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>
 	</Character>
-	<Character  Name="Hacker" StartingState="init" >
-		<Nicknames List="Eric,Mr. Gloomerry,Gloomerry" />
-		<State Name="init" des="(i) You are calling the IT department:(/i) Internet and Technology, that's my thing! What can I do to help you?"/>
+
+	<Character  Name="Eric Gloomerry" StartingState="First-time" StartLoc="NONE">
+		<Nicknames List="Eric,Mr. Gloomerry,Gloomerry,Hacker" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>
 	</Character>
-	<Character Name="Doctor" StartingState="init" >
-		<Nicknames List="Jeremy,Dr. King,King" />
-		<State Name="init" des="(i) You are calling the Morgue (/i) Who should I autopsy?" />
+
+	<Character Name="Jeremy King" StartingState="First-time" StartLoc="NONE">
+		<Nicknames List="Jeremy,Dr. King,King,Doctor" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="Open" Line="something something something" />
+		</Dialogue>
 	</Character>
-	<Character Name="Criminologist" StartingState="init" >
-		<Nicknames List="Harvey,Mr. Marshall,Marshall" />
-		<State Name="init" des="(i) You are calling the Criminology Center: (/i) I study the psychological profiles of killers and the history of crime. Can I help you with anything?" />
+
+	<Character Name="Harvey Marshall" StartingState="First-time" StartLoc="NONE">
+		<Nicknames List="Harvey,Mr. Marshall,Marshall,Criminologist" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>
 	</Character>
-	<Character Name="Scientist" StartingState="init" >
-		<Nicknames List="Lou,Ms. Chin,Chin" />
-		<State Name="init" des="(i)You are calling the Laboratory: (/i) Scientific analysis is the basis of modern investigation. Do you have any evidence for me?" />
+	
+	<Character Name="Lou Chin" StartingState="First-time" StartLoc="NONE">
+		<Nicknames List="Lou,Ms. Chin,Chin,Scientist" />
+		<States>
+			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+		</States>
+		<Dialogue>
+			<Line State="First-time" Line="something something something" />
+		</Dialogue>
 	</Character>
+
 </Characters>

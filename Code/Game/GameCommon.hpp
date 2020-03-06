@@ -2,37 +2,21 @@
 #include "Engine/EngineCommon.hpp"
 #include "Engine/Math/AABB2.hpp"
 
-//Engine related classes
+//--------------------------------------------------
+//Engine related globals
+//--------------------------------------------------
 class RenderContext;
 class InputSystem;
 class AudioSystem;
 
-//Game related classes
+
+//--------------------------------------------------
+//Game related globals
+//--------------------------------------------------
 class App;
 
-//Scenario related classes 
-class Card;
-class Location;
-class Item;
-class Character;
-class EventSystem;
-struct State;
-struct Dialogue;
-
-// simplifying type definitions
-typedef std::string							String;
-typedef std::vector<String>					StringList;
-typedef std::pair<String, int>				Lookup;
-typedef std::map<String, int>				LookupTable;
-typedef std::map<String, int>::iterator		LookupItr;
-typedef std::vector<Location>				LocationList;
-typedef std::vector<Item>					ItemList;
-typedef std::vector<Character>				CharacterList;
-typedef std::vector<State>					StateList;
-typedef std::vector<Dialogue>				DialogueList;
-
+// global game components
 extern App* g_theApp;
-extern AudioSystem* g_theAudio;
 extern EventSystem* g_theDialogueEventSystem;
 
 // key codes
@@ -95,8 +79,6 @@ constexpr int TILDE_KEY = 192;
 
 //Window config
 constexpr float WORLD_ASPECT = 1.77777777777777777777777777778f;
-
-//Camera global variables
 constexpr float WORLD_HEIGHT = 100.0f;
 constexpr float WORLD_WIDTH = WORLD_HEIGHT * WORLD_ASPECT;
 constexpr float WORLD_CENTER_X = 0.0f;
@@ -105,6 +87,7 @@ constexpr float WORLD_CENTER_Y = 0.0f;
 const Vec2 WORLD_BL_CORNER(-0.5f * WORLD_WIDTH, -0.5f * WORLD_HEIGHT);
 const Vec2 WORLD_TR_CORNER(0.5f * WORLD_WIDTH, 0.5f * WORLD_HEIGHT);
 const AABB2 WORLD_BOUNDS(WORLD_BL_CORNER, WORLD_TR_CORNER);
+
 
 //Global game const
 constexpr int	MAX_INPUT = 64;
@@ -115,3 +98,74 @@ constexpr int	MAX_COMMAND_LENGTH = 16;
 int		StringCompare(const char* str1, const char* str2);
 int		StringNCompare(const char* str1, const char* str2, int first_n_chars);
 void	StringTrim(char* str);
+
+//--------------------------------------------------
+//Scenario related globals
+//--------------------------------------------------
+class Card;
+class Location;
+class Item;
+class Character;
+class EventSystem;
+struct Dialogue;
+struct LocationState;
+struct CharacterIntro;
+struct CharacterState;
+
+typedef std::string							String;
+typedef std::vector<String>					StringList;
+typedef std::pair<String, int>				Lookup;
+typedef std::map<String, int>				LookupTable;
+typedef std::map<String, int>::iterator		LookupItr;
+typedef std::vector<Location>				LocationList;
+typedef std::vector<Item>					ItemList;
+typedef std::vector<Character>				CharacterList;
+typedef std::vector<LocationState>			LocStateList;
+typedef std::vector<CharacterIntro>		LocCharacterIntro;
+typedef std::vector<CharacterState>			CharStateList;
+
+
+inline char g_locationHeader[] = "Heading to: ";
+inline char g_characterHeader[] = "Interrogating: ";
+inline char g_itemHeader[] = "Found Item: ";
+
+
+inline char g_locationCommand[] = "GOTO";
+inline char g_characterCommand[] = "ASK";
+inline char g_itemCommand[] = "VIEW";
+
+
+inline String g_unknownLocation = "Location cards represent London's districts. Without an address or a precise goal you cannot go there.";
+inline String g_sameLocation = "You are already in this location. The location is indicated in the top left corner.";
+
+
+enum CardType
+{
+	UNKNOWN_CARD_TYPE = -1,
+
+	CARD_LOCATION,
+	CARD_CHARACTER,
+	CARD_ITEM,
+
+	NUM_CARD_TYPES
+};
+
+enum LogType
+{
+	LOG_ERROR = -1,
+
+	LOG_ECHO,
+	LOG_MESSAGE,
+	LOG_LOCATION,
+	LOG_CHARACTER,
+	LOG_ITEM,
+
+	NUM_LOG_TYPES
+};
+
+enum ContextMode
+{
+	CONTEXT_NONE = -1,
+	CONTEXT_INTERROGATION,
+	CONTEXT_PLAYER_CHARACTER
+};

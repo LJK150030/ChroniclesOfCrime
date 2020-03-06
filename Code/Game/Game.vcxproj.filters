@@ -81,9 +81,6 @@
     <ClInclude Include="Scenario.hpp">
       <Filter>General</Filter>
     </ClInclude>
-    <ClInclude Include="GameNames.hpp">
-      <Filter>General</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Run\Data\GameConfig.xml">

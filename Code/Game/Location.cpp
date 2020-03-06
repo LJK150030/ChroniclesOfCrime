@@ -1,4 +1,7 @@
 #include "Game/Location.hpp"
+#include "Game/Scenario.hpp"
+#include "Game/Character.hpp"
+
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
 
@@ -7,6 +10,8 @@ Location::Location()
 {
 	m_type = CARD_LOCATION;
 	m_charsInLoc = std::vector<const Character*>();
+	m_states = LocStateList();
+	m_presentingDialogue = LocCharacterIntro();
 }
 
 
@@ -17,10 +22,7 @@ Location::Location(Scenario* the_setup) : Card(the_setup, CARD_LOCATION)
 
 
 Location::Location(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
-	const String& desc) : Card(the_setup, CARD_LOCATION, name, list_of_nicknames, desc)
-{
-	
-}
+	const String& desc) : Card(the_setup, CARD_LOCATION, name, list_of_nicknames, desc) { }
 
 
 Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_setup, CARD_LOCATION)
@@ -68,11 +70,11 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 		}
 		else if (element_name == "states")
 		{
-			ImportStatesFromXml(child_element);
+			ImportLocationStatesFromXml(child_element);
 		}
-		else if (element_name == "dialogue")
+		else if (element_name == "introducecharacter")
 		{
-			ImportDialogueFromXml(child_element);
+			ImportLocationPresentingEntityFromXml(child_element);
 		}
 		else
 		{
@@ -88,7 +90,7 @@ bool Location::IsCharacterInLocation(const Character* character) const
 	int num_char = static_cast<int>(m_charsInLoc.size());
 	for (int char_idx = 0; char_idx < num_char; ++char_idx)
 	{
-		if (m_charsInLoc[char_idx] == character)
+		if (m_charsInLoc[char_idx]->GetName() == character->GetName())
 		{
 			return true;
 		}
@@ -97,25 +99,79 @@ bool Location::IsCharacterInLocation(const Character* character) const
 	return false;
 }
 
-String Location::GetBestDialogue() const
+String Location::GetLocationDescription() const
 {
-	String current_state = StringToLower(m_currentState.m_name);
-	if(current_state == StringToLower("closed"))
+	if(!m_currentState.m_canMoveHere)
 	{
 		return g_unknownLocation;
 	}
 
-	int num_lines = static_cast<int>(m_dialogueLines.size());
-	for (int state_idx = 0; state_idx < num_lines; ++state_idx)
+	Location* current_location = m_theScenario->GetCurrentLocation();
+	if(current_location->m_name == m_name)
 	{
-		if (StringToLower(m_dialogueLines[state_idx].m_inState) == current_state)
-		{
-			return m_dialogueLines[state_idx].m_line;
-		}
+		return g_sameLocation;
 	}
 
-	ERROR_RECOVERABLE(Stringf("Could not find dialogue for '%s'"), m_name.c_str());
-	return String("unfound dialogue");
+	return m_currentState.m_description;
+}
+
+
+String Location::IntroduceCharacter(const Character* character) const
+{
+	String loc_state = m_currentState.m_name;
+	String char_name = character->GetName();
+	String char_state = character->GetCharacterState().m_name;
+
+	const int num_dialogue = static_cast<int>(m_presentingDialogue.size());
+	std::vector<int> dialogue_ranking;
+	dialogue_ranking.reserve(num_dialogue);
+	int highest_idx = -1;
+	int highest_score = -1;
+
+	for(int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
+	{
+		CharacterIntro test_state = m_presentingDialogue[dialogue_idx];
+		int score = 0;
+
+		//testing location state
+		if(test_state.m_locationState == "*")
+		{
+			score += 1;
+		}
+		else if(test_state.m_locationState == loc_state)
+		{
+			score += 3;
+		}
+
+		//testing character name
+		if (test_state.m_characterName == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_characterName == char_name)
+		{
+			score += 3;
+		}
+
+		//testing character state
+		if (test_state.m_characterState == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_characterState == char_state)
+		{
+			score += 3;
+		}
+
+		//testing score
+		if(score > highest_score)
+		{
+			highest_score = score;
+			highest_idx = dialogue_idx;
+		}
+	}
+	
+	return m_presentingDialogue[highest_idx].m_line;
 }
 
 
@@ -145,6 +201,102 @@ void Location::RemoveCharacterFromLocation(const Character* character)
 			m_charsInLoc[num_char] = nullptr;
 			return;
 		}
+	}
+}
+
+
+void Location::SetState(const String& starting_state)
+{
+	int num_states = static_cast<int>(m_states.size());
+	for(int state_idx = 0; state_idx < num_states; ++state_idx)
+	{
+		if(StringToLower(m_states[state_idx].m_name) == starting_state)
+		{
+			m_currentState = m_states[state_idx];
+			return;
+		}
+	}
+
+	ERROR_AND_DIE(Stringf("StartingState for Card '%s' was not found in the list of states", m_name.c_str()));
+}
+
+
+void Location::ImportLocationStatesFromXml(const XmlElement* element)
+{
+	for (const XmlElement* child_element = element->FirstChildElement();
+		child_element;
+		child_element = child_element->NextSiblingElement()
+		)
+	{
+		String element_name(StringToLower(child_element->Name()));
+		ASSERT_OR_DIE(element_name == "state", Stringf("Could not get State for Card %s", m_name.c_str()));
+
+		LocationState new_state;
+		for(const XmlAttribute* attribute = child_element->FirstAttribute();
+			attribute;
+			attribute = attribute->Next())
+		{
+			String atr_name(StringToLower(attribute->Name()));
+			
+			if(atr_name == "name")
+			{
+				new_state.m_name = attribute->Value();
+			}
+			else if(atr_name == "canmovehere")
+			{
+				new_state.m_canMoveHere = attribute->BoolValue();
+			}
+			else if (atr_name == "addgametime")
+			{
+				new_state.m_addGameTime = attribute->BoolValue();
+			}
+			else if (atr_name == "description")
+			{
+				new_state.m_description = attribute->Value();
+			}
+		}
+
+		m_states.push_back(new_state);
+	}
+}
+
+
+void Location::ImportLocationPresentingEntityFromXml(const XmlElement* element)
+{
+	for (const XmlElement* child_element = element->FirstChildElement();
+		child_element;
+		child_element = child_element->NextSiblingElement()
+		)
+	{
+		String element_name(StringToLower(child_element->Name()));
+		ASSERT_OR_DIE(element_name == "line", Stringf("Could not get character introduction for Card %s", m_name.c_str()));
+
+		CharacterIntro new_presentation;
+		for (const XmlAttribute* attribute = child_element->FirstAttribute();
+			attribute;
+			attribute = attribute->Next())
+		{
+			String atr_name(StringToLower(attribute->Name()));
+			
+			if (atr_name == "state")
+			{
+				new_presentation.m_locationState = attribute->Value();
+			}
+			else if (atr_name == "character")
+			{
+				new_presentation.m_characterName = attribute->Value();
+			}
+			else if (atr_name == "characterstate")
+			{
+				new_presentation.m_characterState = attribute->Value();
+			}
+			else if (atr_name == "line")
+			{
+				new_presentation.m_line = attribute->Value();
+			}
+		}
+
+		m_presentingDialogue.push_back(new_presentation);
 	}
 }
 

@@ -1,6 +1,14 @@
 #pragma once
 #include "Game\Card.hpp"
 
+struct CharacterState
+{
+public:
+	String		m_name = "";
+	bool		m_addGameTime = false;
+	ContextMode	m_contextMode = CONTEXT_NONE;
+};
+
 class Character : public Card
 {
 public:
@@ -11,7 +19,14 @@ public:
 	~Character() = default;
 
 	// ACCESSORS
-
-	// MUTATORS
+	void ImportCharacterStatesFromXml(const XmlElement* element);
+	void ImportCharacterDialogueFromXml(const XmlElement* element);
+	const CharacterState& GetCharacterState() const;
 	
+	// MUTATORS
+	void SetState(const String& starting_state);
+	
+private:
+	CharacterState			m_currentState;
+	CharStateList			m_states;
 };

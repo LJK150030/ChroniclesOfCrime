@@ -10,6 +10,160 @@
 
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
+#include "Engine/Core/DevConsole.hpp"
+
+// Debugging ------------------------------------------------------------
+
+
+STATIC bool DumpLocations(EventArgs& args)
+{
+	UNUSED(args);
+
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	LocationList locations = current_scenario->GetLocationList();
+	int num_locs = static_cast<int>(locations.size());
+
+	g_theDevConsole->PrintString(Rgba::GREEN, "Locations:");
+	for(int loc_idx = 0; loc_idx < num_locs; ++loc_idx)
+	{
+		String loc_name = locations[loc_idx].GetName();
+		String line = loc_name.c_str();
+
+		StringList nn_list = locations[loc_idx].GetListOfNicknames();
+		int num_nn = static_cast<int>(nn_list.size());
+		for(int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
+		{
+			line += Stringf(" '%s'", nn_list[nn_idx].c_str());
+		}
+
+		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("\t %s", line.c_str()));
+
+	}
+
+	return true;
+}
+
+
+STATIC bool DumpCharacter(EventArgs& args)
+{
+	UNUSED(args);
+
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	CharacterList characters = current_scenario->GetCharacterList();
+	int num_char = static_cast<int>(characters.size());
+
+	g_theDevConsole->PrintString(Rgba::GREEN, "Characters:");
+	for (int char_idx = 0; char_idx < num_char; ++char_idx)
+	{
+		String char_name = characters[char_idx].GetName();
+		String line = char_name.c_str();
+
+		StringList nn_list = characters[char_idx].GetListOfNicknames();
+		int num_nn = static_cast<int>(nn_list.size());
+		for (int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
+		{
+			line += Stringf(" '%s'", nn_list[nn_idx].c_str());
+		}
+
+		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("\t %s", line.c_str()));
+
+	}
+
+	return true;
+}
+
+
+STATIC bool DumpItems(EventArgs& args)
+{
+	UNUSED(args);
+
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	ItemList items = current_scenario->GetItemList();
+	int num_items = static_cast<int>(items.size());
+
+	g_theDevConsole->PrintString(Rgba::GREEN, "Items:");
+	for (int item_idx = 0; item_idx < num_items; ++item_idx)
+	{
+		String item_name = items[item_idx].GetName();
+		String line = item_name.c_str();
+
+		StringList nn_list = items[item_idx].GetListOfNicknames();
+		int num_nn = static_cast<int>(nn_list.size());
+		for (int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
+		{
+			line += Stringf(" '%s'", nn_list[nn_idx].c_str());
+		}
+
+		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("\t %s", line.c_str()));
+
+	}
+
+	return true;
+}
+
+
+// Game Actions ---------------------------------------------------------
+
+
+STATIC bool TravelToLocation(EventArgs& args)
+{
+	// args will be card = "item name"
+	Scenario* current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	//find the location in case the player uses a nick name
+	LookupItr loc_itr;
+	String log;
+	String loc_name = args.GetValue("card", String("something and nothing"));
+	const bool is_in_list = current_scenario->IsLocationInLookupTable(loc_itr, String(loc_name));
+
+	if (is_in_list)
+	{
+		log = current_scenario->GetLocationFromList(loc_itr->second).GetLocationDescription();
+	}
+	else
+	{
+		log = current_scenario->GetUnknownLocation();
+	}
+
+	ds->AddLog(LOG_LOCATION, log);
+
+	return true;
+}
+
+
+STATIC bool AskLocationForCharacter(EventArgs& args)
+{
+	String		char_name = args.GetValue("card", String("something and nothing"));
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	//find the character in case the player is uses a nick name
+	LookupItr char_itr;
+	const bool is_char_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(char_name));
+
+	String log;
+	if (is_char_in_list)
+	{
+		Location* cur_loc = current_scenario->GetCurrentLocation();
+		Character* char_subject = current_scenario->GetCharacterFromList(char_itr->second);
+		log = cur_loc->IntroduceCharacter(char_subject);
+	}
+	else
+	{
+		log = current_scenario->GetUnknownCharacter();
+	}
+
+	ds->AddLog(LOG_CHARACTER, log);
+
+	return false;
+}
+
+
+STATIC bool AskLocationForItem(EventArgs& args)
+{
+	return false;
+}
 
 
 STATIC bool InterrogateCharacter(EventArgs& args)
@@ -18,10 +172,13 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	String		name = args.GetValue("card", String("something and nothing"));
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
-	
+
 	LookupItr char_itr;
 	String log;
 	const bool is_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(name));
+
+	// 	Location* cur_loc = current_scenario->GetCurrentLocation();
+	// 	cur_loc->IsCharacterInLocation()
 
 	if (is_in_list)
 	{
@@ -30,11 +187,11 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	}
 	else
 	{
-		log = current_scenario->GetUnknownCharacter();	
+		log = current_scenario->GetUnknownCharacter();
 	}
 
 	ds->AddLog(LOG_CHARACTER, log);
-	
+
 	return true;
 }
 
@@ -61,31 +218,6 @@ STATIC bool InvestigateItem(EventArgs& args)
 	}
 
 	ds->AddLog(LOG_ITEM, log);
-
-	return true;
-}
-
-STATIC bool TravelToLocation(EventArgs& args)
-{
-	// args will be card = "item name"
-	String name = args.GetValue("card", String("something and nothing"));
-	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
-	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
-
-	LookupItr loc_itr;
-	String log;
-	const bool is_in_list = current_scenario->IsLocationInLookupTable(loc_itr, String(name));
-
-	if (is_in_list)
-	{
-		log = current_scenario->GetLocationFromList(loc_itr->second)->GetBestDialogue();
-	}
-	else
-	{
-		log = current_scenario->GetUnknownItem();	
-	}
-
-	ds->AddLog(LOG_LOCATION, log);
 
 	return true;
 }
@@ -121,17 +253,34 @@ STATIC bool HelpCommandDs(EventArgs& args)
 }
 
 
+
 Scenario::Scenario(Game* the_game) : m_theGame(the_game) { }
 Scenario::~Scenario() = default;
 
 
 void Scenario::Startup()
 {
-	g_theDialogueEventSystem = new EventSystem();
+	g_theEventSystem->SubscribeEventCallbackFunction("dump_locs", DumpLocations);
+	g_theEventSystem->SubscribeEventCallbackFunction("dump_chars", DumpCharacter);
+	g_theEventSystem->SubscribeEventCallbackFunction("dump_items", DumpItems);
 
+	
+	g_theDialogueEventSystem = new EventSystem();
+	
+	// when the player is interacting with a location
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goto", TravelToLocation);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("view", InvestigateItem);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("talk", AskLocationForCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("view", AskLocationForItem);
+	
+	// when the player is interacting with a character
+	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
+	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", InterrogateCharacter);
+
+	// when the player is interacting with an item
+	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("link", InvestigateItem);
+	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("shelve", InvestigateItem);
+
+	// Dialogue System helper functions	
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
 }
@@ -165,13 +314,13 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	ReadLocationsXml(location_file);
 	SetupLocationLookupTable();
 
-	const String characters_file = String(folder_dir) + "/Characters.xml";
-	ReadCharactersXml(characters_file);
-	SetupCharacterLookupTable();
-
-	const String item_file = String(folder_dir) + "/Items.xml";
-	ReadItemsXml(item_file);
-	SetupItemLookupTable();
+ 	const String characters_file = String(folder_dir) + "/Characters.xml";
+ 	ReadCharactersXml(characters_file);
+ 	SetupCharacterLookupTable();
+// 
+// 	const String item_file = String(folder_dir) + "/Items.xml";
+// 	ReadItemsXml(item_file);
+// 	SetupItemLookupTable();
 	
 	ManuallySetScenarioSettings();
 }
@@ -220,21 +369,21 @@ bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
 }
 
 
-Location* Scenario::GetLocationFromList(const int idx)
+Location Scenario::GetLocationFromList(const int idx)
 {
-	return &(m_locations[idx]);
+	return m_locations[idx]; //TODO: this is returning the address of the container index pointer 
 }
 
 
 Character* Scenario::GetCharacterFromList(const int idx)
 {
-	return &(m_characters[idx]);
+	return &(m_characters[idx]); //TODO: this is returning the address of the container index pointer 
 }
 
 
 Item* Scenario::GetItemFromList(const int idx)
 {
-	return &(m_items[idx]);
+	return &(m_items[idx]); //TODO: this is returning the address of the container index pointer 
 }
 
 
@@ -257,6 +406,17 @@ String& Scenario::GetUnknownItem()
 	return m_unknownItemLine[random_dialog_idx];
 }
 
+
+Location* Scenario::GetCurrentLocation()
+{
+	return m_currentLocation;
+}
+
+
+Card* Scenario::GetCurrentInterest()
+{
+	return m_currentInterest;
+}
 
 
 void Scenario::ManuallySetScenarioSettings()
@@ -285,6 +445,24 @@ void Scenario::ManuallySetScenarioSettings()
 	m_unknownItemLine.emplace_back("oh, where did I put it...");
 	m_unknownItemLine.emplace_back("I know it is here somewhere.");
 	m_unknownItemLine.emplace_back("what was I looking for again?");
+}
+
+
+LocationList Scenario::GetLocationList()
+{
+	return m_locations;
+}
+
+
+CharacterList Scenario::GetCharacterList()
+{
+	return m_characters;
+}
+
+
+ItemList Scenario::GetItemList()
+{
+	return m_items;
 }
 
 

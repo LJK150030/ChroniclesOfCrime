@@ -99,7 +99,6 @@ void App::BeginFrame() const
 	g_theEventSystem->BeginFrame();
 	g_theDevConsole->BeginFrame();
 	g_theDebugRenderer->BeginFrame();
-	g_theAudio->BeginFrame();
 	m_theGame->BeginFrame();
 }
 
@@ -143,7 +142,6 @@ void App::EndFrame() const
 	g_theEventSystem->EndFrame();
 	g_theDevConsole->EndFrame();
 	g_theDebugRenderer->EndFrame();
-	g_theAudio->EndFrame();
 	m_theGame->EndFrame();
 }
 
@@ -158,8 +156,8 @@ TODO("Need to make sure I am deleting everything, otherwise i get a nasty crash"
 void App::HardRestart()
 {
 	Shutdown();
-	delete m_theGame;
-	m_theGame = nullptr;
+// 	delete m_theGame;
+// 	m_theGame = nullptr;
 	Startup();
 }
 
@@ -178,7 +176,7 @@ bool App::HandleKeyPressed(const unsigned char key_code)
 			m_theGame->SetDeveloperMode(true);
 		return true;
 
-//	Did you do the TODO?
+	//Did you do the TODO?
 // 	case F8_KEY:
 // 		if (!DEV_CONSOLE_IN_USE)
 // 			HardRestart();

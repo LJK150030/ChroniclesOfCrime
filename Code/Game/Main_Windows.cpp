@@ -8,7 +8,7 @@
 
 #include "ThirdParty/imGUI/imgui.h"
 
-#define WINDOW_TITLE "Protogame3D"
+#define WINDOW_TITLE "Chronicles of Crime: Text Adventure"
 
 
 extern App* g_theApp = nullptr;

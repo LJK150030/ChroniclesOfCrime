@@ -1,56 +1,45 @@
 <Locations>
 
 	<Location  Name="Scotland Yard" StartingState="Open" >
-
 		<Nicknames List="Station,Home,HQ" />
-
 		<States>
-			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
-			<State Name="Open" CanMoveHere="true" AddGameTime="true"/>
-			<State Name="Close case" CanMoveHere="true" AddGameTime="true"/>
+			<State Name="Closed" 		CanMoveHere="false" AddGameTime="true"/>
+			<State Name="Open" 			CanMoveHere="true" 	AddGameTime="true" 	Description="If you need any help, the Chief Officer's office (char=33) is open." />
+			<State Name="Close case" 	CanMoveHere="true" 	AddGameTime="true" 	Description="The person you are looking for isn't here. Try to move to a location where that person is located." />
 		</States>
-
-		<Dialogue>
-			<Line State="Open" Line="If you need any help, the Chief Officer's office (char=33) is open."/>
-			<Line State="Close case" Line='If you are ready to give your report, press the "Solve the case" button.'/>
-		</Dialogue>
-
+		<IntroduceCharacter>
+			<Line State="*" Character="*" 					CharacterState="*" 			Line="The person you are looking for isn't here. Try to move to a location where that person is located."/>
+			<Line State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Ah, at last you're here. I have a case for you! An old woman (char=07) has been found dead. I need you to find out if it's a natural death or an homicide."/>
+			<Line State="*" Character="Chief Officer Doyle" CharacterState="State 2" 	Line="If you are lost, my office is always open. I will guide you as much as I can. What do you want to talk about?"/>
+			<Line State="*" Character="Anna Taylor" 		CharacterState="State 1"	Line="You want to analyze the victim's corpse? Well thought! But you should go to the crime scene or ask the doctor what he thinks of the body."/>
+			<Line State="*" Character="Eric Gloomerry" 		CharacterState="*" 			Line="(i) You are calling the IT department:(/i) Internet and Technology, that's my thing! What can I do to help you?"/>
+			<Line State="*" Character="Jeremy King" 		CharacterState="*" 			Line="(i) You are calling the Morgue (/i) Who should I autopsy?"/>
+			<Line State="*" Character="Harvey Marshall" 	CharacterState="*" 			Line="(i) You are calling the Criminology Center: (/i) I study the psychological profiles of killers and the history of crime. Can I help you with anything?"/>
+			<Line State="*" Character="Lou Chin" 			CharacterState="*" 			Line="(i)You are calling the Laboratory: (/i) Scientific analysis is the basis of modern investigation. Do you have any evidence for me?"/>
+		</IntroduceCharacter>
 	</Location>
-
 
 
 	<Location Name="Notting Hill" StartingState="Closed" >
-
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
-
 		<States>
 			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
-			<State Name="Open" CanMoveHere="true" AddGameTime="true"/>
-			<State Name="Close case" CanMoveHere="true" AddGameTime="true"/>
+			<State Name="Open" CanMoveHere="true" AddGameTime="true" Description="(ui=Tutorial)You are now in Notting Hill, inside the victim's apartment, as indicated at the top of the screen." />
+			<State Name="2ndpass" CanMoveHere="true" AddGameTime="true" Description="You are back in Notting Hill, inside the victim's apartment."/>
 		</States>
-
-		<Dialogue>
-			<Line State="Open" Line="(ui=Tutorial)You are now in Notting Hill, inside the victim's apartment, as indicated at the top of the screen."/>
-			<Line State="Close case" Line="You are back in Notting Hill, inside the victim's apartment."/>
-		</Dialogue>
-
+		<IntroduceCharacter>
+		</IntroduceCharacter>
 	</Location>
 
 
-
 	<Location Name="Leicester Square" StartingState="Closed" >
-
 		<Nicknames List="Bridge Club,Club Meeting" />
-
 		<States>
-			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
+			<State Name="Closed" CanMoveHere="false" AddGameTime="true" Description="A woman (char=04) welcomes you at the Bridge club."/>
 			<State Name="Open" CanMoveHere="true" AddGameTime="true"/>
 		</States>
-
-		<Dialogue>
-			<Line State="Open" Line="A woman (char=04) welcomes you at the Bridge club."/>
-		</Dialogue>
-
+		<IntroduceCharacter>
+		</IntroduceCharacter>
 	</Location>
 
 </Locations>

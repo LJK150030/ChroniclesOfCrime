@@ -1,6 +1,5 @@
 #pragma once
 #include "Game/GameCommon.hpp"
-#include "Game/GameNames.hpp"
 
 class Game;
 
