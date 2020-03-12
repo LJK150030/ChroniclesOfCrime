@@ -4,6 +4,11 @@
 
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
+#include "Engine/Core/CPUMesh.hpp"
+#include "Engine/Renderer/GPUMesh.hpp"
+#include "Engine/Renderer/Material.hpp"
+#include "Engine/Renderer/Shader.hpp"
+#include "Engine/Renderer/RenderContext.hpp"
 
 
 Location::Location()
@@ -45,6 +50,27 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 		{
 			current_state = StringToLower(String(attribute->Value()));
 		}
+		else if(attribute_name == "imagedir")
+		{
+			String file_name = m_name + "mat";
+			m_material = g_theRenderer->CreateOrGetMaterial(file_name, false);
+			m_material->SetShader("default_lit.hlsl");
+			m_material->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
+
+			std::string texture_src = attribute->Value();
+			TextureView* texture(reinterpret_cast<TextureView*>(g_theRenderer->CreateOrGetTextureView2D(texture_src)));
+			m_material->SetDiffuseMap(texture);
+
+			CPUMesh quad_mesh;
+			CpuMeshAddQuad(&quad_mesh, 
+				AABB2(
+					-(LOC_ASPECT_RATIO * LOC_HEIGHT), 
+					-LOC_HEIGHT,
+					LOC_ASPECT_RATIO * LOC_HEIGHT,
+					LOC_HEIGHT));
+			m_mesh = new GPUMesh(g_theRenderer);
+			m_mesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
+		}
 		else
 		{
 			ERROR_RECOVERABLE(Stringf("Unknown Attribute in location xml file, '%s', skipping attribute", attribute->Name()))
@@ -84,6 +110,13 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 
 	SetState(current_state);
 }
+
+
+Location::~Location()
+{
+	//debug does not track this step when saying =default
+}
+
 
 bool Location::IsCharacterInLocation(const Character* character) const
 {

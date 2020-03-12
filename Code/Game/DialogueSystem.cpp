@@ -37,8 +37,13 @@ DialogueSystem::~DialogueSystem()
 
 void DialogueSystem::BeginFrame()
 {
-	g_imGUI->BeginFrame();
-	ImGui::NewFrame();
+	
+}
+
+
+void DialogueSystem::Update(double delta_seconds)
+{
+	UNUSED(delta_seconds)
 
 	m_imguiError = ImGui::Begin(
 		"Dialogue System",
@@ -50,23 +55,16 @@ void DialogueSystem::BeginFrame()
 		ImGuiWindowFlags_NoSavedSettings
 	);
 
-	
+
 	ImGui::SetWindowSize(
-		ImVec2(m_dialogWindowSize[0], m_dialogWindowSize[1]), 
+		ImVec2(m_dialogWindowSize[0], m_dialogWindowSize[1]),
 		ImGuiCond_Always
 	);
 
 	ImGui::SetWindowPos(
-		ImVec2(0.0f, m_gameResolution[1] - m_dialogWindowSize[1]),
+		ImVec2(0.0f, m_gameResolution[1] - m_dialogWindowSize[1] * 0.75f),
 		ImGuiCond_Always
 	);
-
-}
-
-
-void DialogueSystem::Update(double delta_seconds)
-{
-	UNUSED(delta_seconds)
 
 	if (!m_imguiError)
 	{
@@ -88,7 +86,6 @@ void DialogueSystem::Render() const
 
 void DialogueSystem::EndFrame() const
 {
-	g_imGUI->EndFrame();
 }
 
 

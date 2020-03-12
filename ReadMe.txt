@@ -91,8 +91,8 @@ Semester Schedule
 																																2				Saving card images to file
 																																
 	10-Mar	5.75
-			0.25		Show the current location from image	
-			0.25		Print the Location that the player is at
+O			0.25		Show the current location from image	
+O			0.25		Print the Location that the player is at
 			0.25		Print the Item the player is interacting with
 			0.25		Print the Character the player is talking to
 			0.25		Print the Subject the player asked the character
@@ -220,11 +220,12 @@ Semester Schedule
 			1			Read in list of questions
 			1			Read in list of ending text
 
-	17-Apr	2
-			1		List of custom variables to track
-			1		Read in custome variables from xml
+	17-Apr	-			Ludum Dare Weekend
 
-	21-Apr	4		Polish
+	21-Apr	2
+			1			List of custom variables to track
+			1			Read in custome variables from xml
+			
 	24-Apr	4		Polish
 	28-Apr	4		Polish
 	1-Mar 	4		Polish

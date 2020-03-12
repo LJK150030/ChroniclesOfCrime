@@ -38,8 +38,8 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 
 			LookupItr loc_itr;
 			m_theScenario->IsLocationInLookupTable(loc_itr, attribute->Value());
-			Location loc = m_theScenario->GetLocationFromList(loc_itr->second);
-			loc.AddCharacterToLocation(this);
+			Location* loc = m_theScenario->GetLocationFromList(loc_itr->second);
+			loc->AddCharacterToLocation(this);
 		}
 		else
 		{

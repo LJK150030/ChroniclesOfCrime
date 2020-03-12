@@ -11,6 +11,7 @@
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
 #include "Engine/Core/DevConsole.hpp"
+#include "Engine/Renderer/ImGUISystem.hpp"
 
 // Debugging ------------------------------------------------------------
 
@@ -119,7 +120,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 
 	if (is_in_list)
 	{
-		log = current_scenario->GetLocationFromList(loc_itr->second).GetLocationDescription();
+		log = current_scenario->GetLocationFromList(loc_itr->second)->GetLocationDescription();
 	}
 	else
 	{
@@ -283,6 +284,17 @@ void Scenario::Startup()
 	// Dialogue System helper functions	
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
+
+
+	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
+		"Screensize",
+		Vec2(720.0f, 1080.0f)
+	);
+	
+	m_gameResolution[0] = frame_resolution.x;
+	m_gameResolution[1] = frame_resolution.y;
+	m_dialogWindowSize[0] = m_gameResolution[0] * 0.25f;
+	m_dialogWindowSize[1] = m_gameResolution[1] * 0.25f;
 }
 
 
@@ -290,6 +302,46 @@ void Scenario::Shutdown()
 {
 	delete g_theDialogueEventSystem;
 	g_theDialogueEventSystem = nullptr;
+}
+
+
+void Scenario::Update(const double delta_seconds)
+{
+	UNUSED(delta_seconds);
+	
+	m_imguiError = ImGui::Begin(
+		"Game State",
+		&m_show,
+		ImGuiWindowFlags_NoResize |
+		ImGuiWindowFlags_NoMove |
+		ImGuiWindowFlags_NoCollapse |
+		ImGuiWindowFlags_NoSavedSettings
+	);
+
+
+	ImGui::SetWindowSize(
+		ImVec2(m_dialogWindowSize[0], m_dialogWindowSize[1]),
+		ImGuiCond_Always
+	);
+
+	ImGui::SetWindowPos(
+		ImVec2(0.0f, 0.0f),
+		ImGuiCond_Always
+	);
+
+	//render game state
+	String current_location = "Current Location: " + m_currentLocation->GetName();
+	ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), current_location.c_str());
+	ImGui::End();
+
+}
+
+
+void Scenario::Render() const
+{
+
+	//render game assets
+	m_currentLocation->Render();
 }
 
 
@@ -369,21 +421,21 @@ bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
 }
 
 
-Location Scenario::GetLocationFromList(const int idx)
+Location* Scenario::GetLocationFromList(const int idx)
 {
-	return m_locations[idx]; //TODO: this is returning the address of the container index pointer 
+	return &(m_locations[idx]);
 }
 
 
 Character* Scenario::GetCharacterFromList(const int idx)
 {
-	return &(m_characters[idx]); //TODO: this is returning the address of the container index pointer 
+	return &(m_characters[idx]);
 }
 
 
 Item* Scenario::GetItemFromList(const int idx)
 {
-	return &(m_items[idx]); //TODO: this is returning the address of the container index pointer 
+	return &(m_items[idx]);
 }
 
 
@@ -538,6 +590,17 @@ void Scenario::ReadLocationsXml(const String& file_path)
 	tinyxml2::XMLDocument loc_doc;
 	OpenXmlFile(&loc_doc, file_path);
 	XmlElement* root_loc = loc_doc.RootElement();
+	uint loc_count = 0;
+	
+	for (const XmlElement* child = root_loc->FirstChildElement(); 
+		child; 
+		child = child->NextSiblingElement())
+	{
+		loc_count++;
+	}
+
+	m_locations.reserve(loc_count);
+	root_loc = loc_doc.RootElement();
 
 	for (const XmlElement* loc_element = root_loc->FirstChildElement(); 
 		loc_element; 

@@ -32,7 +32,7 @@ public:
 	explicit Location(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
 		const String& desc);
 	explicit Location(Scenario* the_setup, const XmlElement* element);
-	~Location() = default;
+	~Location();
 
 	// ACCESSORS
 	bool		IsCharacterInLocation(const Character* character) const;
@@ -54,4 +54,7 @@ private:
 	LocStateList			m_states;
 
 	LocCharacterIntro		m_presentingDialogue;
+
+	const float LOC_HEIGHT = 20.0f;
+	const float LOC_ASPECT_RATIO = 2.2572855953372189841798501248959f;
 };

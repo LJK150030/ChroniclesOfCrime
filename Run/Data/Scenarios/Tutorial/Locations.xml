@@ -1,6 +1,6 @@
 <Locations>
 
-	<Location  Name="Scotland Yard" StartingState="Open" >
+	<Location  Name="Scotland Yard" StartingState="Open" ImageDir="Location/Scotland yard.png" >
 		<Nicknames List="Station,Home,HQ" />
 		<States>
 			<State Name="Closed" 		CanMoveHere="false" AddGameTime="true"/>
@@ -11,7 +11,7 @@
 			<Line State="*" Character="*" 					CharacterState="*" 			Line="The person you are looking for isn't here. Try to move to a location where that person is located."/>
 			<Line State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Ah, at last you're here. I have a case for you! An old woman (char=07) has been found dead. I need you to find out if it's a natural death or an homicide."/>
 			<Line State="*" Character="Chief Officer Doyle" CharacterState="State 2" 	Line="If you are lost, my office is always open. I will guide you as much as I can. What do you want to talk about?"/>
-			<Line State="*" Character="Anna Taylor" 		CharacterState="State 1"	Line="You want to analyze the victim's corpse? Well thought! But you should go to the crime scene or ask the doctor what he thinks of the body."/>
+			<Line State="*" Character="Anna Taylor" 		CharacterState="*"			Line="You want to analyze the victim's corpse? Well thought! But you should go to the crime scene or ask the doctor what he thinks of the body."/>
 			<Line State="*" Character="Eric Gloomerry" 		CharacterState="*" 			Line="(i) You are calling the IT department:(/i) Internet and Technology, that's my thing! What can I do to help you?"/>
 			<Line State="*" Character="Jeremy King" 		CharacterState="*" 			Line="(i) You are calling the Morgue (/i) Who should I autopsy?"/>
 			<Line State="*" Character="Harvey Marshall" 	CharacterState="*" 			Line="(i) You are calling the Criminology Center: (/i) I study the psychological profiles of killers and the history of crime. Can I help you with anything?"/>
@@ -20,7 +20,7 @@
 	</Location>
 
 
-	<Location Name="Notting Hill" StartingState="Closed" >
+	<Location Name="Notting Hill" StartingState="Open" ImageDir="Location/Notting Hill.png">
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
 		<States>
 			<State Name="Closed" CanMoveHere="false" AddGameTime="true"/>
@@ -32,7 +32,7 @@
 	</Location>
 
 
-	<Location Name="Leicester Square" StartingState="Closed" >
+	<Location Name="Leicester Square" StartingState="Closed" ImageDir="Location/Leicester Square and Hyde Park.png">
 		<Nicknames List="Bridge Club,Club Meeting" />
 		<States>
 			<State Name="Closed" CanMoveHere="false" AddGameTime="true" Description="A woman (char=04) welcomes you at the Bridge club."/>

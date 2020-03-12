@@ -1,0 +1,10 @@
+work	estimate	actual	task
+
+
+
+3/11----------------------------------------------------------------
+work	estimate	actual	task
+10:15				0.75	discoved: need an imGUI pannel to display text. Refactor imGUI, because dialogueSystem is the only object rendering, now the scene is rendering using imgui
+10:07						Print the Location that the player is at
+8:07				2.0		discoved: dynamicaly creating a material from an image file path	NOTE: never use new within an object that is stored in a vector unless you can set the capasity. Always use a refrence of an object and not a temporary; once out of scope it will delete refrences and can messup the original object
+8:07	0.25				Show the current location from image

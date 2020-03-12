@@ -9,7 +9,7 @@
 #include "Engine/Renderer/GPUMesh.hpp"
 #include "Engine/Renderer/Shader.hpp"
 #include "Engine/Renderer/Material.hpp"
-
+#include "Engine/Renderer/ImGUISystem.hpp"
 #include <vector>
 
 UNITTEST("Is Test", nullptr, 0)
@@ -66,7 +66,10 @@ void Game::Shutdown()
 void Game::BeginFrame() const
 {
 	// Feed inputs to dear imgui, start new frame
-	m_dialogueSystem->BeginFrame();
+	g_imGUI->BeginFrame();
+	ImGui::NewFrame();
+	
+	//m_dialogueSystem->BeginFrame();
 }
 
 
@@ -75,6 +78,7 @@ void Game::Update(const double delta_seconds)
 	m_time += static_cast<float>(delta_seconds);
 	m_currentFrame++;
 
+	m_currentScenario->Update(delta_seconds);
 	m_dialogueSystem->Update(delta_seconds);
 }
 
@@ -94,9 +98,11 @@ void Game::Render() const
 	g_theRenderer->ClearDepthStencilTarget(1.0f);
 
 	//TODO: example code to draw an obj. Use in 
-	g_theRenderer->BindModelMatrix(m_quadTransform);
-	g_theRenderer->BindMaterial(*m_woodMaterial);
-	g_theRenderer->DrawMesh(*m_quad);
+// 	g_theRenderer->BindModelMatrix(m_quadTransform);
+// 	g_theRenderer->BindMaterial(*m_woodMaterial);
+// 	g_theRenderer->DrawMesh(*m_quad);
+
+	m_currentScenario->Render();
 
 	m_dialogueSystem->Render();
 	
@@ -107,7 +113,9 @@ void Game::Render() const
 
 void Game::EndFrame() const
 {
-	m_dialogueSystem->EndFrame();
+	//m_dialogueSystem->EndFrame();
+
+	g_imGUI->EndFrame();
 }
 
 bool Game::HandleKeyPressed(const unsigned char key_code)

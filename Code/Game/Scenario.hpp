@@ -38,6 +38,9 @@ public:
 	void Startup();
 	void Shutdown();
 
+	void Update(const double delta_seconds);
+	void Render() const;
+
 	void LoadInScenarioManually();
 	void LoadInScenarioFile(const char* folder_dir);
 
@@ -45,7 +48,7 @@ public:
 	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
 	bool IsItemInLookupTable(LookupItr& out, const String& name);
 
-	Location	GetLocationFromList( int idx );
+	Location*	GetLocationFromList( int idx );
 	Character*	GetCharacterFromList(int idx);
 	Item*		GetItemFromList(int idx);
 
@@ -120,4 +123,9 @@ private:
 	StringList		m_unknownLocationLine;
 	StringList		m_unknownCharacterLine;
 	StringList		m_unknownItemLine;
+
+	bool	m_show = true;
+	bool	m_imguiError = false;
+	float	m_gameResolution[2] = { 720.0f, 1080.0f };
+	float	m_dialogWindowSize[2] = { 800.0f, 200.0f };
 };

@@ -1,11 +1,15 @@
 #pragma once
+#include "Engine/Math/Matrix44.hpp"
+
 #include "Game/GameCommon.hpp"
 
 #include <string>
 #include <vector>
 
 class Scenario;
-
+class Material;
+class GPUMesh;
+class Shader;
 
 class Card
 {
@@ -16,7 +20,8 @@ public:
 		const String& desc);
 	~Card();
 
-public:
+	void Render() const;
+	
 	// ACCESSORS
 	bool		IsDiscovered() const;
 	CardType	GetCardType() const;
@@ -44,4 +49,9 @@ protected:
 	
 	String			m_name = "";
 	StringList		m_nickNames;
+
+	Material* m_material = nullptr;
+	GPUMesh* m_mesh = nullptr;
+	Matrix44 m_modelMatrix = Matrix44::IDENTITY;
+
 };
