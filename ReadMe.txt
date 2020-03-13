@@ -90,14 +90,35 @@ Semester Schedule
 																																2				Picking the best Dialogue for a location
 																																2				Saving card images to file
 																																
-	10-Mar	5.75
+	10-Mar	3.5
 O			0.25		Show the current location from image	
 O			0.25		Print the Location that the player is at
-			0.25		Print the Item the player is interacting with
-			0.25		Print the Character the player is talking to
-			0.25		Print the Subject the player asked the character
-			0.25		Print the current game time	
-			0.25		Print the number of game days if the player goes over	
+O			0.25		Print the Item the player is interacting with
+O			0.25		Print the Character the player is talking to
+O			0.25		Print the Subject the player asked the character
+O			0.25		Print the current game time	
+O			0.25		Print the number of game days if the player goes over	
+O			0.5			When changing locations, change the background to the location image
+O			0.25		Add 20 in-game minutes when going to a different location
+O			0.25		When talking to a character, present the text as if reading from a script - Chief: “Glad you can make it…”
+?			0.25		When interacting with an item, italicizes the text as if perform and thinking	
+O			0.25		When the computer is talking to the player, use arrowhead - > Talking to Chief
+
+	13-Mar	3				
+O			0.25		Ask for a character the player knows about In a location the character is currently in
+O			0.25		Ask for a character the player knows about In a location the character is not in
+			0.25		Ask for a character the player does not know about In a location the character is currently in
+			0.25		Ask for a character the player does not know about In a location the character is not in
+O			0.25		Ask for a character that the game does not know about	
+O			0.25		Present an image of the character	
+			0.25		Ask for an item the player knows about In a location the item is currently in
+			0.25		Ask for an item the player knows about In a location the item is not in
+			0.25		Ask for an item the player does not know about In a location the character is currently in
+			0.25		Ask for an item the player does not know about In a location the character is not in
+			0.25		Ask for an item that the game does not know about	
+			0.25		Present an image of the item	
+
+	17-Mar	4
 			0.5			Action Class: Display Text
 			0.5			Action Class: Set Context
 			0.5			Action Class: Enable/Disable Event
@@ -107,7 +128,7 @@ O			0.25		Print the Location that the player is at
 			0.5			Action Class: Set variable value
 			0.5			Action Class: set intro text
 
-	13-Mar	5.25
+	20-Mar	5.25
 			0.75		Condition Class: Time passed
 			0.75		Condition Class: in/notin location
 			0.75		Condition Class: Object state check
@@ -116,7 +137,7 @@ O			0.25		Print the Location that the player is at
 			0.75		Condition Class: Check a variable value
 			0.75		Condition Class: in/out interrogation mode
 
-	17-Mar	4
+	24-Mar	2.5
 			0.25		Trigger class: Set name
 			0.25		Trigger class: List of conditions
 			0.25		Trigger class: List of Actions
@@ -125,37 +146,18 @@ O			0.25		Print the Location that the player is at
 			0.5			Event class: event run multiple times
 			0.25		Event class: Enabaling or disabling an event
 			0.25		Event class: List of Triggers
-			0.5			When changing locations, change the background to the location image
-			0.25		Add 20 in-game minutes when going to a different location
-			0.25		When talking to a character, present the text as if reading from a script - Chief: “Glad you can make it…”
-			0.25		When interacting with an item, italicizes the text as if perform and thinking	
-			0.25		When the computer is talking to the player, use arrowhead - > Talking to Chief
-
+			
 	20-Mar	4
 			1			Read in Event from XML
 			1			Read in Trigger from XML
 			1			Read in Conditions from XML
 			1			Read In Actions from XML
 
-	24-Mar	4				
-			0.25		Ask for a character the player knows about In a location the character is currently in
-			0.25		Ask for a character the player knows about In a location the character is not in
-			0.25		Ask for a character the player does not know about In a location the character is currently in
-			0.25		Ask for a character the player does not know about In a location the character is not in
-			0.25		Ask for a character that the game does not know about	
-			0.25		Present an image of the character	
-			0.25		Ask for an item the player knows about In a location the item is currently in
-			0.25		Ask for an item the player knows about In a location the item is not in
-			0.25		Ask for an item the player does not know about In a location the character is currently in
-			0.25		Ask for an item the player does not know about In a location the character is not in
-			0.25		Ask for an item that the game does not know about	
-			0.25		Present an image of the item	
+	27-Mar	4.75
 			0.25		When investigating a room, Change the background to the room image
 			1			When investigating a room, Change the “state” of the dialog box to ask for evidence in the location
 			0.25		When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
 			0.5			When investigating a room, the player is Able to leave, and change the room back to the current location
-
-	27-Mar	2.75
 			1			When interogating, Change the “state” of the dialog box to ask about entities (characters or items)
 			0.25		When interogating, Every question to the character will take 5 in-game minutes to “interrogate”
 			0.5			When interogating, Ask them about an item
@@ -181,20 +183,20 @@ O			0.25		Print the Location that the player is at
 
 	7-Apr	4.5
 			0.25		from xml, Set Starting Location
-			0.25		from xml, SSet Scenario Name
-			0.25		from xml, SSet startup event
-			0.25		from xml, SSet starting time
-			0.5			from xml, SIntro message
-			0.25		from xml, Sclosed location default message
-			0.25		from xml, Ssame location message
-			0.25		from xml, Sunknown command message
-			0.25		from xml, Stime cost move to location
-			0.25		from xml, Stime cost to investigate a room
-			0.25		from xml, Stime cost to investigate an item
-			0.25		from xml, Stime cost to interagate character
-			0.25		from xml, Stime cost for unknown command
-			0.5			from xml, Sstart scoring for 1 to 5 stars
-			0.5			from xml, Sgame time scoring bonus
+			0.25		from xml, Set Scenario Name
+			0.25		from xml, Set startup event
+			0.25		from xml, Set starting time
+			0.5			from xml, Intro message
+			0.25		from xml, closed location default message
+			0.25		from xml, same location message
+			0.25		from xml, unknown command message
+			0.25		from xml, time cost move to location
+			0.25		from xml, time cost to investigate a room
+			0.25		from xml, time cost to investigate an item
+			0.25		from xml, time cost to interagate character
+			0.25		from xml, time cost for unknown command
+			0.5			from xml, start scoring for 1 to 5 stars
+			0.5			from xml, game time scoring bonus
 
 	10-Apr	5.75	
 			0.25		List of Endings

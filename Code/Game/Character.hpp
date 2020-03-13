@@ -9,6 +9,8 @@ public:
 	ContextMode	m_contextMode = CONTEXT_NONE;
 };
 
+
+
 class Character : public Card
 {
 public:
@@ -29,4 +31,7 @@ public:
 private:
 	CharacterState			m_currentState;
 	CharStateList			m_states;
+
+	const float CHAR_CARD_HEIGHT = 25.0f;
+	const float CHAR_CARD_ASPECT_RATIO = 0.65675934803451581975071907957814f;
 };

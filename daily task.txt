@@ -1,10 +1,27 @@
-work	estimate	actual	task
+3/13----------------------------------------------------------------
+time	estimate	actual	task		
 
+11:45	0.25		0.33	Present an image of the character		
+8:45	0.25		0.04	Ask for a character that the game does not know about
+8:40	0.25		0.04	Ask for a character the player knows about In a location the character is not in
+8:35	0.25		0.08	Ask for a character the player knows about In a location the character is currently in
+8:30	0.25		0.08	When the computer is talking to the player, use arrowhead - > Talking to Chief		NOTE: this is starting to feel like I need to parse the designers input.
+8:21	0.25		0.15	When talking to a character, present the text as if reading from a script - Chief: “Glad you can make it…”		NOTE: If we move all of the characters dialog into the character xml, we can assume the character is talking and add this. However, if a location is introducting the character, but the designer wants the character to talk, it is now up to the designer to add the quotation marks
+8:11	0.25		0.16	Add 20 in-game minutes when going to a different location
+8:04	0.5			0.08	When changing locations, change the background to the location image
+7:52				0.16	note: moved event class further down the schedule, wanted to get base type (Location, Character, items) done first
+7:50	0.25		0.04	Print the Item the player is interacting with
+7:47	0.25		0.04	Print the Subject the player asked the character
+7:45	0.25		0.04	Print the Character the player is talking to
 
+3/12----------------------------------------------------------------
+time	estimate	actual	task
+6:20	0.25		0.25	Print the current day
+6:06	0.25		0.25	Print the current game time	
 
 3/11----------------------------------------------------------------
-work	estimate	actual	task
-10:15				0.75	discoved: need an imGUI pannel to display text. Refactor imGUI, because dialogueSystem is the only object rendering, now the scene is rendering using imgui
-10:07						Print the Location that the player is at
+time	estimate	actual	task
+10:15				0.50	discoved: need an imGUI pannel to display text. Refactor imGUI, because dialogueSystem is the only object rendering, now the scene is rendering using imgui
+10:07	0.25		0.25	Print the Location that the player is at
 8:07				2.0		discoved: dynamicaly creating a material from an image file path	NOTE: never use new within an object that is stored in a vector unless you can set the capasity. Always use a refrence of an object and not a temporary; once out of scope it will delete refrences and can messup the original object
 8:07	0.25				Show the current location from image

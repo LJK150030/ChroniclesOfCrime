@@ -64,10 +64,10 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 			CPUMesh quad_mesh;
 			CpuMeshAddQuad(&quad_mesh, 
 				AABB2(
-					-(LOC_ASPECT_RATIO * LOC_HEIGHT), 
-					-LOC_HEIGHT,
-					LOC_ASPECT_RATIO * LOC_HEIGHT,
-					LOC_HEIGHT));
+					-(LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT),
+					-LOC_CARD_HEIGHT,
+					LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT,
+					LOC_CARD_HEIGHT));
 			m_mesh = new GPUMesh(g_theRenderer);
 			m_mesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
 		}
@@ -108,6 +108,7 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 		}
 	}
 
+	//m_modelMatrix = m_modelMatrix.MakeTranslation2D(Vec2(0.0f, -5.0f));
 	SetState(current_state);
 }
 
@@ -132,28 +133,41 @@ bool Location::IsCharacterInLocation(const Character* character) const
 	return false;
 }
 
-String Location::GetLocationDescription() const
+bool Location::GetLocationDescription(String& out) const
 {
-	if(!m_currentState.m_canMoveHere)
-	{
-		return g_unknownLocation;
-	}
+	Location* cur_loc = m_theScenario->GetCurrentLocation();
 
-	Location* current_location = m_theScenario->GetCurrentLocation();
-	if(current_location->m_name == m_name)
+	if (cur_loc->GetName() == m_name)
 	{
-		return g_sameLocation;
+		out += g_sameLocation;
+		return false;
 	}
-
-	return m_currentState.m_description;
+	else if(!m_currentState.m_canMoveHere)
+	{
+		out += g_unknownLocation;
+		return false;
+	}
+	else
+	{
+		out += m_currentState.m_description;
+		return true;
+	}
 }
 
 
-String Location::IntroduceCharacter(const Character* character) const
+bool Location::IntroduceCharacter(String& out, const Character* character) const
 {
 	String loc_state = m_currentState.m_name;
 	String char_name = character->GetName();
 	String char_state = character->GetCharacterState().m_name;
+
+	Card* cur_char = m_theScenario->GetCurrentInterest();
+
+	if (char_name == m_name)
+	{
+		out += g_sameCharacter;
+		return false;
+	}
 
 	const int num_dialogue = static_cast<int>(m_presentingDialogue.size());
 	std::vector<int> dialogue_ranking;
@@ -203,8 +217,17 @@ String Location::IntroduceCharacter(const Character* character) const
 			highest_idx = dialogue_idx;
 		}
 	}
-	
-	return m_presentingDialogue[highest_idx].m_line;
+
+	if(highest_score == 3)
+	{
+		out += m_presentingDialogue[highest_idx].m_line;
+		return false;
+	}
+	else
+	{
+		out += m_presentingDialogue[highest_idx].m_line;
+		return true;
+	}
 }
 
 

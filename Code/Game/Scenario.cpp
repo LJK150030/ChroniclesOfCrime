@@ -114,20 +114,33 @@ STATIC bool TravelToLocation(EventArgs& args)
 
 	//find the location in case the player uses a nick name
 	LookupItr loc_itr;
-	String log;
+	String log = "\t";
 	String loc_name = args.GetValue("card", String("something and nothing"));
 	const bool is_in_list = current_scenario->IsLocationInLookupTable(loc_itr, String(loc_name));
 
 	if (is_in_list)
 	{
-		log = current_scenario->GetLocationFromList(loc_itr->second)->GetLocationDescription();
+		Location* new_loc = current_scenario->GetLocationFromList(loc_itr->second);
+		const bool valid_transition = new_loc->GetLocationDescription(log);
+		
+		if (valid_transition)
+		{
+			current_scenario->SetLocation(new_loc);
+			current_scenario->SetInterest(nullptr);
+			current_scenario->AddGameTime(current_scenario->GetLocChangeTime(), 0);
+		}
+		else
+		{
+			current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
+		}
 	}
 	else
 	{
-		log = current_scenario->GetUnknownLocation();
+		log += g_unknownLocation;
+		current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 	}
 
-	ds->AddLog(LOG_LOCATION, log);
+	ds->AddLog(LOG_LOCATION, log); 
 
 	return true;
 }
@@ -143,16 +156,28 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 	LookupItr char_itr;
 	const bool is_char_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(char_name));
 
-	String log;
+	String log = "\t";
 	if (is_char_in_list)
 	{
 		Location* cur_loc = current_scenario->GetCurrentLocation();
 		Character* char_subject = current_scenario->GetCharacterFromList(char_itr->second);
-		log = cur_loc->IntroduceCharacter(char_subject);
+		
+		const bool is_subject_here = cur_loc->IntroduceCharacter(log, char_subject);
+
+		if(is_subject_here)
+		{
+			current_scenario->SetInterest(char_subject);
+			current_scenario->AddGameTime(current_scenario->GetInterestChangeTime(), 0);
+		}
+		else
+		{
+			current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
+		}
 	}
 	else
 	{
-		log = current_scenario->GetUnknownCharacter();
+		log += current_scenario->GetUnknownCharacter();
+		current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 	}
 
 	ds->AddLog(LOG_CHARACTER, log);
@@ -175,7 +200,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 
 	LookupItr char_itr;
-	String log;
+	String log = "\t";
 	const bool is_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(name));
 
 	// 	Location* cur_loc = current_scenario->GetCurrentLocation();
@@ -184,11 +209,11 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	if (is_in_list)
 	{
 		current_scenario->GetCharacterFromList(char_itr->second)->SetDiscovery(true);
-		log = current_scenario->GetCharacterFromList(char_itr->second)->GetDescription();
+		log += current_scenario->GetCharacterFromList(char_itr->second)->GetDescription();
 	}
 	else
 	{
-		log = current_scenario->GetUnknownCharacter();
+		log += current_scenario->GetUnknownCharacter();
 	}
 
 	ds->AddLog(LOG_CHARACTER, log);
@@ -205,17 +230,17 @@ STATIC bool InvestigateItem(EventArgs& args)
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 
 	LookupItr item_itr;
-	String log;
+	String log = "\t";
 	const bool is_in_list = current_scenario->IsItemInLookupTable(item_itr, String(name));
 
 	if (is_in_list)
 	{
 		current_scenario->GetItemFromList(item_itr->second)->SetDiscovery(true);
-		log = current_scenario->GetItemFromList(item_itr->second)->GetDescription();
+		log += current_scenario->GetItemFromList(item_itr->second)->GetDescription();
 	}
 	else
 	{
-		log = current_scenario->GetUnknownItem();	
+		log += current_scenario->GetUnknownItem();	
 	}
 
 	ds->AddLog(LOG_ITEM, log);
@@ -318,7 +343,6 @@ void Scenario::Update(const double delta_seconds)
 		ImGuiWindowFlags_NoSavedSettings
 	);
 
-
 	ImGui::SetWindowSize(
 		ImVec2(m_dialogWindowSize[0], m_dialogWindowSize[1]),
 		ImGuiCond_Always
@@ -330,8 +354,33 @@ void Scenario::Update(const double delta_seconds)
 	);
 
 	//render game state
-	String current_location = "Current Location: " + m_currentLocation->GetName();
-	ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), current_location.c_str());
+	String current_time = Stringf("On Day %01d at %02d%02d", m_gameDays, m_gametimeHour, m_gametimeMin);
+	String current_location = "Location: " + m_currentLocation->GetName();
+	
+	String current_interest = "Interested in: ";
+	if(m_currentInterest == nullptr)
+	{
+		current_interest += "---";
+	}
+	else
+	{
+		current_interest += m_currentInterest->GetName();
+	}
+
+	String current_subject = "Subject is: ";
+	if (m_currentSubject == nullptr)
+	{
+		current_subject += "---";
+	}
+	else
+	{
+		current_subject += m_currentSubject->GetName();
+	}
+	
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_location.c_str());
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_time.c_str());
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_interest.c_str());
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_subject.c_str());
 	ImGui::End();
 
 }
@@ -342,6 +391,11 @@ void Scenario::Render() const
 
 	//render game assets
 	m_currentLocation->Render();
+
+	if(m_currentInterest != nullptr)
+	{
+		m_currentInterest->Render();	
+	}
 }
 
 
@@ -471,10 +525,68 @@ Card* Scenario::GetCurrentInterest()
 }
 
 
+void Scenario::SetLocation(Location* loc)
+{
+	m_currentLocation = loc;
+}
+
+
+void Scenario::SetInterest(Card* card)
+{
+	m_currentInterest = card;
+}
+
+
+void Scenario::AddGameTime(const uint mins, const uint hours)
+{
+	m_gametimeMin += mins;
+	m_gametimeHour += hours;
+
+	while(m_gametimeMin >= 60)
+	{
+		m_gametimeMin -= 60;
+		m_gametimeHour += 1;
+	}
+
+	while(m_gametimeHour >= 24)
+	{
+		m_gametimeHour -= 24;
+		m_gameDays += 1;
+	}
+}
+
+
+uint Scenario::GetLocChangeTime() const
+{
+	return CHANGE_LOC_MINS;
+}
+
+
+uint Scenario::GetInterestChangeTime() const
+{
+	return CHANGE_INTEREST;
+}
+
+
+uint Scenario::GetSubjectChangeTime() const
+{
+	return CHANGE_SUBJECT;
+}
+
+
+uint Scenario::GetWastingTime() const
+{
+	return WASTE_TIME;
+}
+
+
 void Scenario::ManuallySetScenarioSettings()
 {
-	m_currentHourMilitary = 9;
-	m_currentMinute = 0;
+	m_gametimeHour = 9;
+	m_gametimeMin = 0;
+	m_gameDays = 1;
+
+	//AddGameTime(68, 50);
 
 	LookupItr loc_itr;
 	bool home = IsLocationInLookupTable(loc_itr, "Scotland Yard");
@@ -618,6 +730,16 @@ void Scenario::ReadCharactersXml(const String& file_path)
 	tinyxml2::XMLDocument characters_doc;
 	OpenXmlFile(&characters_doc, file_path);
 	XmlElement* root_characters = characters_doc.RootElement();
+	uint char_count = 0;
+
+	for (const XmlElement* child = root_characters->FirstChildElement();
+		child;
+		child = child->NextSiblingElement())
+	{
+		char_count++;
+	}
+
+	m_characters.reserve(char_count);
 
 	for (const XmlElement* character_element = root_characters->FirstChildElement();
 		character_element;

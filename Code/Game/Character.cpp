@@ -4,6 +4,10 @@
 
 #include "Engine/Core/StringUtils.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "Engine/Renderer/GPUMesh.hpp"
+#include "Engine/Renderer/Material.hpp"
+#include "Engine/Renderer/Shader.hpp"
+#include "Engine/Renderer/RenderContext.hpp"
 
 Character::Character() { m_type = CARD_CHARACTER; }
 Character::Character(Scenario* the_setup) : Card(the_setup, CARD_CHARACTER) { }
@@ -41,6 +45,27 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 			Location* loc = m_theScenario->GetLocationFromList(loc_itr->second);
 			loc->AddCharacterToLocation(this);
 		}
+		else if (attribute_name == "imagedir")
+		{
+			String file_name = m_name + "mat";
+			m_material = g_theRenderer->CreateOrGetMaterial(file_name, false);
+			m_material->SetShader("default_lit.hlsl");
+			m_material->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
+
+			std::string texture_src = attribute->Value();
+			TextureView* texture(reinterpret_cast<TextureView*>(g_theRenderer->CreateOrGetTextureView2D(texture_src)));
+			m_material->SetDiffuseMap(texture);
+
+			CPUMesh quad_mesh;
+			CpuMeshAddQuad(&quad_mesh,
+				AABB2(
+					-(CHAR_CARD_ASPECT_RATIO * CHAR_CARD_HEIGHT),
+					-CHAR_CARD_HEIGHT,
+					CHAR_CARD_ASPECT_RATIO * CHAR_CARD_HEIGHT,
+					CHAR_CARD_HEIGHT));
+			m_mesh = new GPUMesh(g_theRenderer);
+			m_mesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
+		}
 		else
 		{
 			ERROR_RECOVERABLE(Stringf("Unknown Attribute in location xml file, '%s', skipping attribute", attribute->Name()))
@@ -77,7 +102,8 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 			ERROR_RECOVERABLE(Stringf("Unknown Element in location xml file, '%s', skipping element", child_element->Name()))
 		}
 	}
-
+	
+	m_modelMatrix = m_modelMatrix.MakeTranslation2D(Vec2(55.0f, 10.0f));
 	SetState(current_state);
 }
 

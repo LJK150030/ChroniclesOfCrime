@@ -1,6 +1,6 @@
 <Characters>
 
-	<Character  Name="Chief Officer Doyle" StartingState="First-time" StartLoc="Scotland Yard">
+	<Character  Name="Chief Officer Doyle" StartingState="First-time" StartLoc="Scotland Yard" ImageDir="Character/Chief.png">
 		<Nicknames List="Chief,Doyle" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -11,7 +11,7 @@
 		</Dialogue>	
 	</Character>
 
-	<Character Name="Anna Taylor" StartingState="First-time" StartLoc="Notting Hill">
+	<Character Name="Anna Taylor" StartingState="First-time" StartLoc="Notting Hill" ImageDir="Character/Anna.png">
 		<Nicknames List="Mrs. Taylor,Anna,Taylor,victim" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -22,7 +22,7 @@
 		</Dialogue>		
 	</Character>
 
-	<Character Name="Rose Butterfly" StartingState="First-time" StartLoc="Leicester Square">
+	<Character Name="Rose Butterfly" StartingState="First-time" StartLoc="Leicester Square" ImageDir="Character/Rose.png">
 		<Nicknames List="Rose,Butterfly,Ms. Butterfly" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -32,7 +32,7 @@
 		</Dialogue>	
 	</Character>
 
-	<Character Name="Jenny May" StartingState="First-time" StartLoc="Leicester Square">
+	<Character Name="Jenny May" StartingState="First-time" StartLoc="Leicester Square" ImageDir="Character/Jenny.png">
 		<Nicknames List="Jenny,May,Ms. May" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -42,7 +42,7 @@
 		</Dialogue>
 	</Character>
 
-	<Character  Name="Eric Gloomerry" StartingState="First-time" StartLoc="NONE">
+	<Character  Name="Eric Gloomerry" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Hacker.png">
 		<Nicknames List="Eric,Mr. Gloomerry,Gloomerry,Hacker" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -52,7 +52,7 @@
 		</Dialogue>
 	</Character>
 
-	<Character Name="Jeremy King" StartingState="First-time" StartLoc="NONE">
+	<Character Name="Jeremy King" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Doctor.png">
 		<Nicknames List="Jeremy,Dr. King,King,Doctor" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -62,7 +62,7 @@
 		</Dialogue>
 	</Character>
 
-	<Character Name="Harvey Marshall" StartingState="First-time" StartLoc="NONE">
+	<Character Name="Harvey Marshall" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Criminologist.png">
 		<Nicknames List="Harvey,Mr. Marshall,Marshall,Criminologist" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
@@ -72,7 +72,7 @@
 		</Dialogue>
 	</Character>
 	
-	<Character Name="Lou Chin" StartingState="First-time" StartLoc="NONE">
+	<Character Name="Lou Chin" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Scientist.png">
 		<Nicknames List="Lou,Ms. Chin,Chin,Scientist" />
 		<States>
 			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />

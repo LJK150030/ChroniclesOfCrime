@@ -29,15 +29,14 @@ class Location: public Card
 public:
 	Location();
 	explicit Location(Scenario* the_setup);
-	explicit Location(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
-		const String& desc);
+	explicit Location(Scenario* the_setup, const String& name, const StringList& list_of_nicknames, const String& desc);
 	explicit Location(Scenario* the_setup, const XmlElement* element);
 	~Location();
 
 	// ACCESSORS
 	bool		IsCharacterInLocation(const Character* character) const;
-	String		GetLocationDescription() const;
-	String		IntroduceCharacter(const Character* character) const;
+	bool		GetLocationDescription(String& out) const;
+	bool		IntroduceCharacter(String& out, const Character* character) const;
 	
 	// MUTATORS
 	void AddCharacterToLocation(const Character* character);
@@ -55,6 +54,6 @@ private:
 
 	LocCharacterIntro		m_presentingDialogue;
 
-	const float LOC_HEIGHT = 20.0f;
-	const float LOC_ASPECT_RATIO = 2.2572855953372189841798501248959f;
+	const float LOC_CARD_HEIGHT = 30.0f;
+	const float LOC_CARD_ASPECT_RATIO = 2.2572855953372189841798501248959f;
 };

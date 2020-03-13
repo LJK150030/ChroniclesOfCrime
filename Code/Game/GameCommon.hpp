@@ -137,6 +137,7 @@ inline char g_itemCommand[] = "VIEW";
 
 inline String g_unknownLocation = "Location cards represent London's districts. Without an address or a precise goal you cannot go there.";
 inline String g_sameLocation = "You are already in this location. The location is indicated in the top left corner.";
+inline String g_sameCharacter = "You are already talking to this character.";
 
 
 enum CardType

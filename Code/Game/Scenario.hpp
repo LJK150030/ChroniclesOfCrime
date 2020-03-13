@@ -59,8 +59,15 @@ public:
 	Location*	GetCurrentLocation();
 	Card*		GetCurrentInterest();
 
-	int AddMinutesToTime();
-	int AddHoursToTime();
+	void	SetLocation(Location* loc);
+	void	SetInterest(Card* card);
+
+	void	AddGameTime(const uint mins, const uint hours);
+	uint	GetLocChangeTime() const;
+	uint	GetInterestChangeTime() const;
+	uint	GetSubjectChangeTime() const;
+	uint	GetWastingTime() const;
+
 
 	//Helpper
 	LocationList GetLocationList();
@@ -98,8 +105,14 @@ private:
 	Game*			m_theGame = nullptr;
 	
 	// Game state data
-	int				m_currentHourMilitary = 0;
-	int				m_currentMinute = 0;
+	uint	m_gametimeHour = 0; //in military 0-23
+	uint	m_gametimeMin = 0;	// 0 - 60
+	uint	m_gameDays = 0;
+	
+	uint	CHANGE_LOC_MINS = 20;
+	uint	CHANGE_INTEREST = 5;
+	uint	CHANGE_SUBJECT = 5;
+	uint	WASTE_TIME = 5;
 	
 	Location*		m_currentLocation = nullptr;
 	Card*			m_currentInterest = nullptr;
@@ -123,7 +136,7 @@ private:
 	StringList		m_unknownLocationLine;
 	StringList		m_unknownCharacterLine;
 	StringList		m_unknownItemLine;
-
+	
 	bool	m_show = true;
 	bool	m_imguiError = false;
 	float	m_gameResolution[2] = { 720.0f, 1080.0f };
