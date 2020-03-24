@@ -167,7 +167,7 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 		if(is_subject_here)
 		{
 			current_scenario->SetInterest(char_subject);
-			current_scenario->AddGameTime(current_scenario->GetInterestChangeTime(), 0);
+			current_scenario->AddGameTime(current_scenario->GetInterrogateChangeTime(), 0);
 		}
 		else
 		{
@@ -354,8 +354,9 @@ void Scenario::Update(const double delta_seconds)
 	);
 
 	//render game state
-	String current_time = Stringf("On Day %01d at %02d%02d", m_gameDays, m_gametimeHour, m_gametimeMin);
+	String current_scenario = "Scenario: " + m_name;
 	String current_location = "Location: " + m_currentLocation->GetName();
+	String current_time = Stringf("On Day %01d at %02d:%02d", m_gameDays, m_gametimeHour, m_gametimeMin);
 	
 	String current_interest = "Interested in: ";
 	if(m_currentInterest == nullptr)
@@ -377,6 +378,7 @@ void Scenario::Update(const double delta_seconds)
 		current_subject += m_currentSubject->GetName();
 	}
 	
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_scenario.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_location.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_time.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_interest.c_str());
@@ -423,12 +425,14 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
  	const String characters_file = String(folder_dir) + "/Characters.xml";
  	ReadCharactersXml(characters_file);
  	SetupCharacterLookupTable();
-// 
-// 	const String item_file = String(folder_dir) + "/Items.xml";
-// 	ReadItemsXml(item_file);
-// 	SetupItemLookupTable();
-	
-	ManuallySetScenarioSettings();
+
+	//TODO: read in items
+	// 	const String item_file = String(folder_dir) + "/Items.xml";
+	// 	ReadItemsXml(item_file);
+	// 	SetupItemLookupTable();
+
+	const String settings_file = String(folder_dir) + "/Settings.xml";
+	ReadSettingsXml(settings_file);
 }
 
 
@@ -558,25 +562,25 @@ void Scenario::AddGameTime(const uint mins, const uint hours)
 
 uint Scenario::GetLocChangeTime() const
 {
-	return CHANGE_LOC_MINS;
+	return m_costToMoveToLocation;
 }
 
 
-uint Scenario::GetInterestChangeTime() const
+uint Scenario::GetExamineItemChangeTime() const
 {
-	return CHANGE_INTEREST;
+	return m_costToExamineItem;
 }
 
 
-uint Scenario::GetSubjectChangeTime() const
+uint Scenario::GetInterrogateChangeTime() const
 {
-	return CHANGE_SUBJECT;
+	return m_costToInterrogateCharacter;
 }
 
 
 uint Scenario::GetWastingTime() const
 {
-	return WASTE_TIME;
+	return m_costForUnknownCommand;
 }
 
 
@@ -764,6 +768,164 @@ void Scenario::ReadItemsXml(const String& file_path)
 	{
 		m_items.emplace_back(this, item_element);
 	}
+}
+
+
+void Scenario::ReadSettingsXml(const String& file_path)
+{
+	tinyxml2::XMLDocument setup_doc;
+	OpenXmlFile(&setup_doc, file_path);
+	XmlElement* root_setup = setup_doc.RootElement();
+
+	ReadScenarioSettingsAttributes(root_setup);
+
+	// Get the children elements
+	for (const XmlElement* setup_element = root_setup->FirstChildElement();
+		setup_element;
+		setup_element = setup_element->NextSiblingElement()
+		)
+	{
+		String element_name = StringToLower(setup_element->Name());
+		
+		if (element_name == "timecostforactions")
+		{
+			ReadScenarioTimeCostForActions(setup_element);
+		}
+		else if (element_name == "starsscoresettings")
+		{
+			ReadScenarioStarsScoreSettings(setup_element);
+		}
+		else if (element_name == "gametimescorebonusandpenalty")
+		{
+			ReadScenarioGameTimeScoreBonusAndPenalty(setup_element);
+		}
+	}
+	
+}
+
+
+void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
+{
+	// Get all the attributes from the ScenarioSettings element
+	for (const XmlAttribute* attribute = element->FirstAttribute();
+		attribute;
+		attribute = attribute->Next()
+		)
+	{
+		String attribute_name = StringToLower(attribute->Name());
+
+		if (attribute_name == "name")
+		{
+			m_name = attribute->Value();
+		}
+		else if (attribute_name == "intromessage")
+		{
+			m_introMessage = attribute->Value();
+		}
+		else if (attribute_name == "closedlocationdefaultmessage")
+		{
+			m_closedLocationMessage = attribute->Value();
+		}
+		else if (attribute_name == "samelocationmessage")
+		{
+			m_sameLocationMessage = attribute->Value();
+		}
+		else if (attribute_name == "unknowncommand")
+		{
+			m_unknownCommandMessage = attribute->Value();
+		}
+		else if (attribute_name == "startinglocation")
+		{
+			LookupItr loc_itr;
+			String starting_location_name = attribute->Value();
+			
+			bool home = IsLocationInLookupTable(loc_itr, starting_location_name);
+			if (home)
+			{
+				m_currentLocation = &m_locations[loc_itr->second];
+			}
+
+			ASSERT_OR_DIE(home, "Need to have a valid starting position");
+		}
+		else if (attribute_name == "startupevent")
+		{
+			//TODO: read in after we make the scenario event class
+		}
+		else if (attribute_name == "startingtimeinmilitary")
+		{
+			m_gameDays = 1;
+
+			String military_time_string = attribute->Value();
+
+			StringList military_hour_minute = SplitStringOnDelimiter(military_time_string, ':');
+			ASSERT_OR_DIE(military_hour_minute.size() == 2, "StartintgTimeInMilitary is not a valid time")
+			
+			m_gametimeHour = std::stoul(military_hour_minute[0]);
+			m_gametimeMin = std::stoul(military_hour_minute[1]);
+		}
+	}
+
+	//will need to change the unknown lines
+	m_unknownLocationLine.emplace_back("Where is that again?");
+	m_unknownLocationLine.emplace_back("...I think I'm lost...");
+	m_unknownLocationLine.emplace_back("What city are we in again?");
+	
+	m_unknownCharacterLine.emplace_back("Sorry, give me a minute");
+	m_unknownCharacterLine.emplace_back("I'm at a lost for words");
+	m_unknownCharacterLine.emplace_back("............");
+
+	m_unknownItemLine.emplace_back("oh, where did I put it...");
+	m_unknownItemLine.emplace_back("I know it is here somewhere.");
+	m_unknownItemLine.emplace_back("what was I looking for again?");
+}
+
+
+void Scenario::ReadScenarioTimeCostForActions(const XmlElement* element)
+{
+	for (const XmlAttribute* attribute = element->FirstAttribute();
+		attribute;
+		attribute = attribute->Next()
+		)
+	{
+		String attribute_name = StringToLower(attribute->Name());
+
+		if (attribute_name == "movetolocation")
+		{
+			m_costToMoveToLocation = attribute->UnsignedValue();
+		}
+		else if (attribute_name == "investigatelocation")
+		{
+			m_costToInvestigateLocation = attribute->UnsignedValue();
+		}
+		else if (attribute_name == "examineitem")
+		{
+			m_costToExamineItem = attribute->UnsignedValue();
+		}
+		else if (attribute_name == "interrogate")
+		{
+			m_costToInterrogateCharacter = attribute->UnsignedValue();
+		}
+		else if (attribute_name == "unknowncommand")
+		{
+			m_costForUnknownCommand = attribute->UnsignedValue();
+		}
+	}
+}
+
+
+void Scenario::ReadScenarioStarsScoreSettings(const XmlElement* element)
+{
+	UNUSED(element);
+	// TODO: set up scoring class
+	//ERROR_AND_DIE("ReadScenarioStarsScoreSettings has yet to be made");
+}
+
+
+void Scenario::ReadScenarioGameTimeScoreBonusAndPenalty(const XmlElement* element)
+{
+	UNUSED(element);
+	// TODO: set up scoring class
+	//ERROR_AND_DIE("ReadScenarioGameTimeScoreBonusAndPenalty has yet to be made");
 }
 
 

@@ -1,4 +1,37 @@
-<ScenarioSettings
+<ScenarioSettings 
+	Name="Your first case"
+	IntroMessage="(ui=Tutorial) Welcome to the Chronicles of Crime tutorial. Disclaimer: This scenario is an introduction to the game, which explains how to play without giving you a real investigation challenge. Press next to start."
+	ClosedLocationDefaultMessage="Location cards represent London's districts. Without an address or a precise goal you cannot go there."
+	SameLocationMessage="You are already in this location. The location is indicated in the top left corner."
+	UnknownCommand="That is not a valid command from the game."
+	StartingLocation="Scotland Yard"
+	StartupEvent=""
+	StartingTimeInMilitary="9:00"
+>
 
 
-/>
+	<TimeCostForActions
+		MoveToLocation="20"
+		InvestigateLocation="5"
+		ExamineItem="5"
+		InterrogateCharacter="5"
+		UnknownCommand="0"
+	/>
+
+
+	<StarsScoreSettings
+		Star1="5"
+		Star2="20"
+		Star3="40"
+		Star4="60"
+		Star5="80"
+	/>
+
+
+	<GameTimeScoreBonusAndPenalty IsEnabled="true" MaxBonusPoints="30" MaxPenaltyPoints="0">
+		<IdealPlayedTime 	Days="0" 	Hours="8" 	Minutes="0" />
+		<MaxBonusTime 		Days="0" 	Hours="4" 	Minutes="0" />
+		<MaxPenaltyTime 	Days="0" 	Hours="16" 	Minutes="0" />
+	</GameTimeScoreBonusAndPenalty>
+
+</ScenarioSettings>

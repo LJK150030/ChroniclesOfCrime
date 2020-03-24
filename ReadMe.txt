@@ -182,19 +182,19 @@ O			0.25		Present an image of the character
 			0.5			Add the item to the evidence section of the journal
 
 	7-Apr	4.5
-			0.25		from xml, Set Starting Location
-			0.25		from xml, Set Scenario Name
+O			0.25		from xml, Set Starting Location
+O			0.25		from xml, Set Scenario Name
 			0.25		from xml, Set startup event
-			0.25		from xml, Set starting time
-			0.5			from xml, Intro message
-			0.25		from xml, closed location default message
-			0.25		from xml, same location message
-			0.25		from xml, unknown command message
-			0.25		from xml, time cost move to location
-			0.25		from xml, time cost to investigate a room
-			0.25		from xml, time cost to investigate an item
-			0.25		from xml, time cost to interagate character
-			0.25		from xml, time cost for unknown command
+O			0.25		from xml, Set starting time
+O			0.5			from xml, Intro message
+O			0.25		from xml, closed location default message
+O			0.25		from xml, same location message
+O			0.25		from xml, unknown command message
+O			0.25		from xml, time cost move to location
+O			0.25		from xml, time cost to investigate a room
+O			0.25		from xml, time cost to investigate an item
+O			0.25		from xml, time cost to interagate character
+O			0.25		from xml, time cost for unknown command
 			0.5			from xml, start scoring for 1 to 5 stars
 			0.5			from xml, game time scoring bonus
 
@@ -235,4 +235,8 @@ O			0.25		Present an image of the character
 
 	8-Mar	4		Present final project													---		
 
+
+
+
+// hello world version of scenario rather than tutorial
 

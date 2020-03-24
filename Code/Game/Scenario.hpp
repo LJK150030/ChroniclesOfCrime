@@ -64,8 +64,8 @@ public:
 
 	void	AddGameTime(const uint mins, const uint hours);
 	uint	GetLocChangeTime() const;
-	uint	GetInterestChangeTime() const;
-	uint	GetSubjectChangeTime() const;
+	uint	GetExamineItemChangeTime() const;
+	uint	GetInterrogateChangeTime() const;
 	uint	GetWastingTime() const;
 
 
@@ -86,6 +86,11 @@ private:
 	void ReadCharactersXml(const String& file_path);
 	void ReadItemsXml(const String& file_path);
 	void ReadSettingsXml(const String& file_path);
+
+	void ReadScenarioSettingsAttributes(const XmlElement* element);
+	void ReadScenarioTimeCostForActions(const XmlElement* element);
+	void ReadScenarioStarsScoreSettings(const XmlElement* element);
+	void ReadScenarioGameTimeScoreBonusAndPenalty(const XmlElement* element);
 	
 	// Database manipulation
 	void SetupLocationLookupTable();
@@ -102,22 +107,25 @@ private:
 	
 private:
 	// Owner
-	Game*			m_theGame = nullptr;
+	Game*	m_theGame = nullptr;
 	
 	// Game state data
-	uint	m_gametimeHour = 0; //in military 0-23
-	uint	m_gametimeMin = 0;	// 0 - 60
-	uint	m_gameDays = 0;
-	
-	uint	CHANGE_LOC_MINS = 20;
-	uint	CHANGE_INTEREST = 5;
-	uint	CHANGE_SUBJECT = 5;
-	uint	WASTE_TIME = 5;
-	
-	Location*		m_currentLocation = nullptr;
-	Card*			m_currentInterest = nullptr;
-	Card*			m_currentSubject = nullptr;
-	
+	String		m_name = "";
+	String		m_introMessage = "";
+	String		m_closedLocationMessage = "";
+	String		m_sameLocationMessage = "";
+	String		m_unknownCommandMessage = "";
+	uint		m_gametimeHour = 0; //in military 0-23
+	uint		m_gametimeMin = 0;	// 0 - 60
+	uint		m_gameDays = 0;
+	uint		m_costToMoveToLocation = 20;
+	uint		m_costToInvestigateLocation = 5;
+	uint		m_costToExamineItem = 5;
+	uint		m_costToInterrogateCharacter = 5;
+	uint		m_costForUnknownCommand = 5;
+	Location*	m_currentLocation = nullptr;
+	Card*		m_currentInterest = nullptr;
+	Card*		m_currentSubject = nullptr;
 
 	
 	// Physical representation of Entities in the game
@@ -136,7 +144,8 @@ private:
 	StringList		m_unknownLocationLine;
 	StringList		m_unknownCharacterLine;
 	StringList		m_unknownItemLine;
-	
+
+	// ImGUI settings
 	bool	m_show = true;
 	bool	m_imguiError = false;
 	float	m_gameResolution[2] = { 720.0f, 1080.0f };
