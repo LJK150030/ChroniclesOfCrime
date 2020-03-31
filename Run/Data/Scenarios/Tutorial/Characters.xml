@@ -16,7 +16,7 @@
 			<Scan State="*"	Loc="*"	LocState="*" Char="Jenny May" 			CharState="*"	Line="Did you think of asking her what she thinks about the victim?" />
 		</CharDialogue>	
 		<ItemDialogue>
-			<Scan State="*" Loc="*" LocState="*" Item="*" ItemState"*" Line="What about asking one of the forensic experts?" />
+			<Scan State="*" Loc="*" LocState="*" Item="*" ItemState="*" Line="What about asking one of the forensic experts?" />
 		</ItemDialogue>
 	</Character>
 

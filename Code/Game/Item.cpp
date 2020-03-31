@@ -68,4 +68,26 @@ Item::Item(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CAR
 	}
 }
 
+
+const ItemState& Item::GetItemState() const
+{
+	return m_currentState;
+}
+
+
+void Item::SetState(const String& starting_state)
+{
+	int num_states = static_cast<int>(m_states.size());
+	for (int state_idx = 0; state_idx < num_states; ++state_idx)
+	{
+		if (StringToLower(m_states[state_idx].m_name) == starting_state)
+		{
+			m_currentState = m_states[state_idx];
+			return;
+		}
+	}
+
+	ERROR_AND_DIE(Stringf("StartingState for Card '%s' was not found in the list of states", m_name.c_str()));
+}
+
  

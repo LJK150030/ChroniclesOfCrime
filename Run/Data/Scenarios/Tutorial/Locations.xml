@@ -10,7 +10,7 @@
 		<IntroduceCharacter>
 			<Scan State="*" Character="*" 					CharacterState="*" 			Line="&gt; The person you are looking for isn't here. Try to move to a location where that person is located."/>
 			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Chief Officer Doyle: &quot;Ah, at last you're here. I have a case for you! An old woman (char=07) has been found dead. I need you to find out if it's a natural death or an homicide.&quot;" >
-				<SetObjectState object="Chief Officer Doyle" fromState="State 1" toState="State 2"/>
+				<SetCardState type="Character" name="Chief Officer Doyle" fromState="State 1" toState="State 2"/>
 			</Scan>
 			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 2" 	Line="Chief Officer Doyle: &quot;If you are lost, my office is always open. I will guide you as much as I can. What do you want to talk about?&quot;"/>
 			<Scan State="*" Character="Anna Taylor" 		CharacterState="*"			Line="&gt; You want to analyze the victim's corpse? Well thought! But you should go to the crime scene or ask the doctor what he thinks of the body."/>
@@ -36,7 +36,7 @@
 			<Scan State="*" 	Character="*"					CharacterState="*" Line="&gt; This person isn't present here."/>
 			<Scan State="*" 	Character="Chief Officer Doyle" CharacterState="*" Line="&gt; If you want some help from the Chief Officer, you will have to go back to the Scotland Yard."/>
 			<Scan State="*" 	Character="Anna Taylor" 		CharacterState="*" Line="&gt; The elderly woman died on her rocking chair with no obvious signs of struggle.">
-				<SetObjectState object="Anna Taylor" fromState="State 1" toState="Found"/>
+				<SetCardState type="Character" name="Anna Taylor" fromState="State 1" toState="Found"/>
 			</Scan>
 			<Scan State="*" 	Character="Eric Gloomerry" 		CharacterState="*" Line="&gt; You are calling the IT department: &quot;Internet and Technology, that's my thing! What can I do to help you?&quot;"/>
 			<Scan State="*" 	Character="Jeremy King" 		CharacterState="*" Line="&gt; You are calling the Morgue: &quot;Who should I autopsy?&quot;"/>
@@ -46,19 +46,19 @@
 		<IntroduceItem>
 			<Scan State="*"		Item="*"						ItemState="*"	Line="&gt; Unfortunately there is nothing of real interest for the investigation in this category." />
 			<Scan State="*"		Item="Animals"					ItemState="*"	Line="&gt; The victim's cats are dead.">
-				<SetObjectState object="Animals" fromState="Not Found" toState="Found"/>
+				<SetCardState type="Item" name="Animals" fromState="Not Found" toState="Found"/>
 			</Scan>
 			<Scan State="*"		Item="Food"						ItemState="*"	Line="&gt; You pick up a cream cake that's been partially eaten.">
-				<SetObjectState object="Food" fromState="Not Found" toState="Found"/>
+				<SetCardState type="Item" name="Food" fromState="Not Found" toState="Found"/>
 			</Scan>
 			<Scan State="*"		Item="Games &amp; Toys"			ItemState="*"	Line="&gt; You find a classic deck of 52 playing cards, apparently a usual pastime for the victim.">
-				<SetObjectState object="Games &amp; Toys" fromState="Not Found" toState="Found"/>
+				<SetCardState type="Item" name="Games &amp; Toys" fromState="Not Found" toState="Found"/>
 			</Scan>
 			<Scan State="*"		Item="Communication Device"			ItemState="*"	Line="&gt; An old corded telephone that still works.">
-				<SetObjectState object="Communication Device" fromState="Not Found" toState="Found"/>
+				<SetCardState type="Item" name="Communication Device" fromState="Not Found" toState="Found"/>
 			</Scan>
 			<Scan State="*"		Item="Papers"					ItemState="*"	Line="&gt; A letter with the following text: (b)(i)&quot;Give up on the tournament! You are not as strong as you were before. For the good of the club, leave your spot to someone younger.&quot; (/i)(/b)">
-				<SetObjectState object="Papers" fromState="Not Found" toState="Found"/>
+				<SetCardState type="Item" name="Papers" fromState="Not Found" toState="Found"/>
 			</Scan>
 			<Scan State="*"		Item="Furniture"				ItemState="*"	Line="&gt; Well tried, but the furniture here is old and uninteresting." />
 			<Scan State="*"		Item="Books &amp; Magazines" 	ItemState="*"	Line="&gt; Books about card games and Bridge. No real evidence for the investigation." />

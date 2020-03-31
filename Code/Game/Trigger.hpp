@@ -17,6 +17,6 @@ private:
 	Incident*	m_scenarioEvent = nullptr;
 		
 	String			m_name;
-	ConditionList	m_conditions;
-	ActionList		m_actions;
+	//ConditionList	m_conditions;
+	//ActionList		m_actions;
 };

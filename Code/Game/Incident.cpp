@@ -64,7 +64,7 @@ bool Incident::TestTriggers()
 	const uint num_triggers = static_cast<uint>(m_triggers.size());
 	for(uint trigger_idx = 0; trigger_idx > num_triggers; ++trigger_idx)
 	{
-		bool triggered = m_triggers[trigger_idx].Execute();
+		const bool triggered = m_triggers[trigger_idx].Execute();
 
 		if (triggered)
 		{

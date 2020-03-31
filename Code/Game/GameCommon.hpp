@@ -110,7 +110,9 @@ class EventSystem;
 struct Dialogue;
 struct LocationState;
 struct CharacterIntro;
+struct ItemIntro;
 struct CharacterState;
+struct ItemState;
 class Incident;
 class Trigger;
 class Condition;
@@ -127,11 +129,13 @@ typedef std::vector<Item>					ItemList;
 typedef std::vector<Character>				CharacterList;
 typedef std::vector<LocationState>			LocStateList;
 typedef std::vector<CharacterIntro>			LocCharacterIntro;
+typedef std::vector<ItemIntro>				LocItemIntro;
 typedef std::vector<CharacterState>			CharStateList;
+typedef std::vector<ItemState>				ItemStateList;
 typedef std::vector<Incident>				IncidentList;
 typedef std::vector<Trigger>				TriggerList;
 typedef std::vector<Condition>				ConditionList;
-typedef std::vector<Action>					ActionList;
+typedef std::vector<Action*>				ActionList;
 
 inline char g_locationHeader[] = "Heading to: ";
 inline char g_characterHeader[] = "Interrogating: ";
@@ -145,7 +149,7 @@ inline char g_itemCommand[] = "VIEW";
 inline String g_introMessage = "Welcome!";
 inline String g_closedLocationMessage = "This location is closed.";
 inline String g_sameLocationMessage = "You are already here.";
-inline String g_unknownCommandMessage = "You are already here.";
+inline String g_unknownCommandMessage = "unknown command.";
 
 
 
@@ -204,7 +208,7 @@ enum ConditionType
 	CONDITION_CARD_STATE,			// Object State Check
 	CONDITION_CARD,					// Object Scanned
 	CONDITION_CONTEXT,				// Check current context
-	CONDITION_VARIABLE,				// Check variable value
+	CONDITION_VARIABLE_CHECK,				// Check variable value
 	CONDITION_INTERROGATION_MODE,	// In/Out Interrogation mode
 	
 	NUM_CONDITION_TYPES

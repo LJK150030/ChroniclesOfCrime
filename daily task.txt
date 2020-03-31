@@ -1,6 +1,6 @@
 3/30----------------------------------------------------------------
 time	estimate	actual	task
-8:30	
+	
 8:00	0.5			0.5		discoved: get tutorial events
 7:30	0.5			0.5		discoved: determine xml layout for Actions
 7:00	0.5			0.5		discoved: determine xml layout for Conditions

@@ -1,7 +1,15 @@
 #pragma once
 #include "Game\Card.hpp"
 
-//TODO: this card is only given to a player
+
+struct ItemState
+{
+public:
+	String		m_name = "";
+	bool		m_addGameTime = false;
+};
+
+
 class Item : public Card
 {
 public:
@@ -12,6 +20,12 @@ public:
 	~Item() = default;
 
 	// ACCESSORS
+	const ItemState& GetItemState() const;
 
 	// MUTATORS
+	void SetState(const String& starting_state);
+
+private:
+	ItemState			m_currentState;
+	ItemStateList		m_states;
 };

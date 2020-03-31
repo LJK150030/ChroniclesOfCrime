@@ -3,6 +3,7 @@
 #include "Game/Location.hpp"
 #include "Game/Character.hpp"
 #include "Game/Item.hpp"
+#include "Game/Incident.hpp"
 
 #include "Game/App.hpp"
 #include "Game/Game.hpp"
@@ -422,17 +423,17 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	ReadLocationsXml(location_file);
 	SetupLocationLookupTable();
 
- 	const String characters_file = String(folder_dir) + "/Characters.xml";
- 	ReadCharactersXml(characters_file);
- 	SetupCharacterLookupTable();
+ 	//const String characters_file = String(folder_dir) + "/Characters.xml";
+ 	//ReadCharactersXml(characters_file);
+ 	//SetupCharacterLookupTable();
 
 	//TODO: read in items
 	// 	const String item_file = String(folder_dir) + "/Items.xml";
 	// 	ReadItemsXml(item_file);
 	// 	SetupItemLookupTable();
 
-	const String incidents_file = String(folder_dir) + "/Incidents.xml";
-	ReadIncidentsXml(incidents_file);
+	//const String incidents_file = String(folder_dir) + "/Incidents.xml";
+	//ReadIncidentsXml(incidents_file);
 
 	const String settings_file = String(folder_dir) + "/Settings.xml";
 	ReadSettingsXml(settings_file);
@@ -871,7 +872,7 @@ void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 		}
 		else if (attribute_name == "unknowncommand")
 		{
-			m_unknownCommandMessage = attribute->Value();
+			g_unknownCommandMessage = attribute->Value();
 		}
 		else if (attribute_name == "startinglocation")
 		{

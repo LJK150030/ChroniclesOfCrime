@@ -7,7 +7,7 @@ class Scenario;
 class Condition
 {
 public:
-	explicit Condition(Trigger* event_trigger);
+	explicit Condition(Trigger* event_trigger, const XmlElement* element);
 	virtual ~Condition();
 
 	virtual bool Test();

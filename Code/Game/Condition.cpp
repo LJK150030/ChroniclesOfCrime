@@ -1,7 +1,7 @@
 #include "Game/Condition.hpp"
 
 
-Condition::Condition(Trigger* the_setup): m_trigger(the_setup)
+Condition::Condition(Trigger* event_trigger, const XmlElement* element): m_trigger(event_trigger)
 {
 	
 };
