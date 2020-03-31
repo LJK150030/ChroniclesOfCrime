@@ -1,85 +1,198 @@
 <Characters>
 
-	<Character  Name="Chief Officer Doyle" StartingState="First-time" StartLoc="Scotland Yard" ImageDir="Character/Chief.png">
+	<Character  Name="Chief Officer Doyle" StartingState="State 1" StartLoc="Scotland Yard" ImageDir="Character/Chief.png">
 		<Nicknames List="Chief,Doyle" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
-			<State Name="Other-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 2" AddGameTime="true" ContextMode="Interrogation" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>	
+		<CharDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Char="*" 					CharState="*"	Line="I can help you with many things, dear, but this is not one of them." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Chief Officer Doyle" CharState="*"	Line="We can talk once the case is closed. Stay focused on your task." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 		CharState="*"	Line="This woman's name is Anna Taylor. She's been found dead in her home in the Notting Hill district (loc=G). Here's the address. Maybe you should go there and investigate…">
+				<SetObjectState object="Notting Hill" fromState="Closed" toState="Open"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="To learn more about the personality of a suspect, it's good to ask other people what they think about them." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Jenny May" 			CharState="*"	Line="Did you think of asking her what she thinks about the victim?" />
+		</CharDialogue>	
+		<ItemDialogue>
+			<Scan State="*" Loc="*" LocState="*" Item="*" ItemState"*" Line="What about asking one of the forensic experts?" />
+		</ItemDialogue>
 	</Character>
 
-	<Character Name="Anna Taylor" StartingState="First-time" StartLoc="Notting Hill" ImageDir="Character/Anna.png">
+
+	<Character Name="Anna Taylor" StartingState="State 1" StartLoc="Notting Hill" ImageDir="Character/Anna.png">
 		<Nicknames List="Mrs. Taylor,Anna,Taylor,victim" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
 			<State Name="Found" AddGameTime="true" ContextMode="Interrogation" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>		
 	</Character>
 
-	<Character Name="Rose Butterfly" StartingState="First-time" StartLoc="Leicester Square" ImageDir="Character/Rose.png">
+
+	<Character Name="Rose Butterfly" StartingState="State 1" StartLoc="Leicester Square" ImageDir="Character/Rose.png">
 		<Nicknames List="Rose,Butterfly,Ms. Butterfly" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="vrai nature" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="Guilty" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="end" AddGameTime="true" ContextMode="Interrogation" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>	
+		<CharDialogue>
+			<Scan State="*"				Loc="*"	LocState="*" Char="*"				CharState="*"	Line="I don't know what to say about this subject." />
+			<Scan State="State 1"		Loc="*"	LocState="*" Char="Anna Taylor" 	CharState="*"	Line="Anna was the President of the club, and we have this place thanks to her. She was my partner and we owe her so much." />
+			<Scan State="vari nature"	Loc="*"	LocState="*" Char="Anna Taylor" 	CharState="*"	Line="Yes, I admit that Anna was a difficult person, and to be honest she was a bad Bridge player. It's her money that made her President of the club." />
+			<Scan State="Guilty"		Loc="*"	LocState="*" Char="Anna Taylor"		CharState="*"	Line="Yes, I admit that Anna was a difficult person, and to be honest she was a bad Bridge player. It's her money that made her President of the club." />
+			<Scan State="end"			Loc="*"	LocState="*" Char="Anna Taylor" 	CharState="*"	Line="Yes, I admit that Anna was a difficult person, and to be honest she was a bad Bridge player. It's her money that made her President of the club." />
+			<Scan State="*"				Loc="*"	LocState="*" Char="Rose Butterfly"	CharState="*"	Line="My name is Rose Butterfly. I'm a florist. Bridge is more than just a passion to me, and Anna was my partner." />
+			<Scan State="*"				Loc="*"	LocState="*" Char="Jenny May"		CharState="*"	Line="I'm happy to see new players coming." />
+		</CharDialogue>	
+		<ItemDialogue>
+			<Scan State="*"				Loc="*"	LocState="*" Item="*" 			ItemState="*"		Line="I really don't know what to say about this." />
+			<Scan State="State 1"		Loc="*"	LocState="*" Item="Cake" 		ItemState="Found"	Line="I love to make cream cakes. Sugar is still legal, isn't it?" />
+			<Scan State="vrai nature"	Loc="*"	LocState="*" Item="Cake" 		ItemState="Found"	Line="I love to make cream cakes. Sugar is still legal, isn't it?" />
+			<Scan State="Guilty"		Loc="*"	LocState="*" Item="Cake" 		ItemState="Found"	Line="It's true. I confess. I sent a cake to Anna in order to get her sick and forfeit tomorrow's tournament. I never wanted her to die! ">
+				<SetObjectState object="Rose Butterfly" fromState="Guilty" toState="end"/>
+			</Scan>
+			<Scan State="end"			Loc="*"	LocState="*" Item="Cake" 		ItemState="Found"	Line="It's true. I confess. I sent a cake to Anna in order to get her sick and forfeit tomorrow's tournament. I never wanted her to die! " />
+				<SetObjectState object="Rose Butterfly" fromState="Guilty" toState="end"/>
+			</Scan>
+			<Scan State="State 1"		Loc="*"	LocState="*" Item="Card Game" 	ItemState="Found"	Line="Bridge is a game with such intensity... I love the adrenaline rush of the tournaments. @ There's an important one tomorrow with a big cash prize. With the right partner, I have a good chance to win it." />
+			<Scan State="vrai nature"	Loc="*"	LocState="*" Item="Card Game" 	ItemState="Found"	Line="Anna was supposed to be my partner, but she sucked at Bridge. Her death is a tragedy I would have never wished upon her, though it's true that it will allow me to have a better partner for tomorrow and, hopefully, win the big prize." />
+			<Scan State="Guilty"		Loc="*"	LocState="*" Item="Card Game" 	ItemState="Found"	Line="Anna was supposed to be my partner, but she sucked at Bridge. Her death is a tragedy I would have never wished upon her, though it's true that it will allow me to have a better partner for tomorrow and, hopefully, win the big prize." />
+			<Scan State="end"			Loc="*"	LocState="*" Item="Card Game" 	ItemState="Found"	Line="Anna was supposed to be my partner, but she sucked at Bridge. Her death is a tragedy I would have never wished upon her, though it's true that it will allow me to have a better partner for tomorrow and, hopefully, win the big prize." />
+			<Scan State="*"				Loc="*"	LocState="*" Item="Old Phone" 	ItemState="Found"	Line="It was always difficult to get Anna on the phone, since she refused to have a cell phone." />
+			<Scan State="*"				Loc="*"	LocState="*" Item="Digitalis" 	ItemState="Found"	Line="You need to be careful with the Floxglove flower. It's dangerous because of the digitalis it contains. But it's beautiful nonetheless." />
+			<Scan State="*"				Loc="*"	LocState="*" Item="Letter" 		ItemState="Found"	Line="It's true. I wrote this letter. I will speak frankly since you know the tensions between myself and Anna." />
+				<SetObjectState object="Rose Butterfly" fromState="State 1" toState="vrai nature"/>
+			</Scan>
+			<Scan State="*"				Loc="*"	LocState="*" Item="Flowers" 	ItemState="Found"	Line="I'm a florist, so I know a lot about flowers." />
+		</ItemDialogue>
 	</Character>
 
-	<Character Name="Jenny May" StartingState="First-time" StartLoc="Leicester Square" ImageDir="Character/Jenny.png">
+
+	<Character Name="Jenny May" StartingState="State 1" StartLoc="Leicester Square" ImageDir="Character/Jenny.png">
 		<Nicknames List="Jenny,May,Ms. May" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>
+		<CharDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Char="*" 				CharState="*"	Line="I don't recognize this, should I?" />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 	CharState="*"	Line="Anna was the president of the Bridge club, and we owe a lot to her. She was the teammate of one of our best players, Rose (char=09). Rose is here today." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 	CharState="*"	Line="Rose is competitive, and she often argued with Anna because they were losing more and more often. But they most likely reconciled because Rose sent a cake to Anna (char=07) yesterday.">
+				<SetObjectState object="Rose Butterfly" fromState="State 1" toState="Guilty"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Char="Jenny May" 		CharState="*"	Line="My name is Jenny May, and I'm a veterinarian. It's my day off today, but I'm totally exhausted after working more than 12 hours yesterday." />
+		</CharDialogue>	
+		<ItemDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Item="*" 			ItemState="*"	Line="I would like to help you, but I don't know anything about this subject." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Dead Cat" 	ItemState="*"	Line="Anna asked me a few times to pass by her place and check on her cats. Poor little ones, they had a cholesterol problem.@ I kept telling Anna not to feed them human food, but I think she was doing it anyway." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Cake" 		ItemState="*"	Line="I heard Rose (char=09) on the phone with a delivery man. She was trying to get a cake delivered to Anna (char=07).">
+				<SetObjectState object="Rose Butterfly" fromState="State 1" toState="Guilty"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Item="Card game" 	ItemState="*"	Line="I discovered Bridge only recently and love it! I lose often, not like Rose (char=09), who wins almost every single tournament! There is one tomorrow, actually, with a big cash prize for the winning team."/>
+			<Scan State="*"	Loc="*"	LocState="*" Item="Old Phone" 	ItemState="*"	Line="I don't know Anna's phone number. I had no reason to call her." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Digitalis" 	ItemState="*"	Line="I do use many dangerous substances when I have to put down animals, but definitely not digitalis." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Letter" 		ItemState="*"	Line="I've never seen this letter before." />
+		</ItemDialogue>
 	</Character>
 
-	<Character  Name="Eric Gloomerry" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Hacker.png">
+
+	<Character  Name="Eric Gloomerry" StartingState="State 1" StartLoc="NONE" ImageDir="Character/Hacker.png">
 		<Nicknames List="Eric,Mr. Gloomerry,Gloomerry,Hacker" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Player Character" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>
+		<CharDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Char="*" 					CharState="*"	Line="I need more info before I can do that research." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Chief Officer Doyle" CharState="*"	Line="He's a good fellow who saved my life on more than one occasion when I was...let's just say...on the borders of legality" />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 		CharState="*"	Line="A quick Internet search found that she was president of a Bridge club in Leicester Square (loc=D).">
+				<SetObjectState object="Leicester Square" fromState="Closed" toState="Open"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="She's registered for a Bridge tournament tomorrow with a big cash prize for the winner. Guess who was supposed to be her partner? BINGO! Our victim, Anna." />
+		</CharDialogue>
+		<ItemDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Item="*" 			ItemState="*"			Line="I'm not the one who can help you with this." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Cake" 		ItemState="Found"		Line="I've discovered that the cake was delivered around 8pm to Anna Taylor. The credit card with the name &quot;Rose Butterfly&quot; paid for the order.">
+				<SetObjectState object="Rose Butterfly" fromState="*" toState="Guilty"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Item="Old Phone" 	ItemState="Not Found"	Line="You should pick up the phone first before I can analyze it. (ui=Tutorial) Press the &quot;Goodbye&quot; button and scan the &quot;Communication Devices&quot; card to pick up the phone as evidence." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Old Phone" 	ItemState="Found"		Line="I can't believe these old things still exist! Luckily it's linked to the network with the same usual wires. I was able to find the last call, yesterday at 6:15pm. It came from the phone of a lady named Rose Butterfly (char=09)" />
+		</ItemDialogue>
 	</Character>
 
-	<Character Name="Jeremy King" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Doctor.png">
+
+	<Character Name="Jeremy King" StartingState="State 1" StartLoc="NONE" ImageDir="Character/Doctor.png">
 		<Nicknames List="Jeremy,Dr. King,King,Doctor" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Player Character" />
 		</States>
-		<Dialogue>
-			<Line State="Open" Line="something something something" />
-		</Dialogue>
+		<CharDialogue>
+			<Scan State="*" Loc="*" LocState="*" Char="*" 			CharState="*" Line="A corpse is a mystery that an autopsy attempts to solve, but honestly I'm not sure this person would have wanted to be opened with my scalpel." />
+			<Scan State="*" Loc="*" LocState="*" Char="Anna Taylor" CharState="*" Line="The woman died around 10:30pm yesterday. Her heart just stopped. @ We have found an unusually large amount of digitalis, a poisonous plant residue which can provoke a cardiac arrest. (itm=04)">
+				<SetObjectState object="Digitalis" fromState="Not Found" toState="Found"/>
+			</Scan>
+		</CharDialogue>
+		<ItemDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Item="*" 			ItemState="*"	Line="To each his own. My speciality is medicine, especially that of those who no longer move." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Dead Cat" 	ItemState="*"	Line="Doctor Schrödinger's theories are useless. The cats died of digitalis poisoning. (itm=04)">
+				<SetObjectState object="Digitalis" fromState="Not Found" toState="Found"/>
+			</Scan>
+		</ItemDialogue>
 	</Character>
 
-	<Character Name="Harvey Marshall" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Criminologist.png">
+
+	<Character Name="Harvey Marshall" StartingState="State 1" StartLoc="NONE" ImageDir="Character/Criminologist.png">
 		<Nicknames List="Harvey,Mr. Marshall,Marshall,Criminologist" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Player Character" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>
+		<CharDialogue>
+			<Scan State="*" Loc="*" LocState="*" Char="*" 					CharState="*"	Line="Criminals are complex beings. I need a little more information to figure this out." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Chief Officer Doyle" CharState="*"	Line="Ah! The Chief Officer… There's so much to say about this man, but I'm pretty sure now's not the time." />
+			<Scan State="*" Loc="*" LocState="*" Char="Anna Taylor" 		CharState="*"	Line="An old lady who grew up during the war, and who was extremely stingy with her money." />
+			<Scan State="*" Loc="*" LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="A compulsive fighter who will do whatever it takes to get what she wants. She makes her presence loud and clear with her extreme quirkiness. You will most likely find her at the Leicester Square Bridge Club (loc=D).">
+				<SetObjectState object="Leicester Square" fromState="Closed" toState="Open"/>
+			</Scan>
+			<Scan State="*" Loc="*" LocState="*" Char="Jenny May" 			CharState="*"	Line="A young lady, very serious, who works as a vet. You could say that she has succeeded in life. She is now looking to give a meaning to it." />
+		</CharDialogue>
+		<ItemDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Item="*" 			ItemState="*"		Line="Each object has a criminal history related to it, but this one isn't necessarily linked with your current investigation." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Dead Cat" 	ItemState="Found"	Line="In California, an American was sentenced to 16 years in prison for killing 18 cats and injuring 3 others. ...I don't know if this information will be really useful to your investigation." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Cake" 		ItemState="Found"	Line="Wasting such a delicious looking cake, that is criminal indeed. Try to find out who sent it." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Card Game"	ItemState="Found"   Line="This particular deck is used to play bridge. It's a game played by teams of 2, where one partner can become what is called &quot;the dummy&quot;. In some countries the dummy is called &quot;the dead&quot;.@ Anna Taylor was part of a bridge club in Leicester Square (loc=D).">
+				<SetObjectState object="Leicester Square" fromState="Closed" toState="Open"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Item="Old Phone"	ItemState="Found"   Line="Criminals are becoming more wary of phone tapping." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Digitalis"	ItemState="Found"   Line="Poison is often used by killers who don't like physical violence. The serial killer Marie Becker, also called the Black Widow, was famous for using digitalis. @ Remember that getting the right dosage of poison is difficult, and it can sometimes kill by accident." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Letter"		ItemState="Found"   Line="Our victim, Anna Taylor, was part of a Bridge Club in Leicester Square (loc=D). Apparently, her partner did not want her to participate in the tournamant.">
+				<SetObjectState object="Leicester Square" fromState="Closed" toState="Open"/>
+			</Scan>
+		</ItemDialogue>
 	</Character>
 	
-	<Character Name="Lou Chin" StartingState="First-time" StartLoc="NONE" ImageDir="Character/Scientist.png">
+
+	<Character Name="Lou Chin" StartingState="State 1" StartLoc="NONE" ImageDir="Character/Scientist.png">
 		<Nicknames List="Lou,Ms. Chin,Chin,Scientist" />
 		<States>
-			<State Name="First-time" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="Player Character" />
 		</States>
-		<Dialogue>
-			<Line State="First-time" Line="something something something" />
-		</Dialogue>
+		<CharDialogue>
+			<Scan State="*" Loc="*" LocState="*" Char="*" CharState="*" Line="My microscope doesn't really work so well on people." />
+		</CharDialogue>
+		<ItemDialogue>
+			<Scan State="*"	Loc="*"	LocState="*" Item="*" 			ItemState="*"		Line="I need evidence to preform an analysis. Did you pick up the object you want me to analyze?@(ui=Tutorial) Get out of Interrogation Mode and scan the Evidence Category card of the object you want to pick up." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Dead Cat" 	ItemState="Found"	Line="Who could be so cruel as to kill a sweet little kitty.... Unfortunately, animal corpses are not my area of expertise." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Cake"	 	ItemState="Found"	Line="My analysis confirms traces of digitalis (itm=04) inside the cake. The quantity might not have been harmful to you or I, but would have been fatal to an elderly woman like the victim.">
+				<SetObjectState object="Digitalis" fromState="Not Found" toState="Found"/>
+			</Scan>
+			<Scan State="*"	Loc="*"	LocState="*" Item="Card Game"	ItemState="Found"	Line="Scientifically, there's nothing to say about the cards. The criminologist might be able to help you more." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Old Phone"	ItemState="Found"	Line="Scientifically, there's nothing to say about the phone. The Hacker might help you on this." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Digitalis"	ItemState="Found"	Line="Digitoxin or digitalis is a cardiac glycoside extract from a flower commonly called the Foxglove or in latin (i)Digitalis purpurea(/i)." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Letter"		ItemState="Found"	Line="Unfortunately, it's a letter without any identifiable fingerprints." />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Flowers"		ItemState="Found"	Line="Digitoxin or digitalis (itm=04) is a cardiac glycoside extract from a flower commonly called the Foxglove, or in Latin, (i)Digitalis purpurea(/i)." />
+		</ItemDialogue>
 	</Character>
+
 
 </Characters>

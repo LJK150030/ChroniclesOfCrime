@@ -11,6 +11,9 @@
     <Filter Include="General\Cards">
       <UniqueIdentifier>{a50bbfea-6f2e-4244-8a1c-392b4aba9072}</UniqueIdentifier>
     </Filter>
+    <Filter Include="General\Events">
+      <UniqueIdentifier>{05401c2e-a5f8-4ef0-8d81-863a9191f658}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main_Windows.cpp">
@@ -46,6 +49,18 @@
     <ClCompile Include="Scenario.cpp">
       <Filter>General</Filter>
     </ClCompile>
+    <ClCompile Include="Incident.cpp">
+      <Filter>General\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Trigger.cpp">
+      <Filter>General\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Condition.cpp">
+      <Filter>General\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="Action.cpp">
+      <Filter>General\Events</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -80,6 +95,18 @@
     </ClInclude>
     <ClInclude Include="Scenario.hpp">
       <Filter>General</Filter>
+    </ClInclude>
+    <ClInclude Include="Incident.hpp">
+      <Filter>General\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Trigger.hpp">
+      <Filter>General\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Condition.hpp">
+      <Filter>General\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="Action.hpp">
+      <Filter>General\Events</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

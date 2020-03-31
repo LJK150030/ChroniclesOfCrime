@@ -86,6 +86,7 @@ private:
 	void ReadCharactersXml(const String& file_path);
 	void ReadItemsXml(const String& file_path);
 	void ReadSettingsXml(const String& file_path);
+	void ReadIncidentsXml(const String& file_path);
 
 	void ReadScenarioSettingsAttributes(const XmlElement* element);
 	void ReadScenarioTimeCostForActions(const XmlElement* element);
@@ -111,27 +112,26 @@ private:
 	
 	// Game state data
 	String		m_name = "";
-	String		m_introMessage = "";
-	String		m_closedLocationMessage = "";
-	String		m_sameLocationMessage = "";
-	String		m_unknownCommandMessage = "";
 	uint		m_gametimeHour = 0; //in military 0-23
 	uint		m_gametimeMin = 0;	// 0 - 60
 	uint		m_gameDays = 0;
+	Location*	m_currentLocation = nullptr;
+	Card*		m_currentInterest = nullptr;	// the obj we are talking to, interacting with
+	Card*		m_currentSubject = nullptr;		// the obj we are asking about, relevant to
+
+	// Scenario constants
 	uint		m_costToMoveToLocation = 20;
 	uint		m_costToInvestigateLocation = 5;
 	uint		m_costToExamineItem = 5;
 	uint		m_costToInterrogateCharacter = 5;
 	uint		m_costForUnknownCommand = 5;
-	Location*	m_currentLocation = nullptr;
-	Card*		m_currentInterest = nullptr;
-	Card*		m_currentSubject = nullptr;
 
 	
 	// Physical representation of Entities in the game
 	LocationList	m_locations;
 	CharacterList	m_characters;
 	ItemList		m_items;
+	IncidentList	m_incidents;
 
 	
 	// To quickly lookup where an item is in it's respective list

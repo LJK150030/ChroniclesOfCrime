@@ -1,6 +1,16 @@
+3/30----------------------------------------------------------------
+time	estimate	actual	task
+8:30	
+8:00	0.5			0.5		discoved: get tutorial events
+7:30	0.5			0.5		discoved: determine xml layout for Actions
+7:00	0.5			0.5		discoved: determine xml layout for Conditions
+6:45	0.5			0.25	discoved: determine xml layout for Trigger
+6:25	0.5			0.33	discoved: determine xml layout for Trigger
+6:00	0.5			0.41	discoved: determine xml layout for Scenario Event
+6:00	1					Read in Event from XML		
+
 3/24----------------------------------------------------------------
 time	estimate	actual	task	
-4:42			
 4:39	0.25		0.05	from xml, time cost for unknown command			
 4:36	0.25		0.05	from xml, time cost to interagate character
 4:33	0.25		0.05	from xml, time cost to investigate an item

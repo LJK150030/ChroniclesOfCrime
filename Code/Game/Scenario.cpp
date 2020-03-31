@@ -136,7 +136,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 	}
 	else
 	{
-		log += g_unknownLocation;
+		log += g_closedLocationMessage;
 		current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 	}
 
@@ -430,6 +430,9 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	// 	const String item_file = String(folder_dir) + "/Items.xml";
 	// 	ReadItemsXml(item_file);
 	// 	SetupItemLookupTable();
+
+	const String incidents_file = String(folder_dir) + "/Incidents.xml";
+	ReadIncidentsXml(incidents_file);
 
 	const String settings_file = String(folder_dir) + "/Settings.xml";
 	ReadSettingsXml(settings_file);
@@ -760,6 +763,16 @@ void Scenario::ReadItemsXml(const String& file_path)
 	tinyxml2::XMLDocument items_doc;
 	OpenXmlFile(&items_doc, file_path);
 	XmlElement* root_items = items_doc.RootElement();
+	uint item_count = 0;
+
+	for (const XmlElement* child = root_items->FirstChildElement();
+		child;
+		child = child->NextSiblingElement())
+	{
+		item_count++;
+	}
+
+	m_items.reserve(item_count);
 
 	for (const XmlElement* item_element = root_items->FirstChildElement();
 		item_element;
@@ -804,6 +817,32 @@ void Scenario::ReadSettingsXml(const String& file_path)
 }
 
 
+void Scenario::ReadIncidentsXml(const String& file_path)
+{
+	tinyxml2::XMLDocument incidents_doc;
+	OpenXmlFile(&incidents_doc, file_path);
+	XmlElement* root_incidents = incidents_doc.RootElement();
+	uint incident_count = 0;
+
+	for (const XmlElement* child = root_incidents->FirstChildElement();
+		child;
+		child = child->NextSiblingElement())
+	{
+		incident_count++;
+	}
+
+	m_incidents.reserve(incident_count);
+	
+	for (const XmlElement* item_element = root_incidents->FirstChildElement();
+		item_element;
+		item_element = item_element->NextSiblingElement()
+		)
+	{
+		m_incidents.emplace_back(this, item_element);
+	}
+}
+
+
 void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 {
 	// Get all the attributes from the ScenarioSettings element
@@ -820,15 +859,15 @@ void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 		}
 		else if (attribute_name == "intromessage")
 		{
-			m_introMessage = attribute->Value();
+			g_introMessage = attribute->Value();
 		}
 		else if (attribute_name == "closedlocationdefaultmessage")
 		{
-			m_closedLocationMessage = attribute->Value();
+			g_closedLocationMessage = attribute->Value();
 		}
 		else if (attribute_name == "samelocationmessage")
 		{
-			m_sameLocationMessage = attribute->Value();
+			g_sameLocationMessage = attribute->Value();
 		}
 		else if (attribute_name == "unknowncommand")
 		{

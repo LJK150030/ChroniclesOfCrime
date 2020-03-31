@@ -111,6 +111,11 @@ struct Dialogue;
 struct LocationState;
 struct CharacterIntro;
 struct CharacterState;
+class Incident;
+class Trigger;
+class Condition;
+class Action;
+
 
 typedef std::string							String;
 typedef std::vector<String>					StringList;
@@ -121,9 +126,12 @@ typedef std::vector<Location>				LocationList;
 typedef std::vector<Item>					ItemList;
 typedef std::vector<Character>				CharacterList;
 typedef std::vector<LocationState>			LocStateList;
-typedef std::vector<CharacterIntro>		LocCharacterIntro;
+typedef std::vector<CharacterIntro>			LocCharacterIntro;
 typedef std::vector<CharacterState>			CharStateList;
-
+typedef std::vector<Incident>				IncidentList;
+typedef std::vector<Trigger>				TriggerList;
+typedef std::vector<Condition>				ConditionList;
+typedef std::vector<Action>					ActionList;
 
 inline char g_locationHeader[] = "Heading to: ";
 inline char g_characterHeader[] = "Interrogating: ";
@@ -134,10 +142,12 @@ inline char g_locationCommand[] = "GOTO";
 inline char g_characterCommand[] = "ASK";
 inline char g_itemCommand[] = "VIEW";
 
+inline String g_introMessage = "Welcome!";
+inline String g_closedLocationMessage = "This location is closed.";
+inline String g_sameLocationMessage = "You are already here.";
+inline String g_unknownCommandMessage = "You are already here.";
 
-inline String g_unknownLocation = "Location cards represent London's districts. Without an address or a precise goal you cannot go there.";
-inline String g_sameLocation = "You are already in this location. The location is indicated in the top left corner.";
-inline String g_sameCharacter = "You are already talking to this character.";
+
 
 
 enum CardType
@@ -167,6 +177,35 @@ enum LogType
 enum ContextMode
 {
 	CONTEXT_NONE = -1,
+	
 	CONTEXT_INTERROGATION,
-	CONTEXT_PLAYER_CHARACTER
+	CONTEXT_PLAYER_CHARACTER,
+	
+	NUM_CONTEXT_MODES
+};
+
+
+enum IncidentType
+{
+	INCIDENT_UNKNOWN = -1,
+	
+	INCIDENT_OCCUR_ONCE,
+	INCIDENT_OCCUR_MULTIPLE,
+	
+	NUM_INCIDENT_TYPES
+};
+
+enum ConditionType
+{
+	CONDITION_UNKNOWN = -1,
+	
+	CONDITION_TIME_PASSED,			// Check if time has passed
+	CONDITION_LOCATION,				// In/NotIn location
+	CONDITION_CARD_STATE,			// Object State Check
+	CONDITION_CARD,					// Object Scanned
+	CONDITION_CONTEXT,				// Check current context
+	CONDITION_VARIABLE,				// Check variable value
+	CONDITION_INTERROGATION_MODE,	// In/Out Interrogation mode
+	
+	NUM_CONDITION_TYPES
 };
