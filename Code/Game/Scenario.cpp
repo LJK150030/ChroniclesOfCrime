@@ -1,13 +1,15 @@
+#include "Game/App.hpp"
+#include "Game/Game.hpp"
+#include "Game/DialogueSystem.hpp"
 #include "Game/Scenario.hpp"
 #include "Game/DialogueSystem.hpp"
 #include "Game/Location.hpp"
 #include "Game/Character.hpp"
 #include "Game/Item.hpp"
 #include "Game/Incident.hpp"
-
-#include "Game/App.hpp"
-#include "Game/Game.hpp"
-#include "Game/DialogueSystem.hpp"
+#include "Game/Trigger.hpp"
+#include "Game/Condition.hpp"
+#include "Game/Action.hpp"
 
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
@@ -22,18 +24,18 @@ STATIC bool DumpLocations(EventArgs& args)
 	UNUSED(args);
 
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
-	LocationList locations = current_scenario->GetLocationList();
-	int num_locs = static_cast<int>(locations.size());
+	const LocationList* locations = current_scenario->GetLocationList();
+	const int num_locs = static_cast<int>(locations->size());
 
 	g_theDevConsole->PrintString(Rgba::GREEN, "Locations:");
-	for(int loc_idx = 0; loc_idx < num_locs; ++loc_idx)
+	for (int loc_idx = 0; loc_idx < num_locs; ++loc_idx)
 	{
-		String loc_name = locations[loc_idx].GetName();
-		String line = loc_name.c_str();
+		const String loc_name = locations->at(loc_idx).GetName();
+		String line = loc_name;
 
-		StringList nn_list = locations[loc_idx].GetListOfNicknames();
-		int num_nn = static_cast<int>(nn_list.size());
-		for(int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
+		StringList nn_list = locations->at(loc_idx).GetListOfNicknames();
+		const int num_nn = static_cast<int>(nn_list.size());
+		for (int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
 		{
 			line += Stringf(" '%s'", nn_list[nn_idx].c_str());
 		}
@@ -51,17 +53,17 @@ STATIC bool DumpCharacter(EventArgs& args)
 	UNUSED(args);
 
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
-	CharacterList characters = current_scenario->GetCharacterList();
-	int num_char = static_cast<int>(characters.size());
+	const CharacterList* characters = current_scenario->GetCharacterList();
+	const int num_char = static_cast<int>(characters->size());
 
 	g_theDevConsole->PrintString(Rgba::GREEN, "Characters:");
 	for (int char_idx = 0; char_idx < num_char; ++char_idx)
 	{
-		String char_name = characters[char_idx].GetName();
-		String line = char_name.c_str();
+		const String char_name = characters->at(char_idx).GetName();
+		String line = char_name;
 
-		StringList nn_list = characters[char_idx].GetListOfNicknames();
-		int num_nn = static_cast<int>(nn_list.size());
+		StringList nn_list = characters->at(char_idx).GetListOfNicknames();
+		const int num_nn = static_cast<int>(nn_list.size());
 		for (int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
 		{
 			line += Stringf(" '%s'", nn_list[nn_idx].c_str());
@@ -80,24 +82,111 @@ STATIC bool DumpItems(EventArgs& args)
 	UNUSED(args);
 
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
-	ItemList items = current_scenario->GetItemList();
-	int num_items = static_cast<int>(items.size());
+	const ItemList* items = current_scenario->GetItemList();
+	const int num_items = static_cast<int>(items->size());
 
 	g_theDevConsole->PrintString(Rgba::GREEN, "Items:");
 	for (int item_idx = 0; item_idx < num_items; ++item_idx)
 	{
-		String item_name = items[item_idx].GetName();
+		String item_name = items->at(item_idx).GetName();
 		String line = item_name.c_str();
 
-		StringList nn_list = items[item_idx].GetListOfNicknames();
-		int num_nn = static_cast<int>(nn_list.size());
+		StringList nn_list = items->at(item_idx).GetListOfNicknames();
+		const int num_nn = static_cast<int>(nn_list.size());
 		for (int nn_idx = 0; nn_idx < num_nn; ++nn_idx)
 		{
 			line += Stringf(" '%s'", nn_list[nn_idx].c_str());
 		}
 
 		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("\t %s", line.c_str()));
+	}
 
+	return true;
+}
+
+
+STATIC bool DumpIncident(EventArgs& args)
+{
+	UNUSED(args);
+
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	const IncidentList* incidences = current_scenario->GetIncidentList();
+	const int num_incidences = static_cast<int>(incidences->size());
+
+	g_theDevConsole->PrintString(Rgba::GREEN, "Incidences:");
+	for (int incident_idx = 0; incident_idx < num_incidences; ++incident_idx)
+	{
+		String event_name = incidences->at(incident_idx).GetName();
+		IncidentType event_type = incidences->at(incident_idx).GetType();
+		bool is_enabled = incidences->at(incident_idx).IsIncidentEnabled();
+
+		//print incident
+		String line = event_name + " is a ";
+
+		switch (event_type)
+		{
+		case INCIDENT_OCCUR_ONCE:
+		{
+			line += "OneShot event";
+			break;
+		}
+		case INCIDENT_OCCUR_MULTIPLE:
+		{
+			line += "Multiple event";
+			break;
+		}
+		default:
+		{
+			break;
+		}
+		}
+
+		line += " that is currently ";
+
+		if (is_enabled)
+		{
+			line += "enabled.";
+		}
+		else
+		{
+			line += "disabled.";
+		}
+
+		const TriggerList* triggers = incidences->at(incident_idx).GetTriggerList();
+		const int num_triggers = static_cast<int>(triggers->size());
+		for (int trigger_idx = 0; trigger_idx < num_triggers; ++trigger_idx)
+		{
+			String new_line = "\n                              ";
+			String trigger_name = triggers->at(trigger_idx)->GetName();
+
+			const ConditionList* conditions = triggers->at(trigger_idx)->GetConditionList();
+			const ActionList* actions = triggers->at(trigger_idx)->GetActionList();
+
+			const int num_conditions = static_cast<int>(conditions->size());
+			const int num_actions = static_cast<int>(actions->size());
+
+			new_line += Stringf("%s with %i conditions and %i actions", trigger_name.c_str(), num_conditions, num_actions);
+
+			for (int condition_idx = 0; condition_idx < num_conditions; ++condition_idx)
+			{
+				String new_new_line = "\n                                 ";
+				String condition_string = conditions->at(condition_idx)->GetAsString();
+				new_new_line += condition_string;
+				new_line += new_new_line;
+			}
+
+			for (int action_idx = 0; action_idx < num_actions; ++action_idx)
+			{
+				String new_new_line = "\n                                 ";
+				String action_string = actions->at(action_idx)->GetAsString();
+				new_new_line += action_string;
+				new_line += new_new_line;
+			}
+
+			line += new_line;
+		}
+
+		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("\t %s", line.c_str()));
 	}
 
 	return true;
@@ -123,7 +212,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 	{
 		Location* new_loc = current_scenario->GetLocationFromList(loc_itr->second);
 		const bool valid_transition = new_loc->GetLocationDescription(log);
-		
+
 		if (valid_transition)
 		{
 			current_scenario->SetLocation(new_loc);
@@ -141,7 +230,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 		current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 	}
 
-	ds->AddLog(LOG_LOCATION, log); 
+	ds->AddLog(LOG_LOCATION, log);
 
 	return true;
 }
@@ -162,10 +251,10 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 	{
 		Location* cur_loc = current_scenario->GetCurrentLocation();
 		Character* char_subject = current_scenario->GetCharacterFromList(char_itr->second);
-		
+
 		const bool is_subject_here = cur_loc->IntroduceCharacter(log, char_subject);
 
-		if(is_subject_here)
+		if (is_subject_here)
 		{
 			current_scenario->SetInterest(char_subject);
 			current_scenario->AddGameTime(current_scenario->GetInterrogateChangeTime(), 0);
@@ -189,6 +278,40 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 
 STATIC bool AskLocationForItem(EventArgs& args)
 {
+	String		char_name = args.GetValue("card", String("something and nothing"));
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	//find the item in case the player is uses a nickname
+	LookupItr item_itr;
+	const bool is_item_in_list = current_scenario->IsItemInLookupTable(item_itr, String(char_name));
+
+	String log = "\t";
+	if (is_item_in_list)
+	{
+		Location* cur_loc = current_scenario->GetCurrentLocation();
+		Item* item_subject = current_scenario->GetItemFromList(item_itr->second);
+
+		const bool is_subject_here = cur_loc->IntroduceItem(log, item_subject);
+
+		if (is_subject_here)
+		{
+			current_scenario->SetInterest(item_subject);
+			current_scenario->AddGameTime(current_scenario->GetExamineItemChangeTime(), 0);
+		}
+		else
+		{
+			current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
+		}
+	}
+	else
+	{
+		log += current_scenario->GetUnknownItem();
+		current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
+	}
+
+	ds->AddLog(LOG_ITEM, log);
+
 	return false;
 }
 
@@ -241,7 +364,7 @@ STATIC bool InvestigateItem(EventArgs& args)
 	}
 	else
 	{
-		log += current_scenario->GetUnknownItem();	
+		log += current_scenario->GetUnknownItem();
 	}
 
 	ds->AddLog(LOG_ITEM, log);
@@ -269,7 +392,7 @@ STATIC bool HelpCommandDs(EventArgs& args)
 
 	String log = "Valid Commands: \n";
 	int num_events = static_cast<int>(event_names.size());
-	for(int name_id = 0; name_id < num_events; ++name_id)
+	for (int name_id = 0; name_id < num_events; ++name_id)
 	{
 		log += "\t" + StringToUpper(event_names[name_id]) + "\n";
 	}
@@ -290,15 +413,16 @@ void Scenario::Startup()
 	g_theEventSystem->SubscribeEventCallbackFunction("dump_locs", DumpLocations);
 	g_theEventSystem->SubscribeEventCallbackFunction("dump_chars", DumpCharacter);
 	g_theEventSystem->SubscribeEventCallbackFunction("dump_items", DumpItems);
+	g_theEventSystem->SubscribeEventCallbackFunction("dump_events", DumpIncident);
 
-	
+
 	g_theDialogueEventSystem = new EventSystem();
-	
+
 	// when the player is interacting with a location
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goto", TravelToLocation);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("talk", AskLocationForCharacter);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("view", AskLocationForItem);
-	
+
 	// when the player is interacting with a character
 	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
 	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", InterrogateCharacter);
@@ -316,7 +440,7 @@ void Scenario::Startup()
 		"Screensize",
 		Vec2(720.0f, 1080.0f)
 	);
-	
+
 	m_gameResolution[0] = frame_resolution.x;
 	m_gameResolution[1] = frame_resolution.y;
 	m_dialogWindowSize[0] = m_gameResolution[0] * 0.25f;
@@ -334,7 +458,7 @@ void Scenario::Shutdown()
 void Scenario::Update(const double delta_seconds)
 {
 	UNUSED(delta_seconds);
-	
+
 	m_imguiError = ImGui::Begin(
 		"Game State",
 		&m_show,
@@ -357,10 +481,10 @@ void Scenario::Update(const double delta_seconds)
 	//render game state
 	String current_scenario = "Scenario: " + m_name;
 	String current_location = "Location: " + m_currentLocation->GetName();
-	String current_time = Stringf("On Day %01d at %02d:%02d", m_gameDays, m_gametimeHour, m_gametimeMin);
-	
+	String current_time = Stringf("On Day %01d at %02d:%02d", m_gameTime.m_day, m_gameTime.m_hour, m_gameTime.m_min);
+
 	String current_interest = "Interested in: ";
-	if(m_currentInterest == nullptr)
+	if (m_currentInterest == nullptr)
 	{
 		current_interest += "---";
 	}
@@ -378,7 +502,7 @@ void Scenario::Update(const double delta_seconds)
 	{
 		current_subject += m_currentSubject->GetName();
 	}
-	
+
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_scenario.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_location.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_time.c_str());
@@ -395,9 +519,9 @@ void Scenario::Render() const
 	//render game assets
 	m_currentLocation->Render();
 
-	if(m_currentInterest != nullptr)
+	if (m_currentInterest != nullptr)
 	{
-		m_currentInterest->Render();	
+		m_currentInterest->Render();
 	}
 }
 
@@ -406,10 +530,10 @@ void Scenario::LoadInScenarioManually()
 {
 	ManuallySetLocations();
 	SetupLocationLookupTable();
-	
+
 	ManuallySetCharacters();
 	SetupCharacterLookupTable();
-	
+
 	ManuallySetItems();
 	SetupItemLookupTable();
 
@@ -423,17 +547,16 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	ReadLocationsXml(location_file);
 	SetupLocationLookupTable();
 
- 	//const String characters_file = String(folder_dir) + "/Characters.xml";
- 	//ReadCharactersXml(characters_file);
- 	//SetupCharacterLookupTable();
+	const String characters_file = String(folder_dir) + "/Characters.xml";
+	ReadCharactersXml(characters_file);
+	SetupCharacterLookupTable();
 
-	//TODO: read in items
-	// 	const String item_file = String(folder_dir) + "/Items.xml";
-	// 	ReadItemsXml(item_file);
-	// 	SetupItemLookupTable();
+	const String item_file = String(folder_dir) + "/Items.xml";
+	ReadItemsXml(item_file);
+	SetupItemLookupTable();
 
-	//const String incidents_file = String(folder_dir) + "/Incidents.xml";
-	//ReadIncidentsXml(incidents_file);
+	const String incidents_file = String(folder_dir) + "/Incidents.xml";
+	ReadIncidentsXml(incidents_file);
 
 	const String settings_file = String(folder_dir) + "/Settings.xml";
 	ReadSettingsXml(settings_file);
@@ -547,20 +670,26 @@ void Scenario::SetInterest(Card* card)
 
 void Scenario::AddGameTime(const uint mins, const uint hours)
 {
-	m_gametimeMin += mins;
-	m_gametimeHour += hours;
+	m_gameTime.m_min += mins;
+	m_gameTime.m_hour += hours;
 
-	while(m_gametimeMin >= 60)
+	while (m_gameTime.m_min >= 60)
 	{
-		m_gametimeMin -= 60;
-		m_gametimeHour += 1;
+		m_gameTime.m_min -= 60;
+		m_gameTime.m_hour += 1;
 	}
 
-	while(m_gametimeHour >= 24)
+	while (m_gameTime.m_hour >= 24)
 	{
-		m_gametimeHour -= 24;
-		m_gameDays += 1;
+		m_gameTime.m_hour -= 24;
+		m_gameTime.m_day += 1;
 	}
+}
+
+
+GameTime Scenario::GetCurrentTime() const
+{
+	return m_gameTime;
 }
 
 
@@ -590,15 +719,15 @@ uint Scenario::GetWastingTime() const
 
 void Scenario::ManuallySetScenarioSettings()
 {
-	m_gametimeHour = 9;
-	m_gametimeMin = 0;
-	m_gameDays = 1;
+	m_gameTime.m_min = 0;
+	m_gameTime.m_hour = 9;
+	m_gameTime.m_day = 1;
 
 	//AddGameTime(68, 50);
 
 	LookupItr loc_itr;
 	bool home = IsLocationInLookupTable(loc_itr, "Scotland Yard");
-	if(home)
+	if (home)
 	{
 		m_currentLocation = &m_locations[loc_itr->second];
 	}
@@ -620,21 +749,27 @@ void Scenario::ManuallySetScenarioSettings()
 }
 
 
-LocationList Scenario::GetLocationList()
+const LocationList* Scenario::GetLocationList() const
 {
-	return m_locations;
+	return &m_locations;
 }
 
 
-CharacterList Scenario::GetCharacterList()
+const CharacterList* Scenario::GetCharacterList() const
 {
-	return m_characters;
+	return &m_characters;
 }
 
 
-ItemList Scenario::GetItemList()
+const ItemList* Scenario::GetItemList() const
 {
-	return m_items;
+	return &m_items;
+}
+
+
+const IncidentList* Scenario::GetIncidentList() const
+{
+	return &m_incidents;
 }
 
 
@@ -711,9 +846,9 @@ void Scenario::ReadLocationsXml(const String& file_path)
 	OpenXmlFile(&loc_doc, file_path);
 	XmlElement* root_loc = loc_doc.RootElement();
 	uint loc_count = 0;
-	
-	for (const XmlElement* child = root_loc->FirstChildElement(); 
-		child; 
+
+	for (const XmlElement* child = root_loc->FirstChildElement();
+		child;
 		child = child->NextSiblingElement())
 	{
 		loc_count++;
@@ -722,8 +857,8 @@ void Scenario::ReadLocationsXml(const String& file_path)
 	m_locations.reserve(loc_count);
 	root_loc = loc_doc.RootElement();
 
-	for (const XmlElement* loc_element = root_loc->FirstChildElement(); 
-		loc_element; 
+	for (const XmlElement* loc_element = root_loc->FirstChildElement();
+		loc_element;
 		loc_element = loc_element->NextSiblingElement()
 		)
 	{
@@ -800,7 +935,7 @@ void Scenario::ReadSettingsXml(const String& file_path)
 		)
 	{
 		String element_name = StringToLower(setup_element->Name());
-		
+
 		if (element_name == "timecostforactions")
 		{
 			ReadScenarioTimeCostForActions(setup_element);
@@ -814,7 +949,7 @@ void Scenario::ReadSettingsXml(const String& file_path)
 			ReadScenarioGameTimeScoreBonusAndPenalty(setup_element);
 		}
 	}
-	
+
 }
 
 
@@ -833,7 +968,7 @@ void Scenario::ReadIncidentsXml(const String& file_path)
 	}
 
 	m_incidents.reserve(incident_count);
-	
+
 	for (const XmlElement* item_element = root_incidents->FirstChildElement();
 		item_element;
 		item_element = item_element->NextSiblingElement()
@@ -878,7 +1013,7 @@ void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 		{
 			LookupItr loc_itr;
 			String starting_location_name = attribute->Value();
-			
+
 			bool home = IsLocationInLookupTable(loc_itr, starting_location_name);
 			if (home)
 			{
@@ -893,15 +1028,15 @@ void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 		}
 		else if (attribute_name == "startingtimeinmilitary")
 		{
-			m_gameDays = 1;
+			m_gameTime.m_day = 1;
 
 			String military_time_string = attribute->Value();
 
 			StringList military_hour_minute = SplitStringOnDelimiter(military_time_string, ':');
 			ASSERT_OR_DIE(military_hour_minute.size() == 2, "StartintgTimeInMilitary is not a valid time")
-			
-			m_gametimeHour = std::stoul(military_hour_minute[0]);
-			m_gametimeMin = std::stoul(military_hour_minute[1]);
+
+				m_gameTime.m_hour = std::stoul(military_hour_minute[0]);
+			m_gameTime.m_min = std::stoul(military_hour_minute[1]);
 		}
 	}
 
@@ -909,7 +1044,7 @@ void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 	m_unknownLocationLine.emplace_back("Where is that again?");
 	m_unknownLocationLine.emplace_back("...I think I'm lost...");
 	m_unknownLocationLine.emplace_back("What city are we in again?");
-	
+
 	m_unknownCharacterLine.emplace_back("Sorry, give me a minute");
 	m_unknownCharacterLine.emplace_back("I'm at a lost for words");
 	m_unknownCharacterLine.emplace_back("............");

@@ -109,9 +109,9 @@ class Character;
 class EventSystem;
 struct Dialogue;
 struct LocationState;
-struct CharacterIntro;
-struct ItemIntro;
+struct IntroFromLocation;
 struct CharacterState;
+struct CharacterDialogue;
 struct ItemState;
 class Incident;
 class Trigger;
@@ -128,14 +128,14 @@ typedef std::vector<Location>				LocationList;
 typedef std::vector<Item>					ItemList;
 typedef std::vector<Character>				CharacterList;
 typedef std::vector<LocationState>			LocStateList;
-typedef std::vector<CharacterIntro>			LocCharacterIntro;
-typedef std::vector<ItemIntro>				LocItemIntro;
+typedef std::vector<IntroFromLocation>		Intros;
 typedef std::vector<CharacterState>			CharStateList;
 typedef std::vector<ItemState>				ItemStateList;
 typedef std::vector<Incident>				IncidentList;
-typedef std::vector<Trigger>				TriggerList;
-typedef std::vector<Condition>				ConditionList;
+typedef std::vector<Trigger*>				TriggerList;
+typedef std::vector<Condition*>				ConditionList;
 typedef std::vector<Action*>				ActionList;
+typedef std::vector<CharacterDialogue>		CharacterDialogueList;
 
 inline char g_locationHeader[] = "Heading to: ";
 inline char g_characterHeader[] = "Interrogating: ";
@@ -150,8 +150,6 @@ inline String g_introMessage = "Welcome!";
 inline String g_closedLocationMessage = "This location is closed.";
 inline String g_sameLocationMessage = "You are already here.";
 inline String g_unknownCommandMessage = "unknown command.";
-
-
 
 
 enum CardType
@@ -181,10 +179,10 @@ enum LogType
 enum ContextMode
 {
 	CONTEXT_NONE = -1,
-	
+
 	CONTEXT_INTERROGATION,
 	CONTEXT_PLAYER_CHARACTER,
-	
+
 	NUM_CONTEXT_MODES
 };
 
@@ -192,17 +190,17 @@ enum ContextMode
 enum IncidentType
 {
 	INCIDENT_UNKNOWN = -1,
-	
+
 	INCIDENT_OCCUR_ONCE,
 	INCIDENT_OCCUR_MULTIPLE,
-	
+
 	NUM_INCIDENT_TYPES
 };
 
 enum ConditionType
 {
 	CONDITION_UNKNOWN = -1,
-	
+
 	CONDITION_TIME_PASSED,			// Check if time has passed
 	CONDITION_LOCATION,				// In/NotIn location
 	CONDITION_CARD_STATE,			// Object State Check
@@ -210,6 +208,14 @@ enum ConditionType
 	CONDITION_CONTEXT,				// Check current context
 	CONDITION_VARIABLE_CHECK,				// Check variable value
 	CONDITION_INTERROGATION_MODE,	// In/Out Interrogation mode
-	
+
 	NUM_CONDITION_TYPES
+};
+
+
+struct GameTime
+{
+	uint		m_min = 0;	// 0 - 60
+	uint		m_hour = 0; // in military 0-23
+	uint		m_day = 0; // 1 - inf
 };

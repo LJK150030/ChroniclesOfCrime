@@ -11,12 +11,20 @@ public:
 
 	bool	Execute();
 
-	Incident*	GetOwner() const;
+	Incident*				GetOwner() const;
+	String					GetName() const;
+	const ConditionList*	GetConditionList() const;
+	const ActionList*		GetActionList() const;
+
+
+private:
+	void ImportConditionsFromXml(const XmlElement* element);
+	void ImportActionsFromXml(const XmlElement* element);
 
 private:
 	Incident*	m_scenarioEvent = nullptr;
-		
+
 	String			m_name;
-	//ConditionList	m_conditions;
-	//ActionList		m_actions;
+	ConditionList	m_conditions;
+	ActionList		m_actions;
 };

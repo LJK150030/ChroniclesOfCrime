@@ -14,16 +14,18 @@
 #include "Engine/Renderer/RenderContext.hpp"
 
 
-CharacterIntro::CharacterIntro()
+//------------------------------------------------------------
+IntroFromLocation::IntroFromLocation()
 {
 }
 
-CharacterIntro::~CharacterIntro()
+
+IntroFromLocation::~IntroFromLocation()
 {
 	uint num_actions = static_cast<uint>(m_actions.size());
-	for(uint action_idx = 0; action_idx < num_actions; ++action_idx)
+	for (uint action_idx = 0; action_idx < num_actions; ++action_idx)
 	{
-		if(m_actions[action_idx] != nullptr)
+		if (m_actions[action_idx] != nullptr)
 		{
 			delete m_actions[action_idx];
 			m_actions[action_idx] = nullptr;
@@ -32,13 +34,14 @@ CharacterIntro::~CharacterIntro()
 }
 
 
+//------------------------------------------------------------
 Location::Location()
 {
 	m_type = CARD_LOCATION;
 	m_charsInLoc = std::vector<const Character*>();
 	m_states = LocStateList();
-	m_presentingCharacterDialogue = LocCharacterIntro();
-	m_presentingItemDialogue = LocItemIntro();
+	m_presentingCharacterDialogue = Intros();
+	m_presentingItemDialogue = Intros();
 }
 
 
@@ -52,7 +55,7 @@ Location::Location(Scenario* the_setup, const String& name, const StringList& li
 	const String& desc) : Card(the_setup, CARD_LOCATION, name, list_of_nicknames, desc) { }
 
 
-Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_setup, CARD_LOCATION)
+Location::Location(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CARD_LOCATION)
 {
 	String current_state = "";
 
@@ -64,17 +67,17 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 	{
 		String attribute_name = StringToLower(attribute->Name());
 
-		if(attribute_name == "name")
+		if (attribute_name == "name")
 		{
 			m_name = attribute->Value();
 		}
-		else if(attribute_name == "startingstate")
+		else if (attribute_name == "startingstate")
 		{
 			current_state = StringToLower(String(attribute->Value()));
 		}
-		else if(attribute_name == "imagedir")
+		else if (attribute_name == "imagedir")
 		{
-			String file_name = m_name + "mat";
+			String file_name = m_name + ".mat";
 			m_material = g_theRenderer->CreateOrGetMaterial(file_name, false);
 			m_material->SetShader("default_lit.hlsl");
 			m_material->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
@@ -84,7 +87,7 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 			m_material->SetDiffuseMap(texture);
 
 			CPUMesh quad_mesh;
-			CpuMeshAddQuad(&quad_mesh, 
+			CpuMeshAddQuad(&quad_mesh,
 				AABB2(
 					-(LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT),
 					-LOC_CARD_HEIGHT,
@@ -93,7 +96,7 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 			m_mesh = new GPUMesh(g_theRenderer);
 			m_mesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
 		}
-		else if(attribute_name == "roomdir")
+		else if (attribute_name == "roomdir")
 		{
 			//todo present room;
 		}
@@ -126,11 +129,11 @@ Location::Location(Scenario* the_setup, const XmlElement* element): Card(the_set
 		}
 		else if (element_name == "introducecharacter")
 		{
-			ImportLocationPresentingCharacterFromXml(child_element);
+			ImportLocationIntroductions(child_element, CARD_CHARACTER);
 		}
-		else if(element_name == "introduceitem")
+		else if (element_name == "introduceitem")
 		{
-			ImportLocationPresentingItemFromXml(child_element);
+			ImportLocationIntroductions(child_element, CARD_ITEM);
 		}
 		else
 		{
@@ -172,7 +175,7 @@ bool Location::GetLocationDescription(String& out) const
 		out += g_sameLocationMessage;
 		return false;
 	}
-	else if(!m_currentState.m_canMoveHere)
+	else if (!m_currentState.m_canMoveHere)
 	{
 		out += g_closedLocationMessage;
 		return false;
@@ -185,7 +188,7 @@ bool Location::GetLocationDescription(String& out) const
 }
 
 
-bool Location::IntroduceCharacter(String& out, const Character* character) const
+bool Location::IntroduceCharacter(String& out, const Character* character)
 {
 	String loc_state = m_currentState.m_name;
 	String char_name = character->GetName();
@@ -203,50 +206,50 @@ bool Location::IntroduceCharacter(String& out, const Character* character) const
 	int highest_idx = -1;
 	int highest_score = -1;
 
-	for(int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
+	for (int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
 	{
-		CharacterIntro test_state = m_presentingCharacterDialogue[dialogue_idx];
+		IntroFromLocation& test_state = m_presentingCharacterDialogue[dialogue_idx];
 		int score = 0;
 
 		//testing location state
-		if(test_state.m_locationState == "*")
+		if (test_state.m_locationState == "*")
 		{
 			score += 1;
 		}
-		else if(test_state.m_locationState == loc_state)
+		else if (test_state.m_locationState == loc_state)
 		{
 			score += 3;
 		}
 
 		//testing character name
-		if (test_state.m_characterName == "*")
+		if (test_state.m_cardName == "*")
 		{
 			score += 1;
 		}
-		else if (test_state.m_characterName == char_name)
+		else if (test_state.m_cardName == char_name)
 		{
 			score += 3;
 		}
 
 		//testing character state
-		if (test_state.m_characterState == "*")
+		if (test_state.m_cardState == "*")
 		{
 			score += 1;
 		}
-		else if (test_state.m_characterState == char_state)
+		else if (test_state.m_cardState == char_state)
 		{
 			score += 3;
 		}
 
 		//testing score
-		if(score > highest_score)
+		if (score > highest_score)
 		{
 			highest_score = score;
 			highest_idx = dialogue_idx;
 		}
 	}
 
-	if(highest_score == 3)
+	if (highest_score == 3)
 	{
 		out += m_presentingCharacterDialogue[highest_idx].m_line;
 		return false;
@@ -259,7 +262,7 @@ bool Location::IntroduceCharacter(String& out, const Character* character) const
 }
 
 
-bool Location::IntroduceItem(String& out, const Item* item) const
+bool Location::IntroduceItem(String& out, const Item* item)
 {
 	String loc_state = m_currentState.m_name;
 	String item_name = item->GetName();
@@ -279,7 +282,7 @@ bool Location::IntroduceItem(String& out, const Item* item) const
 
 	for (int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
 	{
-		ItemIntro test_state = m_presentingItemDialogue[dialogue_idx];
+		IntroFromLocation& test_state = m_presentingItemDialogue[dialogue_idx];
 		int score = 0;
 
 		//testing location state
@@ -293,21 +296,21 @@ bool Location::IntroduceItem(String& out, const Item* item) const
 		}
 
 		//testing character name
-		if (test_state.m_itemName == "*")
+		if (test_state.m_cardName == "*")
 		{
 			score += 1;
 		}
-		else if (test_state.m_itemName == item_name)
+		else if (test_state.m_cardName == item_name)
 		{
 			score += 3;
 		}
 
 		//testing character state
-		if (test_state.m_itemState == "*")
+		if (test_state.m_cardState == "*")
 		{
 			score += 1;
 		}
-		else if (test_state.m_itemState == item_state)
+		else if (test_state.m_cardState == item_state)
 		{
 			score += 3;
 		}
@@ -342,9 +345,9 @@ const LocationState& Location::GetLocationState() const
 void Location::AddCharacterToLocation(const Character* character)
 {
 	int num_char = static_cast<int>(m_charsInLoc.size());
-	for(int char_idx = 0; char_idx < num_char; ++char_idx)
+	for (int char_idx = 0; char_idx < num_char; ++char_idx)
 	{
-		if(m_charsInLoc[char_idx] == nullptr)
+		if (m_charsInLoc[char_idx] == nullptr)
 		{
 			m_charsInLoc[char_idx] = character;
 			return;
@@ -372,9 +375,9 @@ void Location::RemoveCharacterFromLocation(const Character* character)
 void Location::SetState(const String& starting_state)
 {
 	int num_states = static_cast<int>(m_states.size());
-	for(int state_idx = 0; state_idx < num_states; ++state_idx)
+	for (int state_idx = 0; state_idx < num_states; ++state_idx)
 	{
-		if(StringToLower(m_states[state_idx].m_name) == starting_state)
+		if (StringToLower(m_states[state_idx].m_name) == starting_state)
 		{
 			m_currentState = m_states[state_idx];
 			return;
@@ -396,17 +399,17 @@ void Location::ImportLocationStatesFromXml(const XmlElement* element)
 		ASSERT_OR_DIE(element_name == "state", Stringf("Could not get State for Card %s", m_name.c_str()));
 
 		LocationState new_state;
-		for(const XmlAttribute* attribute = child_element->FirstAttribute();
+		for (const XmlAttribute* attribute = child_element->FirstAttribute();
 			attribute;
 			attribute = attribute->Next())
 		{
 			String atr_name(StringToLower(attribute->Name()));
-			
-			if(atr_name == "name")
+
+			if (atr_name == "name")
 			{
 				new_state.m_name = attribute->Value();
 			}
-			else if(atr_name == "canmovehere")
+			else if (atr_name == "canmovehere")
 			{
 				new_state.m_canMoveHere = attribute->BoolValue();
 			}
@@ -425,7 +428,7 @@ void Location::ImportLocationStatesFromXml(const XmlElement* element)
 }
 
 
-void Location::ImportLocationPresentingCharacterFromXml(const XmlElement* element)
+void Location::ImportLocationIntroductions(const XmlElement* element, CardType type)
 {
 	int num_scan_lines = 0;
 	for (const XmlElement* child_element = element->FirstChildElement();
@@ -435,7 +438,20 @@ void Location::ImportLocationPresentingCharacterFromXml(const XmlElement* elemen
 	{
 		num_scan_lines++;
 	}
-	m_presentingCharacterDialogue.reserve(num_scan_lines);
+
+	switch (type)
+	{
+	case CARD_CHARACTER:
+	{
+		m_presentingCharacterDialogue.reserve(num_scan_lines);
+		break;
+	}
+	case CARD_ITEM:
+	{
+		m_presentingItemDialogue.reserve(num_scan_lines);
+		break;
+	}
+	}
 
 	for (const XmlElement* child_element = element->FirstChildElement();
 		child_element;
@@ -445,29 +461,47 @@ void Location::ImportLocationPresentingCharacterFromXml(const XmlElement* elemen
 		String element_name(StringToLower(child_element->Name()));
 		ASSERT_OR_DIE(element_name == "scan", Stringf("Could not get character introduction for Card %s", m_name.c_str()));
 
-		m_presentingCharacterDialogue.emplace_back();
-		CharacterIntro &new_presentation = m_presentingCharacterDialogue.back();
+
+		IntroFromLocation* new_presentation = nullptr;
+
+		switch (type)
+		{
+		case CARD_CHARACTER:
+		{
+			m_presentingCharacterDialogue.emplace_back();
+			new_presentation = &m_presentingCharacterDialogue.back();
+			break;
+		}
+		case CARD_ITEM:
+		{
+			m_presentingItemDialogue.emplace_back();
+			new_presentation = &m_presentingItemDialogue.back();
+			break;
+		}
+		}
+
+		new_presentation->m_cardType = type;
 		for (const XmlAttribute* attribute = child_element->FirstAttribute();
 			attribute;
 			attribute = attribute->Next())
 		{
 			String atr_name(StringToLower(attribute->Name()));
-			
+
 			if (atr_name == "state")
 			{
-				new_presentation.m_locationState = attribute->Value();
+				new_presentation->m_locationState = attribute->Value();
 			}
-			else if (atr_name == "character")
+			else if (atr_name == "character" || atr_name == "item")
 			{
-				new_presentation.m_characterName = attribute->Value();
+				new_presentation->m_cardName = attribute->Value();
 			}
-			else if (atr_name == "characterstate")
+			else if (atr_name == "characterstate" || atr_name == "itemstate")
 			{
-				new_presentation.m_characterState = attribute->Value();
+				new_presentation->m_cardState = attribute->Value();
 			}
 			else if (atr_name == "line")
 			{
-				new_presentation.m_line = attribute->Value();
+				new_presentation->m_line = attribute->Value();
 			}
 		}
 
@@ -478,165 +512,11 @@ void Location::ImportLocationPresentingCharacterFromXml(const XmlElement* elemen
 
 			if (element_name == "setcardstate")
 			{
-				CardType type = UNKNOWN_CARD_TYPE;
-				String target_loc_name = "";
-				String from_loc_state = "";
-				String to_loc_state = "";
-
-
-				for (const XmlAttribute* attribute = grand_child_element->FirstAttribute();
-					attribute;
-					attribute = attribute->Next())
-				{
-					String atr_name(StringToLower(attribute->Name()));
-
-					if (atr_name == "type")
-					{
-						String card_type = StringToLower(attribute->Value());
-						if (card_type == "location")
-						{
-							type = CARD_LOCATION;
-						}
-						else if (card_type == "character")
-						{
-							type = CARD_CHARACTER;
-						}
-						else if (card_type == "item")
-						{
-							type = CARD_ITEM;
-						}
-
-					}
-					else if (atr_name == "name")
-					{
-						target_loc_name = StringToLower(attribute->Value());
-					}
-					else if (atr_name == "fromstate")
-					{
-						from_loc_state = StringToLower(attribute->Value());
-					}
-					else if (atr_name == "tostate")
-					{
-						to_loc_state = StringToLower(attribute->Value());
-					}
-					else
-					{
-						ERROR_AND_DIE("Unexpected attribute in SetLocState")
-					}
-				}
-
-				new_presentation.m_actions.push_back(new ChangeCardState(m_theScenario, type, target_loc_name, from_loc_state, to_loc_state));
-
+				new_presentation->m_actions.push_back(
+					new ActionChangeCardState(m_theScenario, grand_child_element)
+				);
 			}
-		}
 
-	}
-}
-
-
-void Location::ImportLocationPresentingItemFromXml(const XmlElement* element)
-{
-	int num_scan_lines = 0;
-	for (const XmlElement* child_element = element->FirstChildElement();
-		child_element;
-		child_element = child_element->NextSiblingElement()
-		)
-	{
-		num_scan_lines++;
-	}
-	m_presentingItemDialogue.reserve(num_scan_lines);
-
-	for (const XmlElement* child_element = element->FirstChildElement();
-		child_element;
-		child_element = child_element->NextSiblingElement()
-		)
-	{
-		String element_name(StringToLower(child_element->Name()));
-		ASSERT_OR_DIE(element_name == "scan", Stringf("Could not get item introduction for Card %s", m_name.c_str()));
-
-		m_presentingItemDialogue.emplace_back();
-		ItemIntro& new_presentation = m_presentingItemDialogue.back();
-		for (const XmlAttribute* attribute = child_element->FirstAttribute();
-			attribute;
-			attribute = attribute->Next())
-		{
-			String atr_name(StringToLower(attribute->Name()));
-
-			if (atr_name == "state")
-			{
-				new_presentation.m_locationState = attribute->Value();
-			}
-			else if (atr_name == "item")
-			{
-				new_presentation.m_itemName = attribute->Value();
-			}
-			else if (atr_name == "itemstate")
-			{
-				new_presentation.m_itemState = attribute->Value();
-			}
-			else if (atr_name == "line")
-			{
-				new_presentation.m_line = attribute->Value();
-			}
-		}
-
-		const XmlElement* grand_child_element = child_element->FirstChildElement();
-		if (grand_child_element != nullptr)
-		{
-			element_name = StringToLower(grand_child_element->Name());
-
-			if (element_name == "setcardstate")
-			{
-				CardType type = UNKNOWN_CARD_TYPE;
-				String target_loc_name = "";
-				String from_loc_state = "";
-				String to_loc_state = "";
-
-
-				for (const XmlAttribute* attribute = grand_child_element->FirstAttribute();
-					attribute;
-					attribute = attribute->Next())
-				{
-					String atr_name(StringToLower(attribute->Name()));
-
-					if (atr_name == "type")
-					{
-						String card_type = StringToLower(attribute->Value());
-						if (card_type == "location")
-						{
-							type = CARD_LOCATION;
-						}
-						else if (card_type == "character")
-						{
-							type = CARD_CHARACTER;
-						}
-						else if (card_type == "item")
-						{
-							type = CARD_ITEM;
-						}
-
-					}
-					else if (atr_name == "name")
-					{
-						target_loc_name = StringToLower(attribute->Value());
-					}
-					else if (atr_name == "fromstate")
-					{
-						from_loc_state = StringToLower(attribute->Value());
-					}
-					else if (atr_name == "tostate")
-					{
-						to_loc_state = StringToLower(attribute->Value());
-					}
-					else
-					{
-						ERROR_AND_DIE("Unexpected attribute in SetLocState")
-					}
-				}
-
-				new_presentation.m_actions.push_back(new ChangeCardState(m_theScenario, type, target_loc_name, from_loc_state, to_loc_state));
-
-			}
 		}
 
 	}

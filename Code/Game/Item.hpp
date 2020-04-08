@@ -7,6 +7,7 @@ struct ItemState
 public:
 	String		m_name = "";
 	bool		m_addGameTime = false;
+	//showUI = ClueFound or none
 };
 
 
@@ -26,6 +27,12 @@ public:
 	void SetState(const String& starting_state);
 
 private:
+	void ImportItemStatesFromXml(const XmlElement* element);
+
+private:
 	ItemState			m_currentState;
 	ItemStateList		m_states;
+
+	const float ITEM_CARD_HEIGHT = 25.0f;
+	const float ITEM_CARD_ASPECT_RATIO = 0.6108597285067873f;
 };

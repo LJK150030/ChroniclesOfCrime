@@ -2,7 +2,7 @@
 	<Incident name="Tuto: interrogation mode" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Chief Officer Doyle" operation="Is" State="Other-time"/>
+				<ObjectStateCheck object="Chief Officer Doyle" type="character" operation="Is" State="State 2"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="You are currently in Interrogation Mode. The image and name of the person you are interrogating will appear at the top.@ You can interrogate this person on any subject, by using any card at your disposal. You just have to scan it. There are no wrong questions-- all combinations are possible. You should now have (char=07) on your board. Ask the Chief Officer what he knows about that woman. (img=tutorial2)" />
@@ -14,7 +14,7 @@
 	<Incident name="Tuto: location" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Notting Hill" operation="Is" State="Open"/>
+				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Open"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="Look for the Notting Hill District (loc=G) among the London district cards and position it on the side of your Evidence Board. Now that you have the address, you can go there. (img=tutorial3)@ Tap the &quot;Goodbye&quot; button to end the conversation and move to Notting Hill by scanning the Location Card." />
@@ -50,7 +50,7 @@
 	<Incident name="Tuto : Expert" type="Multiple" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Animals" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Animals" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The Doctor can help you by doing an autopsy and making medical observations.@ Scan the Doctor to call him, then scan the subject you want to discuss with him.(img=tutorial5)" />
@@ -59,7 +59,7 @@
 
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Anna Taylor" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Anna Taylor" type="character" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The Doctor can help you by doing an autopsy and making medical observations.@ Scan the doctor to call him, then scan the subject you want to discuss with him.(img=tutorial5)" />
@@ -68,7 +68,7 @@
 
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Communication Device" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Communication Device" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The Hacker can help you with his technical knowledge and by doing information research. @ Scan the Hacker to call him, then scan the subject you want to discuss with him.(img=tutorial4)" />
@@ -77,7 +77,7 @@
 
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Food" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The Scientist can help you by doing a laboratory analysis or with scientific research. @ Scan the Scientist, then scan the subject you want to discuss with her.(img=tutorial7)" />
@@ -86,7 +86,7 @@
 
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Games &amp; Toys" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Games &amp; Toys" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The Criminologist can help you establish the psychological profile of a suspect or can aid you in putting an object into its sociological context. @ Scan the Criminologist to call him, then scan the subject you want to discuss with him.(img=tutorial6)" />
@@ -98,7 +98,7 @@
 	<Incident name="Tuto: Special item" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Digitalis" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Digitalis" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The symbol (itm=04) indicates that you have found a special subject of conversation. Find it in the &quot;special item&quot; deck and reveal it."/>
@@ -110,7 +110,7 @@
 	<Incident name="Tuto:  attitude change" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Rose Butterfly" operation="Is" State="Vrai Nature"/>
+				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="Vrai Nature"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="This letter makes you wonder if the suspect hasn't had a change of heart. Don't hesitate to re-interrogate him on certain subjects, he might be able to tell you more about them." />
@@ -119,7 +119,7 @@
 
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Rose Butterfly" operation="Is" State="Guilty"/>
+				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="Guilty"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="Some texts will give you information that will alter the attitude of some suspects. Come back to interrogate them when you think you have made an important finding." />
@@ -135,7 +135,7 @@
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="Good start. When you're sure of your suspicions, go back to the Scotland Yard to give your report, and answer the questions to close the case." />
-				<SetObjectState object="Scotland Yard" fromState="*" toState="Close case"/>
+				<SetCardState type="location" name="Scotland Yard" fromState="*" toState="Close case"/>
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -156,11 +156,11 @@
 	<Incident name="disable More clue hint" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Animals" operation="Is" State="Found"/>
-				<ObjectStateCheck object="Food" operation="Is" State="Found"/>
-				<ObjectStateCheck object="Games &amp; Toys" operation="Is" State="Found"/>
-				<ObjectStateCheck object="Communication Device" operation="Is" State="Found"/>
-				<ObjectStateCheck object="Papers" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Animals" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Games &amp; Toys" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Communication Device" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Papers" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<ActivateIncident incident="More clue hint" set="Disable" />
@@ -175,7 +175,7 @@
 				<LocationCheck location="Notting Hill" condition="Inside" />
 			</Conditions>
 			<Actions>
-				<SetObjectState object="Notting Hill" fromState="Open" toState="2ndpass"/>
+				<SetCardState type="location" name="Notting Hill" fromState="Open" toState="2ndpass"/>
 				<DisplayText type="Tutorial" message="Select your actions carefully because time is running out. Each scan makes the clock in the upper-right corner move forward, and going to a location takes even longer. @ Some locations can be searched. In those situations a &quot;Search for clues&quot; button appears, indicating there is the possibility to search for clues in Virtual Reality. The victim's apartment has this button, so let's try it!" />
 			</Actions>
 		</Trigger>
@@ -209,12 +209,12 @@
 	<Incident name="Help Bridge Club not found" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Leicester Square" operation="Is" State="Closed"/>
+				<ObjectStateCheck object="Leicester Square" type="location" operation="Is" State="Closed"/>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="11" minutesPassed="00" />
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="The neighborhood investigation just finished. We learned that Anna Taylor (char=07) was a Bridge player, often practicing in a club on Leicester Square (loc=D)" />
-				<SetObjectState object="Leicester Square" fromState="Closed" toState="Open"/>
+				<SetCardState type="location" name="Leicester Square" fromState="Closed" toState="Open"/>
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -223,11 +223,11 @@
 	<Incident name="Ending hint" type="OneShot" isEnabled="true">
 		<Trigger name="Trigger">
 			<Conditions>
-				<ObjectStateCheck object="Rose Butterfly" operation="Is" State="end"/>
+				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="end"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="You have enough elements to solve this case. Go back to the Scotland Yard to give your report." />
-				<SetObjectState object="Scotland Yard" fromState="*" toState="Close case"/>
+				<SetCardState type="location" name="Scotland Yard" fromState="*" toState="Close case"/>
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -237,8 +237,8 @@
 		<Trigger name="Trigger">
 			<Conditions>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="9" minutesPassed="5" />
-				<ObjectStateCheck object="Notting Hill" operation="Is" State="Closed"/>
-				<ContextCheck object="Chief Officer Doyle" condition="IsNot" />
+				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Closed"/>
+				<ContextCheck object="Chief Officer Doyle" type="character" condition="Is Not" />
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="To ask the police chief (char=33) about the victim (char=07). First scan the Police chief(char=33), then scan the victim  (char=07). He will tell you what he knows about her." />
@@ -248,8 +248,8 @@
 		<Trigger name="Trigger">
 			<Conditions>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="9" minutesPassed="5" />
-				<ObjectStateCheck object="Notting Hill" operation="Is" State="Closed"/>
-				<ContextCheck object="Chief Officer Doyle" condition="Is" />
+				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Closed"/>
+				<ContextCheck object="Chief Officer Doyle" type="character" condition="Is" />
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="To ask the police chief (char=33) about the victim (char=07). Scan the victim  (char=07). He will tell you what he knows about her." />

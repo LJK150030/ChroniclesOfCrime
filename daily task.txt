@@ -1,12 +1,56 @@
+4/7----------------------------------------------------------------
+time	estimate	actual	task
+--break
+3:00	0.5			1.92	Event class: Dump incidences in dev console (found bugs in the process)
+
+4/6----------------------------------------------------------------
+time	estimate	actual	task
+8:20	0.25		0.08	Read In Actions from XML: ActionIncidentToggle
+8:15	0.25		0.08	Read In Actions from XML: ActionChangeCardState
+7:53	0.25		0.36	Read In Actions from XML: ActionDisplayText
+7:49	0.25		0.06	Read in Conditions from XML: ConditionContextCheck
+7:28	0.25		0.35	Read in Conditions from XML: ConditionStateCheck
+7:16	0.25		0.22	Read in Conditions from XML: ConditionLocationCheck
+7:00	0.25		0.26	Read in Conditions from XML: ConditionTimePassed
+
+4/2----------------------------------------------------------------
+time	estimate	actual	task
+3:50	0.25		0.15	Read in Trigger from XML: List of Actions
+3:40	0.25		0.16	Read in Trigger from XML: List of conditions
+3:34	0.25		0.10	Read in Trigger from XML: Set name
+3:25	0.25		0.15	Read in Event from XML: List of Triggers
+3:19	0.25		0.10	Read in Event from XML: Enabaling or disabling an event
+3:10	0.25		0.15	Read in Event from XML: a oneshot/multiple event
+3:00	0.25		0.16	Read in Event from XML: name
+
+
+3/31----------------------------------------------------------------
+time	estimate	actual	task
+6:18	0.5			0.33	Action class: setup Action class
+5:56	0.5			0.37	Condition class: setup Condition class
+5:36	0.5			0.33	Trigger class: setup Trigger class
+5:02	0.5			0.57	Event class: setup Event class (called Incident class, it is a scenario event)
+4:18	0.5			0.73	item class: display item image
+4:08	0.25		0.16	item class: read in image dir for item cards
+3:59	0.25		0.15	item class: refactor reading in new item xml, state
+3:44	0.5			0.25	character class: refactor reading in new character xml, dialogue with items
+3:16	0.5			0.46	character class: refactor reading in new character xml, dialogue with character
+2:50	0.5			0.42	character class: refactor reading in new character xml, state
+
+
 3/30----------------------------------------------------------------
 time	estimate	actual	task
-	
-8:00	0.5			0.5		discoved: get tutorial events
-7:30	0.5			0.5		discoved: determine xml layout for Actions
-7:00	0.5			0.5		discoved: determine xml layout for Conditions
-6:45	0.5			0.25	discoved: determine xml layout for Trigger
-6:25	0.5			0.33	discoved: determine xml layout for Trigger
-6:00	0.5			0.41	discoved: determine xml layout for Scenario Event
+12:50	0.5			0.33	item class: all item content in xml
+11:58	0.5			0.95	character class: all character content in xml
+11:05	0.5			0.72	location class: all location content in xml
+9:15	0.5			0.83	Action Class: using the action class for dialog and state changes
+8:30	0.5			0.75	Action Class: setting up the action using the command pattern
+8:00	0.5			0.5		Event class: get tutorial events
+7:30	0.5			0.5		Action Class: determine xml layout for Actions
+7:00	0.5			0.5		Condition Class: determine xml layout for Conditions
+6:45	0.5			0.25	Trigger class: determine xml layout for Trigger
+6:25	0.5			0.33	Trigger class: determine xml layout for Trigger
+6:00	0.5			0.41	Event class: determine xml layout for Scenario Event
 6:00	1					Read in Event from XML		
 
 3/24----------------------------------------------------------------
@@ -23,8 +67,8 @@ time	estimate	actual	task
 3:58	0.25		0.03	from xml, closed location default message
 3:55	0.5			0.03	from xml, Intro message
 3:40	0.25		0.25	from xml, Set Scenario Name
-3:00	0.25		0.66	discoved: read in xml file with bare bones if/else tree
-2:30	0.5			0.50	discoved: determine xml layout for scenario xml file
+3:00	0.25		0.66	discover: read in xml file with bare bones if/else tree
+2:30	0.5			0.50	discover: determine xml layout for scenario xml file
 2:30	0.25				from xml, Set Starting Location
 
 
@@ -53,7 +97,7 @@ time	estimate	actual	task
 
 3/11----------------------------------------------------------------
 time	estimate	actual	task
-10:15				0.50	discoved: need an imGUI pannel to display text. Refactor imGUI, because dialogueSystem is the only object rendering, now the scene is rendering using imgui
+10:15				0.50	discover: need an imGUI pannel to display text. Refactor imGUI, because dialogueSystem is the only object rendering, now the scene is rendering using imgui
 10:07	0.25		0.25	Print the Location that the player is at
-8:07				2.0		discoved: dynamicaly creating a material from an image file path	NOTE: never use new within an object that is stored in a vector unless you can set the capasity. Always use a refrence of an object and not a temporary; once out of scope it will delete refrences and can messup the original object
+8:07				2.0		discover: dynamicaly creating a material from an image file path	NOTE: never use new within an object that is stored in a vector unless you can set the capasity. Always use a refrence of an object and not a temporary; once out of scope it will delete refrences and can messup the original object
 8:07	0.25				Show the current location from image

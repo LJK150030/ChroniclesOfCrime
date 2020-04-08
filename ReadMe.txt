@@ -138,20 +138,20 @@ O			0.25		Present an image of the character
 			0.75		Condition Class: in/out interrogation mode
 
 	24-Mar	2.5
-			0.25		Trigger class: Set name
-			0.25		Trigger class: List of conditions
-			0.25		Trigger class: List of Actions
-			0.25		Event class: Set Name
+O			0.25		Trigger class: Set name
+O			0.25		Trigger class: List of conditions
+O			0.25		Trigger class: List of Actions
+O			0.25		Event class: Set Name
 			0.5			Event class: a one shot event
 			0.5			Event class: event run multiple times
 			0.25		Event class: Enabaling or disabling an event
 			0.25		Event class: List of Triggers
 			
 	20-Mar	4
-			1			Read in Event from XML
-			1			Read in Trigger from XML
-			1			Read in Conditions from XML
-			1			Read In Actions from XML
+O			1			Read in Event from XML
+O			1			Read in Trigger from XML
+O			1			Read in Conditions from XML
+O			1			Read In Actions from XML
 
 	27-Mar	4.75
 			0.25		When investigating a room, Change the background to the room image
@@ -230,13 +230,5 @@ O			0.25		from xml, time cost for unknown command
 			
 	24-Apr	4		Polish
 	28-Apr	4		Polish
-	1-Mar 	4		Polish
-	5-Mar	4		Polish
-
-	8-Mar	4		Present final project													---		
-
-
-
-
-// hello world version of scenario rather than tutorial
+	1-Mar 	4		Present final project
 

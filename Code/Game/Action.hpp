@@ -6,43 +6,67 @@ class Scenario;
 class Action
 {
 public:
-	explicit Action(Scenario* the_setup);
+	explicit Action(Scenario* the_setup);		// needed for dialogue
+	explicit Action(Trigger* event_trigger);	// need for events
 	virtual ~Action();
 
 	virtual void Execute();
+	virtual String GetAsString();
 
 protected:
 	Scenario*	m_theScenario = nullptr;
 
-};
-
-
-//-----------------------------------------------------
-class DisplayText : public Action
-{
-public:
-	explicit DisplayText(Scenario* the_setup, const String& message);
-	virtual ~DisplayText();
-
-	virtual void Execute() override;
-
-private:
+	//ActionDisplayText
 	String m_message;
-};
 
-
-//-----------------------------------------------------
-class ChangeCardState : public Action
-{
-public:
-	explicit ChangeCardState(Scenario* the_setup, CardType type, const String& card_name, const String& from_state_name, const String& to_state_name);
-	virtual ~ChangeCardState();
-
-	virtual void Execute() override;
-
-private:
-	CardType m_type = UNKNOWN_CARD_TYPE;
+	//ActionChangeCardState
 	String m_cardName = "";
+	CardType m_cardType = UNKNOWN_CARD_TYPE;
 	String m_fromStateName = "";
 	String m_toStateName = "";
+
+	//ActionIncidentToggle
+	String m_incidentName = "";
+	bool m_set = false;
+};
+
+
+//-----------------------------------------------------
+class ActionDisplayText : public Action
+{
+public:
+	explicit ActionDisplayText(Scenario* event_trigger, const XmlElement* element);
+	explicit ActionDisplayText(Trigger* event_trigger, const XmlElement* element);
+	virtual ~ActionDisplayText();
+
+	virtual void Execute() override;
+	virtual String GetAsString() override;
+};
+
+
+//-----------------------------------------------------
+class ActionChangeCardState : public Action
+{
+public:
+	explicit ActionChangeCardState(Scenario* the_setup, const XmlElement* element);
+	explicit ActionChangeCardState(Trigger* event_trigger, const XmlElement* element);
+	virtual ~ActionChangeCardState();
+
+	virtual void Execute() override;
+	virtual String GetAsString() override;
+
+};
+
+
+//-----------------------------------------------------
+class ActionIncidentToggle : public Action
+{
+public:
+	explicit ActionIncidentToggle(Scenario* event_trigger, const XmlElement* element);
+	explicit ActionIncidentToggle(Trigger* event_trigger, const XmlElement* element);
+	virtual ~ActionIncidentToggle();
+
+	virtual void Execute() override;
+	virtual String GetAsString() override;
+
 };

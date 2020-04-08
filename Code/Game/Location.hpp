@@ -11,39 +11,26 @@ public:
 };
 
 
-struct CharacterIntro
+struct IntroFromLocation
 {
 public:
-	CharacterIntro();
-	~CharacterIntro();
+	IntroFromLocation();
+	~IntroFromLocation();
 
 public:
 	String m_locationState = "*";
 
 	// either a character or item
-	String m_characterName = "*";
-	String m_characterState = "*";
+	CardType m_cardType = UNKNOWN_CARD_TYPE;
+	String m_cardName = "*";
+	String m_cardState = "*";
 
 	String m_line = "default dialogue for any card";
 	ActionList m_actions = ActionList();
 };
 
 
-struct ItemIntro
-{
-public:
-	String m_locationState = "*";
-
-	// either a character or item
-	String m_itemName = "*";
-	String m_itemState = "*";
-
-	String m_line = "default dialogue for any card";
-	ActionList m_actions = ActionList();
-};
-
-
-class Location: public Card
+class Location : public Card
 {
 public:
 	Location();
@@ -55,27 +42,26 @@ public:
 	// ACCESSORS
 	bool					IsCharacterInLocation(const Character* character) const;
 	bool					GetLocationDescription(String& out) const;
-	bool					IntroduceCharacter(String& out, const Character* character) const;
-	bool					IntroduceItem(String& out, const Item* item) const;
+	bool					IntroduceCharacter(String& out, const Character* character);
+	bool					IntroduceItem(String& out, const Item* item);
 	const LocationState&	GetLocationState() const;
-	
+
 	// MUTATORS
 	void AddCharacterToLocation(const Character* character);
 	void RemoveCharacterFromLocation(const Character* character);
 	void SetState(const String& starting_state);
-	
+
 	void ImportLocationStatesFromXml(const XmlElement* element);
-	void ImportLocationPresentingCharacterFromXml(const XmlElement* element);
-	void ImportLocationPresentingItemFromXml(const XmlElement* element);
-	
+	void ImportLocationIntroductions(const XmlElement* element, CardType type);
+
 private:
 	std::vector<const Character*> m_charsInLoc;
 
 	LocationState			m_currentState;
 	LocStateList			m_states;
 
-	LocCharacterIntro		m_presentingCharacterDialogue;
-	LocItemIntro			m_presentingItemDialogue;
+	Intros			m_presentingCharacterDialogue;
+	Intros			m_presentingItemDialogue;
 
 	const float LOC_CARD_HEIGHT = 30.0f;
 	const float LOC_CARD_ASPECT_RATIO = 2.2572855953372189841798501248959f;

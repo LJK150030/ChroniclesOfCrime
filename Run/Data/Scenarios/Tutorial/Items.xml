@@ -1,6 +1,6 @@
 <Items>
 
-	<Item  Name="Animals" StartingState="Not Found" >
+	<Item  Name="Animals" StartingState="Not Found" ImageDir="Item/DeadCat.png">
 		<Nicknames List="Cat,Cats,Dead Cats" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -8,7 +8,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Food" StartingState="Not Found" >
+	<Item  Name="Food" StartingState="Not Found" ImageDir="Item/Cake.png">
 		<Nicknames List="Cake" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -16,7 +16,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Games &amp; Toys" StartingState="Not Found" >
+	<Item  Name="Games &amp; Toys" StartingState="Not Found" ImageDir="Item/Bridge.png">
 		<Nicknames List="Game,Cards,Card Game,Bridge" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -24,7 +24,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Communication Device" StartingState="Not Found" >
+	<Item  Name="Communication Device" StartingState="Not Found" ImageDir="Item/OldPhone.png">
 		<Nicknames List="Phone,Old Phone" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -32,7 +32,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Papers" StartingState="Not Found" >
+	<Item  Name="Papers" StartingState="Not Found" ImageDir="Item/Letter.png">
 		<Nicknames List="Letter" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -40,7 +40,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Digitalis" StartingState="Not Found" >
+	<Item  Name="Digitalis" StartingState="Not Found" ImageDir="Item/Digitalis.png">
 		<Nicknames List="poison,Digitoxin" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -48,7 +48,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Furniture" StartingState="Not Found" >
+	<Item  Name="Furniture" StartingState="Not Found" ImageDir="Item/Furniture.png">
 		<Nicknames List="chair" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -56,7 +56,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Books &amp; Magazines" StartingState="Not Found" >
+	<Item  Name="Books &amp; Magazines" StartingState="Not Found" ImageDir="Item/Books.png">
 		<Nicknames List="Books, Book, Magazines, Magazine" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />
@@ -64,7 +64,7 @@
 		</States>
 	</Item>
 
-	<Item  Name="Plants" StartingState="Not Found" >
+	<Item  Name="Plants" StartingState="Not Found" ImageDir="Item/Plants.png">
 		<Nicknames List="Flowers, Flower, Plant" />
 		<States>
 			<State Name="Not Found" AddGameTime="true" />

@@ -14,10 +14,10 @@
 			</Scan>
 			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 2" 	Line="Chief Officer Doyle: &quot;If you are lost, my office is always open. I will guide you as much as I can. What do you want to talk about?&quot;"/>
 			<Scan State="*" Character="Anna Taylor" 		CharacterState="*"			Line="&gt; You want to analyze the victim's corpse? Well thought! But you should go to the crime scene or ask the doctor what he thinks of the body."/>
-			<Scan State="*" Character="Eric Gloomerry" 		CharacterState="*" 			Line="&gt;You are calling the IT department: &quot;Internet and Technology, that's my thing! What can I do to help you?&quot;"/>
-			<Scan State="*" Character="Jeremy King" 		CharacterState="*" 			Line="&gt;You are calling the Morgue &quot;Who should I autopsy?&quot;"/>
-			<Scan State="*" Character="Harvey Marshall" 	CharacterState="*" 			Line="&gt;You are calling the Criminology Center: &quot;I study the psychological profiles of killers and the history of crime. Can I help you with anything?&quot;"/>
-			<Scan State="*" Character="Lou Chin" 			CharacterState="*" 			Line="&gt;You are calling the Laboratory: &quot;Scientific analysis is the basis of modern investigation. Do you have any evidence for me?&quot;"/>
+			<Scan State="*" Character="Eric Gloomerry" 		CharacterState="*" 			Line="&gt; You are calling the IT department: &quot;Internet and Technology, that's my thing! What can I do to help you?&quot;"/>
+			<Scan State="*" Character="Jeremy King" 		CharacterState="*" 			Line="&gt; You are calling the Morgue &quot;Who should I autopsy?&quot;"/>
+			<Scan State="*" Character="Harvey Marshall" 	CharacterState="*" 			Line="&gt; You are calling the Criminology Center: &quot;I study the psychological profiles of killers and the history of crime. Can I help you with anything?&quot;"/>
+			<Scan State="*" Character="Lou Chin" 			CharacterState="*" 			Line="&gt; You are calling the Laboratory: &quot;Scientific analysis is the basis of modern investigation. Do you have any evidence for me?&quot;"/>
 		</IntroduceCharacter>
 		<IntroduceItem>
 			<Scan State="*"		Item="*"	ItemState="*"	Line="&gt; This object can't be picked up or used in this location." />
@@ -25,7 +25,7 @@
 	</Location>
 
 
-	<Location Name="Notting Hill" StartingState="Closed" ImageDir="Location/Notting Hill.png" RoomDir="Room/VrWipTutorial.png">
+	<Location Name="Notting Hill" StartingState="Open" ImageDir="Location/Notting Hill.png" RoomDir="Room/VrWipTutorial.png">
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>
@@ -67,8 +67,8 @@
 	</Location>
 
 
-	<Location Name="Leicester Square" StartingState="Closed" ImageDir="Location/Leicester Square and Hyde Park.png">
-		<Nicknames List="Bridge Club,Club Meeting" />
+	<Location Name="Leicester Square" StartingState="Open" ImageDir="Location/Leicester Square and Hyde Park.png">
+		<Nicknames List="Bridge Club,Club Meeting,Park,Bridge" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>
 			<State Name="Open" 		CanMoveHere="true" 	AddGameTime="true" Description="A woman (char=04) welcomes you at the Bridge club."/>

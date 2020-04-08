@@ -1,6 +1,7 @@
 #include "Game/Character.hpp"
 #include "Game/Scenario.hpp"
 #include "Game/Location.hpp"
+#include "Game/Action.hpp"
 
 #include "Engine/Core/StringUtils.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
@@ -9,6 +10,27 @@
 #include "Engine/Renderer/Shader.hpp"
 #include "Engine/Renderer/RenderContext.hpp"
 
+//------------------------------------------------------------
+CharacterDialogue::CharacterDialogue()
+{
+}
+
+
+CharacterDialogue::~CharacterDialogue()
+{
+	uint num_actions = static_cast<uint>(m_actions.size());
+	for (uint action_idx = 0; action_idx < num_actions; ++action_idx)
+	{
+		if (m_actions[action_idx] != nullptr)
+		{
+			delete m_actions[action_idx];
+			m_actions[action_idx] = nullptr;
+		}
+	}
+}
+
+
+//------------------------------------------------------------
 Character::Character() { m_type = CARD_CHARACTER; }
 Character::Character(Scenario* the_setup) : Card(the_setup, CARD_CHARACTER) { }
 Character::Character(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
@@ -35,7 +57,7 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 		}
 		else if (attribute_name == "startloc")
 		{
-			if(strcmp(attribute->Value(),"NONE") == 0)
+			if (strcmp(attribute->Value(), "NONE") == 0)
 			{
 				continue;
 			}
@@ -47,7 +69,7 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 		}
 		else if (attribute_name == "imagedir")
 		{
-			String file_name = m_name + "mat";
+			String file_name = m_name + ".mat";
 			m_material = g_theRenderer->CreateOrGetMaterial(file_name, false);
 			m_material->SetShader("default_lit.hlsl");
 			m_material->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
@@ -93,16 +115,20 @@ Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_
 		{
 			ImportCharacterStatesFromXml(child_element);
 		}
-		else if (element_name == "dialogue")
+		else if (element_name == "chardialogue")
 		{
-			ImportCharacterDialogueFromXml(child_element);
+			ImportCharacterDialogueFromXml(child_element, CARD_CHARACTER);
+		}
+		else if (element_name == "itemdialogue")
+		{
+			ImportCharacterDialogueFromXml(child_element, CARD_ITEM);
 		}
 		else
 		{
 			ERROR_RECOVERABLE(Stringf("Unknown Element in location xml file, '%s', skipping element", child_element->Name()))
 		}
 	}
-	
+
 	m_modelMatrix = m_modelMatrix.MakeTranslation2D(Vec2(55.0f, 10.0f));
 	SetState(current_state);
 }
@@ -154,9 +180,106 @@ void Character::ImportCharacterStatesFromXml(const XmlElement* element)
 }
 
 
-void Character::ImportCharacterDialogueFromXml(const XmlElement* element)
+void Character::ImportCharacterDialogueFromXml(const XmlElement* element, CardType type)
 {
-	//TODO: import character dialogue
+	int num_scan_lines = 0;
+
+	for (const XmlElement* child_element = element->FirstChildElement();
+		child_element;
+		child_element = child_element->NextSiblingElement()
+		)
+	{
+		num_scan_lines++;
+	}
+
+	switch (type)
+	{
+	case CARD_CHARACTER:
+	{
+		m_dialogueAboutCharacter.reserve(num_scan_lines);
+		break;
+	}
+	case CARD_ITEM:
+	{
+		m_dialogueAboutItem.reserve(num_scan_lines);
+		break;
+	}
+	}
+
+	for (const XmlElement* child_element = element->FirstChildElement();
+		child_element;
+		child_element = child_element->NextSiblingElement()
+		)
+	{
+		String element_name(StringToLower(child_element->Name()));
+		ASSERT_OR_DIE(element_name == "scan", Stringf("Could not get character dialogue for Card %s", m_name.c_str()));
+
+		CharacterDialogue* new_dialog = nullptr;
+
+		switch (type)
+		{
+		case CARD_CHARACTER:
+		{
+			m_dialogueAboutCharacter.emplace_back();
+			new_dialog = &m_dialogueAboutCharacter.back();
+
+			break;
+		}
+		case CARD_ITEM:
+		{
+			m_dialogueAboutItem.emplace_back();
+			new_dialog = &m_dialogueAboutItem.back();
+			break;
+		}
+		}
+
+		new_dialog->m_cardType = type;
+		for (const XmlAttribute* attribute = child_element->FirstAttribute();
+			attribute;
+			attribute = attribute->Next())
+		{
+			String atr_name(StringToLower(attribute->Name()));
+
+			if (atr_name == "state")
+			{
+				new_dialog->m_characterState = attribute->Value();
+			}
+			else if (atr_name == "loc")
+			{
+				new_dialog->m_locationName = attribute->Value();
+			}
+			else if (atr_name == "locstate")
+			{
+				new_dialog->m_locationState = attribute->Value();
+			}
+			else if (atr_name == "char")
+			{
+				new_dialog->m_cardName = attribute->Value();
+			}
+			else if (atr_name == "charstate")
+			{
+				new_dialog->m_cardState = attribute->Value();
+			}
+			else if (atr_name == "line")
+			{
+				new_dialog->m_line = attribute->Value();
+			}
+		}
+
+		const XmlElement* grand_child_element = child_element->FirstChildElement();
+		if (grand_child_element != nullptr)
+		{
+			element_name = StringToLower(grand_child_element->Name());
+
+			if (element_name == "setcardstate")
+			{
+				new_dialog->m_actions.push_back(
+					new ActionChangeCardState(m_theScenario, grand_child_element)
+				);
+			}
+		}
+
+	}
 }
 
 
