@@ -393,7 +393,13 @@ ActionIncidentToggle::~ActionIncidentToggle()
 
 void ActionIncidentToggle::Execute()
 {
-	ERROR_RECOVERABLE("Have not setup the ActionIncidentToggle::Execute() function");
+	LookupItr inc_itr;
+	const bool in_scenario = m_theScenario->IsIncidentInLookupTable(inc_itr, m_incidentName);
+	if (in_scenario)
+	{
+		Incident* inc = m_theScenario->GetIncidentFromList(inc_itr->second);
+		inc->SetActive(m_set);
+	}
 }
 
 

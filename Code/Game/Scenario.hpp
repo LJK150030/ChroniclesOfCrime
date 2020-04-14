@@ -47,10 +47,12 @@ public:
 	bool IsLocationInLookupTable(LookupItr& out, const String& name);
 	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
 	bool IsItemInLookupTable(LookupItr& out, const String& name);
+	bool IsIncidentInLookupTable(LookupItr& out, const String& name);
 
 	Location*	GetLocationFromList(int idx);
 	Character*	GetCharacterFromList(int idx);
 	Item*		GetItemFromList(int idx);
+	Incident*	GetIncidentFromList(int idx);
 
 	String& GetUnknownLocation();
 	String& GetUnknownCharacter();
@@ -100,11 +102,13 @@ private:
 	void SetupLocationLookupTable();
 	void SetupCharacterLookupTable();
 	void SetupItemLookupTable();
+	void SetupIncidentLookupTable();
 
 
 	void AddToLocationLookupTable(const String& key_loc_name, int value_idx);
 	void AddToCharacterLookupTable(const String& key_loc_name, int value_idx);
 	void AddToItemLookupTable(const String& key_loc_name, int value_idx);
+	void AddToIncidentLookupTable(const String& key_loc_name, int value_idx);
 
 
 	void OpenXmlFile(tinyxml2::XMLDocument* out, const String& file_path);
@@ -139,6 +143,7 @@ private:
 	LookupTable		m_locationLookup;
 	LookupTable		m_characterLookup;
 	LookupTable		m_itemLookup;
+	LookupTable		m_incidentLookup;
 
 
 	// Random lines to say when the player writes an unknown name

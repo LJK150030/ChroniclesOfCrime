@@ -566,6 +566,7 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	
 	const String incidents_file = String(folder_dir) + "/Incidents.xml";
 	ReadIncidentsXml(incidents_file);
+	SetupIncidentLookupTable();
 }
 
 
@@ -612,6 +613,20 @@ bool Scenario::IsItemInLookupTable(LookupItr& out, const String& name)
 }
 
 
+bool Scenario::IsIncidentInLookupTable(LookupItr& out, const String& name)
+{
+	const String name_to_lower = StringToLower(name);
+	out = m_incidentLookup.find(name_to_lower);
+
+	if (out != m_incidentLookup.end())
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
 Location* Scenario::GetLocationFromList(const int idx)
 {
 	return &(m_locations[idx]);
@@ -627,6 +642,12 @@ Character* Scenario::GetCharacterFromList(const int idx)
 Item* Scenario::GetItemFromList(const int idx)
 {
 	return &(m_items[idx]);
+}
+
+
+Incident* Scenario::GetIncidentFromList(const int idx)
+{
+	return &(m_incidents[idx]);
 }
 
 
@@ -1178,6 +1199,17 @@ void Scenario::SetupItemLookupTable()
 }
 
 
+void Scenario::SetupIncidentLookupTable()
+{
+	const int num_incidents = static_cast<int>(m_incidents.size());
+	for (int inc_idx = 0; inc_idx < num_incidents; ++inc_idx)
+	{
+		//reference to the name itself
+		AddToIncidentLookupTable(m_incidents[inc_idx].GetName(), inc_idx);
+	}
+}
+
+
 void Scenario::AddToLocationLookupTable(const String& key_loc_name, int value_idx)
 {
 	LookupItr loc_itr;
@@ -1205,6 +1237,16 @@ void Scenario::AddToItemLookupTable(const String& key_loc_name, int value_idx)
 	const bool in_list_already = IsItemInLookupTable(item_itr, name_to_lower);
 	ASSERT_OR_DIE(!in_list_already, Stringf("Duplicate Item name: %s", item_itr->first.c_str()));
 	m_itemLookup.insert(Lookup(name_to_lower, value_idx));
+}
+
+
+void Scenario::AddToIncidentLookupTable(const String& key_loc_name, int value_idx)
+{
+	LookupItr incident_itr;
+	String name_to_lower = StringToLower(key_loc_name);
+	const bool in_list_already = IsIncidentInLookupTable(incident_itr, name_to_lower);
+	ASSERT_OR_DIE(!in_list_already, Stringf("Duplicate Incident name: %s", incident_itr->first.c_str()));
+	m_incidentLookup.insert(Lookup(name_to_lower, value_idx));
 }
 
 

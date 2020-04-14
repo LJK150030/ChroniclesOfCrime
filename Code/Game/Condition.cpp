@@ -364,7 +364,7 @@ bool ConditionStateCheck::Test()
 			{
 				Location* location_lookup = the_scenario->GetLocationFromList(loc_itr->second);
 				LocationState loc_cur_state = location_lookup->GetLocationState();
-				String loc_cur_state_name = loc_cur_state.m_name;
+				String loc_cur_state_name = StringToLower(loc_cur_state.m_name);
 
 				switch(m_qualCondition)
 				{
@@ -407,7 +407,7 @@ bool ConditionStateCheck::Test()
 			{
 				Character* character_lookup = the_scenario->GetCharacterFromList(char_itr->second);
 				CharacterState char_cur_state = character_lookup->GetCharacterState();
-				String char_cur_state_name = char_cur_state.m_name;
+				String char_cur_state_name = StringToLower(char_cur_state.m_name);
 
 				switch (m_qualCondition)
 				{
@@ -450,7 +450,7 @@ bool ConditionStateCheck::Test()
 			{
 				Item* item_lookup = the_scenario->GetItemFromList(item_itr->second);
 				ItemState item_cur_state = item_lookup->GetItemState();
-				String item_cur_state_name = item_cur_state.m_name;
+				String item_cur_state_name = StringToLower(item_cur_state.m_name);
 
 				switch (m_qualCondition)
 				{
@@ -630,7 +630,142 @@ ConditionContextCheck::~ConditionContextCheck()
 
 bool ConditionContextCheck::Test()
 {
-	ERROR_RECOVERABLE("Have not setup the Trigger::Execute() function");
+	Scenario* the_scenario = m_trigger->GetOwner()->GetOwner();
+
+	switch (m_cardType)
+	{
+		case CARD_LOCATION:
+		{
+			LookupItr loc_itr;
+			const bool is_valid_location = the_scenario->IsLocationInLookupTable(loc_itr, m_cardName);
+
+			if (is_valid_location)
+			{
+				Location* location_lookup = the_scenario->GetLocationFromList(loc_itr->second);
+				String loc_name = StringToLower(location_lookup->GetName());
+
+				switch (m_qualCondition)
+				{
+				case QUAL_IS:
+				{
+					if (loc_name == m_cardName)
+					{
+						return true;
+					}
+					break;
+				}
+				case QUAL_IS_NOT:
+				{
+					if (loc_name != m_cardName)
+					{
+						return true;
+					}
+					break;
+				}
+				default:
+				{
+					ERROR_RECOVERABLE("ConditionStateCheck error, the qual condition was not set properly")
+						break;
+				}
+				}
+			}
+			else
+			{
+				ERROR_RECOVERABLE(Stringf("ConditionStateCheck error, the name of the location %s is not a valid location", m_cardName.c_str()))
+			}
+
+			break;
+		}
+		case CARD_CHARACTER:
+		{
+			LookupItr char_itr;
+			const bool is_valid_character = the_scenario->IsCharacterInLookupTable(char_itr, m_cardName);
+
+			if (is_valid_character)
+			{
+				Character* character_lookup = the_scenario->GetCharacterFromList(char_itr->second);
+				String char_name = StringToLower(character_lookup->GetName());
+
+				switch (m_qualCondition)
+				{
+				case QUAL_IS:
+				{
+					if (char_name == m_cardName)
+					{
+						return true;
+					}
+					break;
+				}
+				case QUAL_IS_NOT:
+				{
+					if (char_name != m_cardName)
+					{
+						return true;
+					}
+					break;
+				}
+				default:
+				{
+					ERROR_RECOVERABLE("ConditionStateCheck error, the qual condition was not set properly")
+						break;
+				}
+				}
+			}
+			else
+			{
+				ERROR_RECOVERABLE(Stringf("ConditionStateCheck error, the name of the character %s is not a valid character", m_cardName.c_str()))
+			}
+
+			break;
+		}
+		case CARD_ITEM:
+		{
+			LookupItr item_itr;
+			const bool is_valid_item = the_scenario->IsItemInLookupTable(item_itr, m_cardName);
+
+			if (is_valid_item)
+			{
+				Item* item_lookup = the_scenario->GetItemFromList(item_itr->second);
+				String item_name = StringToLower(item_lookup->GetName());
+
+				switch (m_qualCondition)
+				{
+				case QUAL_IS:
+				{
+					if (item_name == m_cardName)
+					{
+						return true;
+					}
+					break;
+				}
+				case QUAL_IS_NOT:
+				{
+					if (item_name != m_cardName)
+					{
+						return true;
+					}
+					break;
+				}
+				default:
+				{
+					ERROR_RECOVERABLE("ConditionStateCheck error, the qual condition was not set properly")
+						break;
+				}
+				}
+			}
+			else
+			{
+				ERROR_RECOVERABLE(Stringf("ConditionStateCheck error, the name of the item %s is not a valid item", m_cardName.c_str()))
+			}
+
+			break;
+		}
+		default:
+		{
+			ERROR_AND_DIE("ConditionStateCheck error, CardType was not properly set")
+				break;
+		}
+	}
 	return false;
 }
 

@@ -1,6 +1,10 @@
 4/14----------------------------------------------------------------
 time	estimate	actual	task
-6:09
+break ----
+7:17	0.5			0.33	Action class: ActionIncidentToggle logic works
+6:33	0.5			0.73	Action class: ActionChangeCardState logic works
+6:24	0.5			0.15	Action class: ActionDisplayText logic works
+6:09	1.0			0.25	Conditions class: ConditionContextCheck logic works
 4:39	1.0			1.50	Conditions class: ConditionStateCheck logic works
 3:54	1.0			0.75	Conditions class: ConditionLocationCheck  logic works
 2:45	0.5			1.19	Conditions class: ConditionTimePassed logic works

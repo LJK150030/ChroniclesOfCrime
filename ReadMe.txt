@@ -119,21 +119,21 @@ O			0.25		Present an image of the character
 			0.25		Present an image of the item	
 
 	17-Mar	4
-			0.5			Action Class: Display Text
+O			0.5			Action Class: Display Text
 			0.5			Action Class: Set Context
-			0.5			Action Class: Enable/Disable Event
-			0.5			Action Class: Set object state
+O			0.5			Action Class: Enable/Disable Event
+O			0.5			Action Class: Set object state
 			0.5			Action Class: change game time
 			0.5			Action Class: Trigger ending
 			0.5			Action Class: Set variable value
 			0.5			Action Class: set intro text
 
 	20-Mar	5.25
-			0.75		Condition Class: Time passed
-			0.75		Condition Class: in/notin location
-			0.75		Condition Class: Object state check
+O			0.75		Condition Class: Time passed
+O			0.75		Condition Class: in/notin location
+O			0.75		Condition Class: Object state check
 			0.75		Condition Class: Object scanned
-			0.75		Condition Class: Check current context
+O			0.75		Condition Class: Check current context
 			0.75		Condition Class: Check a variable value
 			0.75		Condition Class: in/out interrogation mode
 
@@ -142,10 +142,10 @@ O			0.25		Trigger class: Set name
 O			0.25		Trigger class: List of conditions
 O			0.25		Trigger class: List of Actions
 O			0.25		Event class: Set Name
-			0.5			Event class: a one shot event
-			0.5			Event class: event run multiple times
-			0.25		Event class: Enabaling or disabling an event
-			0.25		Event class: List of Triggers
+O			0.5			Event class: a one shot event
+O			0.5			Event class: event run multiple times
+O			0.25		Event class: Enabaling or disabling an event
+O			0.25		Event class: List of Triggers
 			
 	20-Mar	4
 O			1			Read in Event from XML
