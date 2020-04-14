@@ -242,23 +242,23 @@ void Character::ImportCharacterDialogueFromXml(const XmlElement* element, CardTy
 
 			if (atr_name == "state")
 			{
-				new_dialog->m_characterState = attribute->Value();
+				new_dialog->m_characterState = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "loc")
 			{
-				new_dialog->m_locationName = attribute->Value();
+				new_dialog->m_locationName = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "locstate")
 			{
-				new_dialog->m_locationState = attribute->Value();
+				new_dialog->m_locationState = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "char")
 			{
-				new_dialog->m_cardName = attribute->Value();
+				new_dialog->m_cardName = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "charstate")
 			{
-				new_dialog->m_cardState = attribute->Value();
+				new_dialog->m_cardState = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "line")
 			{

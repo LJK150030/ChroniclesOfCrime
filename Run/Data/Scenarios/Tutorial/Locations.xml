@@ -25,7 +25,7 @@
 	</Location>
 
 
-	<Location Name="Notting Hill" StartingState="Open" ImageDir="Location/Notting Hill.png" RoomDir="Room/VrWipTutorial.png">
+	<Location Name="Notting Hill" StartingState="Closed" ImageDir="Location/Notting Hill.png" RoomDir="Room/VrWipTutorial.png">
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>
@@ -67,7 +67,7 @@
 	</Location>
 
 
-	<Location Name="Leicester Square" StartingState="Open" ImageDir="Location/Leicester Square and Hyde Park.png">
+	<Location Name="Leicester Square" StartingState="Closed" ImageDir="Location/Leicester Square and Hyde Park.png">
 		<Nicknames List="Bridge Club,Club Meeting,Park,Bridge" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>

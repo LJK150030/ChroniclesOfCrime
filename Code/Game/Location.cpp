@@ -190,9 +190,10 @@ bool Location::GetLocationDescription(String& out) const
 
 bool Location::IntroduceCharacter(String& out, const Character* character)
 {
-	String loc_state = m_currentState.m_name;
-	String char_name = character->GetName();
-	String char_state = character->GetCharacterState().m_name;
+	String loc_state = StringToLower(m_currentState.m_name);
+	String char_name = StringToLower(character->GetName());
+	String char_state = StringToLower(character->GetCharacterState().m_name);
+
 
 	if (char_name == m_name)
 	{
@@ -252,11 +253,27 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 	if (highest_score == 3)
 	{
 		out += m_presentingCharacterDialogue[highest_idx].m_line;
+
+		const int num_actions = static_cast<int>(m_presentingCharacterDialogue[highest_idx].m_actions.size());
+
+		for (int act_idx = 0; act_idx < num_actions; ++act_idx)
+		{
+			m_presentingCharacterDialogue[highest_idx].m_actions[act_idx]->Execute();
+		}
+		
 		return false;
 	}
 	else
 	{
 		out += m_presentingCharacterDialogue[highest_idx].m_line;
+
+		const int num_actions = static_cast<int>(m_presentingCharacterDialogue[highest_idx].m_actions.size());
+
+		for (int act_idx = 0; act_idx < num_actions; ++act_idx)
+		{
+			m_presentingCharacterDialogue[highest_idx].m_actions[act_idx]->Execute();
+		}
+		
 		return true;
 	}
 }
@@ -264,9 +281,9 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 
 bool Location::IntroduceItem(String& out, const Item* item)
 {
-	String loc_state = m_currentState.m_name;
-	String item_name = item->GetName();
-	String item_state = item->GetItemState().m_name;
+	String loc_state = StringToLower(m_currentState.m_name);
+	String item_name = StringToLower(item->GetName());
+	String item_state = StringToLower(item->GetItemState().m_name);
 
 	if (item_name == m_name)
 	{
@@ -326,11 +343,27 @@ bool Location::IntroduceItem(String& out, const Item* item)
 	if (highest_score == 3)
 	{
 		out += m_presentingItemDialogue[highest_idx].m_line;
+
+		const int num_actions = static_cast<int>(m_presentingItemDialogue[highest_idx].m_actions.size());
+
+		for(int act_idx = 0; act_idx < num_actions; ++act_idx)
+		{
+			m_presentingItemDialogue[highest_idx].m_actions[act_idx]->Execute();
+		}
+		
 		return false;
 	}
 	else
 	{
 		out += m_presentingItemDialogue[highest_idx].m_line;
+
+		const int num_actions = static_cast<int>(m_presentingItemDialogue[highest_idx].m_actions.size());
+
+		for (int act_idx = 0; act_idx < num_actions; ++act_idx)
+		{
+			m_presentingItemDialogue[highest_idx].m_actions[act_idx]->Execute();
+		}
+		
 		return true;
 	}
 }
@@ -489,15 +522,15 @@ void Location::ImportLocationIntroductions(const XmlElement* element, CardType t
 
 			if (atr_name == "state")
 			{
-				new_presentation->m_locationState = attribute->Value();
+				new_presentation->m_locationState = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "character" || atr_name == "item")
 			{
-				new_presentation->m_cardName = attribute->Value();
+				new_presentation->m_cardName = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "characterstate" || atr_name == "itemstate")
 			{
-				new_presentation->m_cardState = attribute->Value();
+				new_presentation->m_cardState = StringToLower(attribute->Value());
 			}
 			else if (atr_name == "line")
 			{

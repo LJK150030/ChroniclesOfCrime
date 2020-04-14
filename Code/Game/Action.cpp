@@ -57,7 +57,7 @@ ActionDisplayText::ActionDisplayText(Scenario* event_trigger, const XmlElement* 
 		}
 		else if (attribute_name == "message")
 		{
-			m_message = attribute->Value();
+			m_message = StringToLower(attribute->Value());
 		}
 		else
 		{
@@ -145,15 +145,15 @@ ActionChangeCardState::ActionChangeCardState(Scenario* the_setup, const XmlEleme
 		}
 		else if (attribute_name == "name")
 		{
-			m_cardName = attribute->Value();
+			m_cardName = StringToLower(attribute->Value());
 		}
 		else if (attribute_name == "fromstate")
 		{
-			m_fromStateName = attribute->Value();
+			m_fromStateName = StringToLower(attribute->Value());
 		}
 		else if (attribute_name == "tostate")
 		{
-			m_toStateName = attribute->Value();
+			m_toStateName = StringToLower(attribute->Value());
 		}
 		else
 		{
@@ -196,15 +196,15 @@ ActionChangeCardState::ActionChangeCardState(Trigger* event_trigger, const XmlEl
 		}
 		else if (attribute_name == "name")
 		{
-			m_cardName = attribute->Value();
+			m_cardName = StringToLower(attribute->Value());
 		}
 		else if (attribute_name == "fromstate")
 		{
-			m_fromStateName = attribute->Value();
+			m_fromStateName = StringToLower(attribute->Value());
 		}
 		else if (attribute_name == "tostate")
 		{
-			m_toStateName = attribute->Value();
+			m_toStateName = StringToLower(attribute->Value());
 		}
 		else
 		{
