@@ -4,7 +4,7 @@
 
 #include "Engine/Core/StringUtils.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
-
+#include "Engine/Core/DevConsole.hpp"
 
 Incident::Incident(Scenario* the_setup, const XmlElement* element) : m_theScenario(the_setup)
 {
@@ -109,6 +109,7 @@ bool Incident::TestTriggers()
 				m_isEnabled = false;
 			}
 			
+			PrintToDevConsole(m_triggers[trigger_idx]);
 			return true;
 		}
 	}
@@ -128,24 +129,37 @@ Scenario* Incident::GetOwner() const
 	return m_theScenario;
 }
 
+
 String Incident::GetName() const
 {
 	return m_name;
 }
+
 
 IncidentType Incident::GetType() const
 {
 	return m_type;
 }
 
+
 const TriggerList* Incident::GetTriggerList() const
 {
 	return &m_triggers;
 }
 
+
 GameTime Incident::GetActivatedTime() const
 {
 	return m_timeAtActive;
 }
+
+
+void Incident::PrintToDevConsole(const Trigger* trigger_triggered) const
+{
+	String line = Stringf("Event %s was triggered by %s", GetName().c_str(), trigger_triggered->GetName().c_str());
+	g_theDevConsole->PrintString(line, Rgba::CYAN, 0.0f);
+}
+
+
 
 

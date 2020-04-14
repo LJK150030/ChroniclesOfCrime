@@ -22,6 +22,7 @@ public:
 	IncidentType		GetType() const;
 	const TriggerList*	GetTriggerList() const;
 	GameTime			GetActivatedTime() const;
+	void				PrintToDevConsole(const Trigger* trigger_triggered) const;
 
 private:
 	Scenario*				m_theScenario = nullptr;

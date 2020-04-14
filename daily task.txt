@@ -1,5 +1,7 @@
 4/14----------------------------------------------------------------
-
+time	estimate	actual	task
+3:54	1.0					Conditions class: ConditionLocationCheck logic works
+2:45	0.5			1.19	Conditions class: ConditionTimePassed logic works
 
 4/7----------------------------------------------------------------
 time	estimate	actual	task

@@ -4,6 +4,7 @@
 #include "Game/Trigger.hpp"
 #include "Game/Incident.hpp"
 #include "Game/Scenario.hpp"
+#include "Game/Location.hpp"
 
 
 Condition::Condition(Trigger* event_trigger) : m_trigger(event_trigger)
@@ -154,22 +155,22 @@ String ConditionTimePassed::GetAsString() const
 
 	switch (m_since)
 	{
-	case ABSOLUTE_GAME_TIME:
-	{
-		since_string = Stringf("if the time is %02d:%02d on day %d.",
-			m_timePassed.m_hour, m_timePassed.m_min, m_timePassed.m_day);
-		break;
-	}
-	case INCIDENT_ENABLED:
-	{
-		since_string = Stringf("if it is after %d day(s), %d hour(s), and %d min(s) since this event was made",
-			m_timePassed.m_hour, m_timePassed.m_min, m_timePassed.m_day);
-		break;
-	}
-	default:
-	{
-		break;
-	}
+		case ABSOLUTE_GAME_TIME:
+		{
+			since_string = Stringf("if the time is %02d:%02d on day %d.",
+				m_timePassed.m_hour, m_timePassed.m_min, m_timePassed.m_day);
+			break;
+		}
+		case INCIDENT_ENABLED:
+		{
+			since_string = Stringf("if it is after %d day(s), %d hour(s), and %d min(s) since this event was made",
+				m_timePassed.m_hour, m_timePassed.m_min, m_timePassed.m_day);
+			break;
+		}
+		default:
+		{
+			break;
+		}
 	}
 
 	return Stringf("ConditionTimePassed: %s", since_string.c_str());
@@ -223,7 +224,37 @@ ConditionLocationCheck::~ConditionLocationCheck()
 
 bool ConditionLocationCheck::Test()
 {
-	ERROR_RECOVERABLE("Have not setup the Trigger::Execute() function");
+	Scenario* the_scenario = m_trigger->GetOwner()->GetOwner();
+	Location* current_location = the_scenario->GetCurrentLocation();
+	
+	LookupItr loc_itr;
+	bool is_valid_location = the_scenario->IsLocationInLookupTable(loc_itr, m_atLocationName);
+
+	if(is_valid_location)
+	{
+		Location* location_lookup = the_scenario->GetLocationFromList(loc_itr->second);
+
+		if (m_playerPresence)
+		{
+			if (current_location == location_lookup)
+			{
+				return true;
+			}
+		}
+		else
+		{
+			if (current_location != location_lookup)
+			{
+				return true;
+			}
+		}
+	}
+	else
+	{
+		ERROR_RECOVERABLE(Stringf("ConditionLocationCheck error, the name of the location %s is not a valid location", m_atLocationName.c_str()))
+	}
+
+
 	return false;
 }
 
