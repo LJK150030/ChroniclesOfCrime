@@ -231,6 +231,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 	}
 
 	ds->AddLog(LOG_LOCATION, log);
+	current_scenario->TestIncidents();
 
 	return true;
 }
@@ -271,6 +272,7 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 	}
 
 	ds->AddLog(LOG_CHARACTER, log);
+	current_scenario->TestIncidents();
 
 	return false;
 }
@@ -311,6 +313,7 @@ STATIC bool AskLocationForItem(EventArgs& args)
 	}
 
 	ds->AddLog(LOG_ITEM, log);
+	current_scenario->TestIncidents();
 
 	return false;
 }
@@ -341,6 +344,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	}
 
 	ds->AddLog(LOG_CHARACTER, log);
+	current_scenario->TestIncidents();
 
 	return true;
 }
@@ -368,6 +372,7 @@ STATIC bool InvestigateItem(EventArgs& args)
 	}
 
 	ds->AddLog(LOG_ITEM, log);
+	current_scenario->TestIncidents();
 
 	return true;
 }
@@ -401,7 +406,6 @@ STATIC bool HelpCommandDs(EventArgs& args)
 
 	return true;
 }
-
 
 
 Scenario::Scenario(Game* the_game) : m_theGame(the_game) { }
@@ -445,6 +449,8 @@ void Scenario::Startup()
 	m_gameResolution[1] = frame_resolution.y;
 	m_dialogWindowSize[0] = m_gameResolution[0] * 0.25f;
 	m_dialogWindowSize[1] = m_gameResolution[1] * 0.25f;
+
+	TestIncidents();
 }
 
 
@@ -555,11 +561,11 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	ReadItemsXml(item_file);
 	SetupItemLookupTable();
 
-	const String incidents_file = String(folder_dir) + "/Incidents.xml";
-	ReadIncidentsXml(incidents_file);
-
 	const String settings_file = String(folder_dir) + "/Settings.xml";
 	ReadSettingsXml(settings_file);
+	
+	const String incidents_file = String(folder_dir) + "/Incidents.xml";
+	ReadIncidentsXml(incidents_file);
 }
 
 
@@ -714,6 +720,17 @@ uint Scenario::GetInterrogateChangeTime() const
 uint Scenario::GetWastingTime() const
 {
 	return m_costForUnknownCommand;
+}
+
+
+void Scenario::TestIncidents()
+{
+	const uint num_incidents = static_cast<uint>(m_incidents.size());
+
+	for(uint inc_idx = 0; inc_idx < num_incidents; ++inc_idx)
+	{
+		m_incidents[inc_idx].TestTriggers();
+	}
 }
 
 
@@ -1028,14 +1045,14 @@ void Scenario::ReadScenarioSettingsAttributes(const XmlElement* element)
 		}
 		else if (attribute_name == "startingtimeinmilitary")
 		{
-			m_gameTime.m_day = 1;
+			m_gameTime.m_day = 0;
 
 			String military_time_string = attribute->Value();
 
 			StringList military_hour_minute = SplitStringOnDelimiter(military_time_string, ':');
 			ASSERT_OR_DIE(military_hour_minute.size() == 2, "StartintgTimeInMilitary is not a valid time")
 
-				m_gameTime.m_hour = std::stoul(military_hour_minute[0]);
+			m_gameTime.m_hour = std::stoul(military_hour_minute[0]);
 			m_gameTime.m_min = std::stoul(military_hour_minute[1]);
 		}
 	}

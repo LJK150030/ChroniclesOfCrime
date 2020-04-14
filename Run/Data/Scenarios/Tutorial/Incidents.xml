@@ -258,4 +258,16 @@
 	</Incident>
 
 
+	<Incident name="Testing Event time condition" type="Multiple" isEnabled="true">
+		<Trigger name="Trigger">
+			<Conditions>
+				<TimePassed since="EventEnabled" daysPassed="0" hoursPassed="0" minutesPassed="10" />
+			</Conditions>
+			<Actions>
+				<DisplayText type="Tutorial" message="Testing time condtion for event activation" />
+			</Actions>
+		</Trigger>
+	</Incident>
+
+
 </Incidents>

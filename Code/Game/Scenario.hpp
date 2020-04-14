@@ -24,7 +24,6 @@ static bool AskLocationForItem(EventArgs& args);
 static bool InterrogateCharacter(EventArgs& args);
 static bool InvestigateItem(EventArgs& args);
 
-//Don't like these here, but reducing too many includes
 static bool ClearCommandDs(EventArgs& args);
 static bool HelpCommandDs(EventArgs& args);
 
@@ -69,6 +68,7 @@ public:
 	uint		GetExamineItemChangeTime() const;
 	uint		GetInterrogateChangeTime() const;
 	uint		GetWastingTime() const;
+	void		TestIncidents();
 
 
 	//Helpper

@@ -6,7 +6,7 @@
 	UnknownCommand="That is not a valid command from the game."
 	StartingLocation="Scotland Yard"
 	StartupEvent=""
-	StartingTimeInMilitary="9:00"
+	StartingTimeInMilitary="09:00"
 >
 
 

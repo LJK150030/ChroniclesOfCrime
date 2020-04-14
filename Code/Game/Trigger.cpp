@@ -72,8 +72,26 @@ Trigger::~Trigger()
 
 bool Trigger::Execute()
 {
-	ERROR_AND_DIE("Have not setup the Trigger::Execute() function")
-		return false;
+	
+	// the set of conditions in an incident is using logical 'and'
+	const uint num_conditions = static_cast<uint>(m_conditions.size());
+	for(uint con_idx = 0; con_idx < num_conditions; ++con_idx)
+	{
+		const bool result = m_conditions[con_idx]->Test();
+
+		if(!result)
+		{
+			return false;
+		}
+	}
+
+	const uint num_actions = static_cast<uint>(m_actions.size());
+	for (uint act_idx = 0; act_idx < num_actions; ++act_idx)
+	{
+		m_actions[act_idx]->Execute();
+	}
+
+	return true;
 }
 
 

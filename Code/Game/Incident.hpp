@@ -21,6 +21,7 @@ public:
 	String				GetName() const;
 	IncidentType		GetType() const;
 	const TriggerList*	GetTriggerList() const;
+	GameTime			GetActivatedTime() const;
 
 private:
 	Scenario*				m_theScenario = nullptr;

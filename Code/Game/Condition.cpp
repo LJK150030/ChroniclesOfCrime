@@ -1,6 +1,9 @@
 #include "Game/Condition.hpp"
 #include "Engine/Core/StringUtils.hpp"
 #include "Engine/Core/ErrorWarningAssert.hpp"
+#include "Game/Trigger.hpp"
+#include "Game/Incident.hpp"
+#include "Game/Scenario.hpp"
 
 
 Condition::Condition(Trigger* event_trigger) : m_trigger(event_trigger)
@@ -82,7 +85,66 @@ ConditionTimePassed::~ConditionTimePassed()
 
 bool ConditionTimePassed::Test()
 {
-	ERROR_AND_DIE("Have not setup the Trigger::Execute() function");
+
+	
+	switch(m_since)
+	{
+		case ABSOLUTE_GAME_TIME:
+		{
+			Scenario* the_scenario = m_trigger->GetOwner()->GetOwner();
+			GameTime relative_time = the_scenario->GetCurrentTime();
+
+			int relative_time_in_minutes = relative_time.m_min;
+			relative_time_in_minutes += 60 * relative_time.m_hour;
+			relative_time_in_minutes += 1440 * relative_time.m_day;
+
+			int time_set_in_minutes = m_timePassed.m_min;
+			time_set_in_minutes += 60 * m_timePassed.m_hour;
+			time_set_in_minutes += 1440 * m_timePassed.m_day;
+
+			const int time_remaining_in_minutes = time_set_in_minutes - relative_time_in_minutes;
+
+			if(time_remaining_in_minutes <= 0)
+			{
+				return true;
+			}
+				
+			break;
+		}
+		case INCIDENT_ENABLED:
+		{
+			Scenario* the_scenario = m_trigger->GetOwner()->GetOwner();
+			GameTime relative_time = the_scenario->GetCurrentTime();
+
+			int relative_time_in_minutes = relative_time.m_min;
+			relative_time_in_minutes += 60 * relative_time.m_hour;
+			relative_time_in_minutes += 1440 * relative_time.m_day;
+				
+			Incident* the_event = m_trigger->GetOwner();
+			GameTime time_event_active = the_event->GetActivatedTime();
+			int active_in_minutes = time_event_active.m_min;
+			active_in_minutes += 60 * time_event_active.m_hour;
+			active_in_minutes += 1440 *  time_event_active.m_day;
+
+			const int time_remaining_in_minutes = relative_time_in_minutes - active_in_minutes;
+				
+			int time_threshold_minutes = m_timePassed.m_min;
+			time_threshold_minutes += 60 * m_timePassed.m_hour;
+			time_threshold_minutes += 1440 * m_timePassed.m_day;
+
+			if (time_remaining_in_minutes >= time_threshold_minutes)
+			{
+				return true;
+			}
+
+			break;
+		}
+		default:
+		{
+			break;
+		}
+	}
+	
 	return false;
 }
 
@@ -161,7 +223,7 @@ ConditionLocationCheck::~ConditionLocationCheck()
 
 bool ConditionLocationCheck::Test()
 {
-	ERROR_AND_DIE("Have not setup the Trigger::Execute() function");
+	ERROR_RECOVERABLE("Have not setup the Trigger::Execute() function");
 	return false;
 }
 
@@ -255,7 +317,7 @@ ConditionStateCheck::~ConditionStateCheck()
 
 bool ConditionStateCheck::Test()
 {
-	ERROR_AND_DIE("Have not setup the Trigger::Execute() function");
+	ERROR_RECOVERABLE("Have not setup the Trigger::Execute() function");
 	return false;
 }
 
@@ -395,7 +457,7 @@ ConditionContextCheck::~ConditionContextCheck()
 
 bool ConditionContextCheck::Test()
 {
-	ERROR_AND_DIE("Have not setup the Trigger::Execute() function");
+	ERROR_RECOVERABLE("Have not setup the Trigger::Execute() function");
 	return false;
 }
 

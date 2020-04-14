@@ -393,7 +393,7 @@ ActionIncidentToggle::~ActionIncidentToggle()
 
 void ActionIncidentToggle::Execute()
 {
-	ERROR_AND_DIE("Have not setup the ActionIncidentToggle::Execute() function");
+	ERROR_RECOVERABLE("Have not setup the ActionIncidentToggle::Execute() function");
 }
 
 

@@ -96,12 +96,19 @@ bool Incident::TestTriggers()
 	}
 
 	const uint num_triggers = static_cast<uint>(m_triggers.size());
-	for (uint trigger_idx = 0; trigger_idx > num_triggers; ++trigger_idx)
+
+	// A set of triggers in an Incident means using logical 'or'
+	for (uint trigger_idx = 0; trigger_idx < num_triggers; ++trigger_idx)
 	{
 		const bool triggered = m_triggers[trigger_idx]->Execute();
 
 		if (triggered)
 		{
+			if(m_type == INCIDENT_OCCUR_ONCE)
+			{
+				m_isEnabled = false;
+			}
+			
 			return true;
 		}
 	}
@@ -134,6 +141,11 @@ IncidentType Incident::GetType() const
 const TriggerList* Incident::GetTriggerList() const
 {
 	return &m_triggers;
+}
+
+GameTime Incident::GetActivatedTime() const
+{
+	return m_timeAtActive;
 }
 
 
