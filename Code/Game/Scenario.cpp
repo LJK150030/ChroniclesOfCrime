@@ -428,8 +428,8 @@ void Scenario::Startup()
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("view", AskLocationForItem);
 
 	// when the player is interacting with a character
-	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
-	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", InterrogateCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", InterrogateCharacter);
 
 	// when the player is interacting with an item
 	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("link", InvestigateItem);

@@ -215,33 +215,35 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 		//testing location state
 		if (test_state.m_locationState == "*")
 		{
-			score += 1;
+			score += 0;
 		}
 		else if (test_state.m_locationState == loc_state)
 		{
 			score += 3;
 		}
 
+		
 		//testing character name
 		if (test_state.m_cardName == "*")
 		{
-			score += 1;
+			score += 0;
 		}
 		else if (test_state.m_cardName == char_name)
 		{
 			score += 3;
+
+			//testing character state
+			if (test_state.m_cardState == "*")
+			{
+				score += 0;
+			}
+			else if (test_state.m_cardState == char_state)
+			{
+				score += 3;
+			}
 		}
 
-		//testing character state
-		if (test_state.m_cardState == "*")
-		{
-			score += 1;
-		}
-		else if (test_state.m_cardState == char_state)
-		{
-			score += 3;
-		}
-
+		
 		//testing score
 		if (score > highest_score)
 		{
@@ -250,7 +252,7 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 		}
 	}
 
-	if (highest_score == 3)
+	if (highest_score == 0)
 	{
 		out += m_presentingCharacterDialogue[highest_idx].m_line;
 

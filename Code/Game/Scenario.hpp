@@ -121,8 +121,8 @@ private:
 	String		m_name = "";
 	GameTime	m_gameTime;
 	Location*	m_currentLocation = nullptr;
-	Card*		m_currentInterest = nullptr;	// the obj we are talking to, interacting with
-	Card*		m_currentSubject = nullptr;		// the obj we are asking about, relevant to
+	Card*		m_currentInterest = nullptr;	// the card we are talking to, interacting with (aka context)
+	Card*		m_currentSubject = nullptr;		// the card we are asking about, relevant to
 
 	// Scenario constants
 	uint		m_costToMoveToLocation = 20;
