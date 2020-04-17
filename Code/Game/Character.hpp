@@ -42,10 +42,12 @@ public:
 	~Character() = default;
 
 	// ACCESSORS
-	void ImportCharacterStatesFromXml(const XmlElement* element);
-	void ImportCharacterDialogueFromXml(const XmlElement* element, CardType type);
-	const CharacterState& GetCharacterState() const;
-
+	void					ImportCharacterStatesFromXml(const XmlElement* element);
+	void					ImportCharacterDialogueFromXml(const XmlElement* element, CardType type);
+	const CharacterState&	GetCharacterState() const;
+	bool					AskAboutCharacter(String& out, const Location* location, const Character* character);
+	bool					AskAboutItem(String& out, const Location* location, const Item* character);
+	
 	// MUTATORS
 	void SetState(const String& starting_state);
 

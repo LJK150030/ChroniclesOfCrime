@@ -48,6 +48,7 @@ public:
 	bool IsCharacterInLookupTable(LookupItr& out, const String& name);
 	bool IsItemInLookupTable(LookupItr& out, const String& name);
 	bool IsIncidentInLookupTable(LookupItr& out, const String& name);
+	bool IsCardInLookupTable(LookupItr& out_itr, CardType& out_type, const String& name);
 
 	Location*	GetLocationFromList(int idx);
 	Character*	GetCharacterFromList(int idx);

@@ -24,7 +24,7 @@
 	<Character Name="Anna Taylor" StartingState="State 1" StartLoc="Notting Hill" ImageDir="Character/Anna.png">
 		<Nicknames List="Mrs. Taylor,Anna,Taylor,victim" />
 		<States>
-			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
+			<State Name="State 1" AddGameTime="true" ContextMode="None" />
 			<State Name="Found" AddGameTime="true" ContextMode="Interrogation" />
 		</States>
 	</Character>

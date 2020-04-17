@@ -326,21 +326,61 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 
-	LookupItr char_itr;
 	String log = "\t";
-	const bool is_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(name));
 
-	// 	Location* cur_loc = current_scenario->GetCurrentLocation();
-	// 	cur_loc->IsCharacterInLocation()
+	Card* current_interest = current_scenario->GetCurrentInterest();
 
-	if (is_in_list)
+	if(current_interest == nullptr)
 	{
-		current_scenario->GetCharacterFromList(char_itr->second)->SetDiscovery(true);
-		log += current_scenario->GetCharacterFromList(char_itr->second)->GetDescription();
+		log += "> Cannot ask this now. Make sure to Talk to a character, then ask them a question.";
 	}
 	else
 	{
-		log += current_scenario->GetUnknownCharacter();
+		const CardType interest_card_type = current_interest->GetCardType();
+
+		if (interest_card_type != CARD_CHARACTER)
+		{
+			log += "> Cannot ask this now. Make sure to Talk to a character, then ask them a question.";
+		}
+		else
+		{
+			LookupItr interrogatee_itr;
+			current_scenario->IsCharacterInLookupTable(interrogatee_itr, current_interest->GetName());
+			Character* interrogatee = current_scenario->GetCharacterFromList(interrogatee_itr->second);
+			CharacterState interrogatee_state = interrogatee->GetCharacterState();
+			
+			if(interrogatee_state.m_contextMode == CONTEXT_NONE)
+			{
+				log += "> Cannot Interrogate this character right now.";
+			}
+			else
+			{
+				Location* cur_loc = current_scenario->GetCurrentLocation();
+
+				LookupItr card_itr;
+				const bool is_char = current_scenario->IsCharacterInLookupTable(card_itr, String(name));
+
+				if(is_char)
+				{
+					Character* about_char = current_scenario->GetCharacterFromList(card_itr->second);
+					interrogatee->AskAboutCharacter(log, cur_loc, about_char);
+				}
+				else 
+				{
+					const bool is_item = current_scenario->IsItemInLookupTable(card_itr, String(name));
+
+					if(is_item)
+					{
+						Item* about_item = current_scenario->GetItemFromList(card_itr->second);
+						interrogatee->AskAboutItem(log, cur_loc, about_item);
+					}
+					else
+					{
+						log += "> Asking about an unknown item or card.";
+					}
+				}
+			}
+		}
 	}
 
 	ds->AddLog(LOG_CHARACTER, log);
@@ -620,6 +660,35 @@ bool Scenario::IsIncidentInLookupTable(LookupItr& out, const String& name)
 
 	if (out != m_incidentLookup.end())
 	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool Scenario::IsCardInLookupTable(LookupItr& out_itr, CardType& out_type, const String& name)
+{
+	const String name_to_lower = StringToLower(name);
+	
+	out_itr = m_locationLookup.find(name_to_lower);
+	if (out_itr != m_locationLookup.end())
+	{
+		out_type = CARD_LOCATION;
+		return true;
+	}
+	
+	out_itr = m_characterLookup.find(name_to_lower);
+	if (out_itr != m_characterLookup.end())
+	{
+		out_type = CARD_CHARACTER;
+		return true;
+	}
+
+	out_itr = m_itemLookup.find(name_to_lower);
+	if (out_itr != m_itemLookup.end())
+	{
+		out_type = CARD_ITEM;
 		return true;
 	}
 

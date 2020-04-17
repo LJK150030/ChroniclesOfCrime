@@ -215,18 +215,18 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 		//testing location state
 		if (test_state.m_locationState == "*")
 		{
-			score += 0;
+			score += 1;
 		}
 		else if (test_state.m_locationState == loc_state)
 		{
-			score += 3;
+			score += 5;
 		}
 
 		
 		//testing character name
 		if (test_state.m_cardName == "*")
 		{
-			score += 0;
+			score += 1;
 		}
 		else if (test_state.m_cardName == char_name)
 		{
@@ -235,11 +235,11 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 			//testing character state
 			if (test_state.m_cardState == "*")
 			{
-				score += 0;
+				score += 1;
 			}
 			else if (test_state.m_cardState == char_state)
 			{
-				score += 3;
+				score += 5;
 			}
 		}
 
@@ -252,32 +252,21 @@ bool Location::IntroduceCharacter(String& out, const Character* character)
 		}
 	}
 
-	if (highest_score == 0)
+	out += m_presentingCharacterDialogue[highest_idx].m_line;
+
+	const int num_actions = static_cast<int>(m_presentingCharacterDialogue[highest_idx].m_actions.size());
+
+	for (int act_idx = 0; act_idx < num_actions; ++act_idx)
 	{
-		out += m_presentingCharacterDialogue[highest_idx].m_line;
-
-		const int num_actions = static_cast<int>(m_presentingCharacterDialogue[highest_idx].m_actions.size());
-
-		for (int act_idx = 0; act_idx < num_actions; ++act_idx)
-		{
-			m_presentingCharacterDialogue[highest_idx].m_actions[act_idx]->Execute();
-		}
-		
-		return false;
+		m_presentingCharacterDialogue[highest_idx].m_actions[act_idx]->Execute();
 	}
-	else
-	{
-		out += m_presentingCharacterDialogue[highest_idx].m_line;
-
-		const int num_actions = static_cast<int>(m_presentingCharacterDialogue[highest_idx].m_actions.size());
-
-		for (int act_idx = 0; act_idx < num_actions; ++act_idx)
-		{
-			m_presentingCharacterDialogue[highest_idx].m_actions[act_idx]->Execute();
-		}
-		
+	
+	if (highest_idx != 0)
+	{		
 		return true;
 	}
+
+	return false;
 }
 
 
@@ -314,7 +303,7 @@ bool Location::IntroduceItem(String& out, const Item* item)
 			score += 3;
 		}
 
-		//testing character name
+		//testing item name
 		if (test_state.m_cardName == "*")
 		{
 			score += 1;
@@ -322,16 +311,16 @@ bool Location::IntroduceItem(String& out, const Item* item)
 		else if (test_state.m_cardName == item_name)
 		{
 			score += 3;
-		}
 
-		//testing character state
-		if (test_state.m_cardState == "*")
-		{
-			score += 1;
-		}
-		else if (test_state.m_cardState == item_state)
-		{
-			score += 3;
+			//testing item state
+			if (test_state.m_cardState == "*")
+			{
+				score += 1;
+			}
+			else if (test_state.m_cardState == item_state)
+			{
+				score += 5;
+			}
 		}
 
 		//testing score
@@ -342,32 +331,21 @@ bool Location::IntroduceItem(String& out, const Item* item)
 		}
 	}
 
-	if (highest_score == 3)
+	out += m_presentingItemDialogue[highest_idx].m_line;
+
+	const int num_actions = static_cast<int>(m_presentingItemDialogue[highest_idx].m_actions.size());
+
+	for (int act_idx = 0; act_idx < num_actions; ++act_idx)
 	{
-		out += m_presentingItemDialogue[highest_idx].m_line;
-
-		const int num_actions = static_cast<int>(m_presentingItemDialogue[highest_idx].m_actions.size());
-
-		for(int act_idx = 0; act_idx < num_actions; ++act_idx)
-		{
-			m_presentingItemDialogue[highest_idx].m_actions[act_idx]->Execute();
-		}
-		
-		return false;
+		m_presentingItemDialogue[highest_idx].m_actions[act_idx]->Execute();
 	}
-	else
+	
+	if (highest_idx != 0)
 	{
-		out += m_presentingItemDialogue[highest_idx].m_line;
-
-		const int num_actions = static_cast<int>(m_presentingItemDialogue[highest_idx].m_actions.size());
-
-		for (int act_idx = 0; act_idx < num_actions; ++act_idx)
-		{
-			m_presentingItemDialogue[highest_idx].m_actions[act_idx]->Execute();
-		}
-		
-		return true;
+		return true;	
 	}
+	
+	return false;
 }
 
 

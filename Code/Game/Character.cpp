@@ -36,6 +36,7 @@ Character::Character(Scenario* the_setup) : Card(the_setup, CARD_CHARACTER) { }
 Character::Character(Scenario* the_setup, const String& name, const StringList& list_of_nicknames,
 	const String& desc) : Card(the_setup, CARD_CHARACTER, name, list_of_nicknames, desc) { }
 
+
 Character::Character(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CARD_CHARACTER)
 {
 	String current_state = "";
@@ -286,6 +287,108 @@ void Character::ImportCharacterDialogueFromXml(const XmlElement* element, CardTy
 const CharacterState& Character::GetCharacterState() const
 {
 	return m_currentState;
+}
+
+
+bool Character::AskAboutCharacter(String& out, const Location* location, const Character* character)
+{
+	String loc_name = location->GetName();
+	String loc_state = location->GetLocationState().m_name;
+	String char_name = StringToLower(character->GetName());
+	String char_state = StringToLower(character->GetCharacterState().m_name);
+	
+	const int num_dialogue = static_cast<int>(m_dialogueAboutCharacter.size());
+	std::vector<int> dialogue_ranking;
+	dialogue_ranking.reserve(num_dialogue);
+	
+	int highest_idx = -1;
+	int highest_score = -1;
+
+	for (int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
+	{
+		CharacterDialogue& test_state = m_dialogueAboutCharacter[dialogue_idx];
+		int score = 0;
+
+		//testing character state
+		if (test_state.m_characterState == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_characterState == m_currentState.m_name)
+		{
+			score += 3;
+		}
+
+		//testing location name
+		if (test_state.m_locationName == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_locationName == loc_name)
+		{
+			score += 3;
+
+			//testing location name
+			if (test_state.m_locationState == "*")
+			{
+				score += 1;
+			}
+			else if (test_state.m_locationState == loc_state)
+			{
+				score += 5;
+			}
+		}
+
+		//testing character name
+		if (test_state.m_cardName == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_cardName == char_name)
+		{
+			score += 3;
+
+			//testing character state
+			if (test_state.m_cardState == "*")
+			{
+				score += 1;
+			}
+			else if (test_state.m_cardState == char_state)
+			{
+				score += 5;
+			}
+		}
+
+		//testing score
+		if (score > highest_score)
+		{
+			highest_score = score;
+			highest_idx = dialogue_idx;
+		}
+	}
+
+	out += m_dialogueAboutCharacter[highest_idx].m_line;
+
+	const int num_actions = static_cast<int>(m_dialogueAboutCharacter[highest_idx].m_actions.size());
+
+	for (int act_idx = 0; act_idx < num_actions; ++act_idx)
+	{
+		m_dialogueAboutCharacter[highest_idx].m_actions[act_idx]->Execute();
+	}
+
+	if (highest_idx != 0)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+
+bool Character::AskAboutItem(String& out, const Location* location, const Item* character)
+{
+	return false;
 }
 
 
