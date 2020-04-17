@@ -390,29 +390,40 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 }
 
 
+STATIC bool SayGoodbyToCharacter(EventArgs& args)
+{
+	String		name = args.GetValue("card", String("something and nothing"));
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+
+	current_scenario->SetInterest(nullptr);
+
+	return true;
+}
+
+
 STATIC bool InvestigateItem(EventArgs& args)
 {
-	// args will be card = "item name"
-	String name = args.GetValue("card", String("something and nothing"));
-	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
-	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
-
-	LookupItr item_itr;
-	String log = "\t";
-	const bool is_in_list = current_scenario->IsItemInLookupTable(item_itr, String(name));
-
-	if (is_in_list)
-	{
-		current_scenario->GetItemFromList(item_itr->second)->SetDiscovery(true);
-		log += current_scenario->GetItemFromList(item_itr->second)->GetDescription();
-	}
-	else
-	{
-		log += current_scenario->GetUnknownItem();
-	}
-
-	ds->AddLog(LOG_ITEM, log);
-	current_scenario->TestIncidents();
+// 	// args will be card = "item name"
+// 	String name = args.GetValue("card", String("something and nothing"));
+// 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+// 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+// 
+// 	LookupItr item_itr;
+// 	String log = "\t";
+// 	const bool is_in_list = current_scenario->IsItemInLookupTable(item_itr, String(name));
+// 
+// 	if (is_in_list)
+// 	{
+// 		current_scenario->GetItemFromList(item_itr->second)->SetDiscovery(true);
+// 		log += current_scenario->GetItemFromList(item_itr->second)->GetDescription();
+// 	}
+// 	else
+// 	{
+// 		log += current_scenario->GetUnknownItem();
+// 	}
+// 
+// 	ds->AddLog(LOG_ITEM, log);
+// 	current_scenario->TestIncidents();
 
 	return true;
 }
@@ -469,7 +480,7 @@ void Scenario::Startup()
 
 	// when the player is interacting with a character
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", InterrogateCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", SayGoodbyToCharacter);
 
 	// when the player is interacting with an item
 	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("link", InvestigateItem);

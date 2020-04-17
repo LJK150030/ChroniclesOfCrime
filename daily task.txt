@@ -1,9 +1,11 @@
 4/17----------------------------------------------------------------
-2:40	1.0			
+time	estimate	actual	task
+5:10	0.5			0.16	When interogating, Leave the interrogation mode by saying goodbye, and going back to the location
+5:00	1.0			0.16	When interogating, Ask them about an item
+2:40	1.0			2.33	When interogating, Ask them about another character	
 
 4/14----------------------------------------------------------------
 time	estimate	actual	task
-break ----
 7:17	0.5			0.33	Action class: ActionIncidentToggle logic works
 6:33	0.5			0.73	Action class: ActionChangeCardState logic works
 6:24	0.5			0.15	Action class: ActionDisplayText logic works

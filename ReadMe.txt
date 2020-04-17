@@ -158,7 +158,7 @@ O			1			Read In Actions from XML
 			1			When investigating a room, Change the “state” of the dialog box to ask for evidence in the location
 			0.25		When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
 			0.5			When investigating a room, the player is Able to leave, and change the room back to the current location
-			1			When interogating, Change the “state” of the dialog box to ask about entities (characters or items)
+O			1			When interogating, Change the “state” of the dialog box to ask about entities (characters or items)
 			0.25		When interogating, Every question to the character will take 5 in-game minutes to “interrogate”
 			0.5			When interogating, Ask them about an item
 			0.5			When interogating, Ask them about another character

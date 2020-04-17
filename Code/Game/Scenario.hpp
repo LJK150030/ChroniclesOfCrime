@@ -22,6 +22,7 @@ static bool TravelToLocation(EventArgs& args);
 static bool AskLocationForCharacter(EventArgs& args);
 static bool AskLocationForItem(EventArgs& args);
 static bool InterrogateCharacter(EventArgs& args);
+static bool SayGoodbyToCharacter(EventArgs& args);
 static bool InvestigateItem(EventArgs& args);
 
 static bool ClearCommandDs(EventArgs& args);
