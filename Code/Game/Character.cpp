@@ -1,6 +1,7 @@
 #include "Game/Character.hpp"
 #include "Game/Scenario.hpp"
 #include "Game/Location.hpp"
+#include "Game/Item.hpp"
 #include "Game/Action.hpp"
 
 #include "Engine/Core/StringUtils.hpp"
@@ -386,8 +387,97 @@ bool Character::AskAboutCharacter(String& out, const Location* location, const C
 
 
 
-bool Character::AskAboutItem(String& out, const Location* location, const Item* character)
+bool Character::AskAboutItem(String& out, const Location* location, const Item* item)
 {
+	String loc_name = location->GetName();
+	String loc_state = location->GetLocationState().m_name;
+	String item_name = StringToLower(item->GetName());
+	String item_state = StringToLower(item->GetItemState().m_name);
+
+	const int num_dialogue = static_cast<int>(m_dialogueAboutCharacter.size());
+	std::vector<int> dialogue_ranking;
+	dialogue_ranking.reserve(num_dialogue);
+
+	int highest_idx = -1;
+	int highest_score = -1;
+
+	for (int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
+	{
+		CharacterDialogue& test_state = m_dialogueAboutCharacter[dialogue_idx];
+		int score = 0;
+
+		//testing character state
+		if (test_state.m_characterState == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_characterState == m_currentState.m_name)
+		{
+			score += 3;
+		}
+
+		//testing location name
+		if (test_state.m_locationName == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_locationName == loc_name)
+		{
+			score += 3;
+
+			//testing location name
+			if (test_state.m_locationState == "*")
+			{
+				score += 1;
+			}
+			else if (test_state.m_locationState == loc_state)
+			{
+				score += 5;
+			}
+		}
+
+		//testing character name
+		if (test_state.m_cardName == "*")
+		{
+			score += 1;
+		}
+		else if (test_state.m_cardName == item_name)
+		{
+			score += 3;
+
+			//testing character state
+			if (test_state.m_cardState == "*")
+			{
+				score += 1;
+			}
+			else if (test_state.m_cardState == item_name)
+			{
+				score += 5;
+			}
+		}
+
+		//testing score
+		if (score > highest_score)
+		{
+			highest_score = score;
+			highest_idx = dialogue_idx;
+		}
+	}
+
+	out += m_dialogueAboutCharacter[highest_idx].m_line;
+
+	const int num_actions = static_cast<int>(m_dialogueAboutCharacter[highest_idx].m_actions.size());
+
+	for (int act_idx = 0; act_idx < num_actions; ++act_idx)
+	{
+		m_dialogueAboutCharacter[highest_idx].m_actions[act_idx]->Execute();
+	}
+
+	if (highest_idx != 0)
+	{
+		return true;
+	}
+
 	return false;
 }
 
