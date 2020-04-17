@@ -394,7 +394,7 @@ bool Character::AskAboutItem(String& out, const Location* location, const Item* 
 	String item_name = StringToLower(item->GetName());
 	String item_state = StringToLower(item->GetItemState().m_name);
 
-	const int num_dialogue = static_cast<int>(m_dialogueAboutCharacter.size());
+	const int num_dialogue = static_cast<int>(m_dialogueAboutItem.size());
 	std::vector<int> dialogue_ranking;
 	dialogue_ranking.reserve(num_dialogue);
 
@@ -403,7 +403,7 @@ bool Character::AskAboutItem(String& out, const Location* location, const Item* 
 
 	for (int dialogue_idx = 0; dialogue_idx < num_dialogue; ++dialogue_idx)
 	{
-		CharacterDialogue& test_state = m_dialogueAboutCharacter[dialogue_idx];
+		CharacterDialogue& test_state = m_dialogueAboutItem[dialogue_idx];
 		int score = 0;
 
 		//testing character state
@@ -464,13 +464,13 @@ bool Character::AskAboutItem(String& out, const Location* location, const Item* 
 		}
 	}
 
-	out += m_dialogueAboutCharacter[highest_idx].m_line;
+	out += m_dialogueAboutItem[highest_idx].m_line;
 
-	const int num_actions = static_cast<int>(m_dialogueAboutCharacter[highest_idx].m_actions.size());
+	const int num_actions = static_cast<int>(m_dialogueAboutItem[highest_idx].m_actions.size());
 
 	for (int act_idx = 0; act_idx < num_actions; ++act_idx)
 	{
-		m_dialogueAboutCharacter[highest_idx].m_actions[act_idx]->Execute();
+		m_dialogueAboutItem[highest_idx].m_actions[act_idx]->Execute();
 	}
 
 	if (highest_idx != 0)
