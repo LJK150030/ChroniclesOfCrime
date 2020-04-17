@@ -107,16 +107,16 @@ O			0.25		When the computer is talking to the player, use arrowhead - > Talking 
 	13-Mar	3				
 O			0.25		Ask for a character the player knows about In a location the character is currently in
 O			0.25		Ask for a character the player knows about In a location the character is not in
-			0.25		Ask for a character the player does not know about In a location the character is currently in
-			0.25		Ask for a character the player does not know about In a location the character is not in
+O			0.25		Ask for a character the player does not know about In a location the character is currently in
+O			0.25		Ask for a character the player does not know about In a location the character is not in
 O			0.25		Ask for a character that the game does not know about	
 O			0.25		Present an image of the character	
-			0.25		Ask for an item the player knows about In a location the item is currently in
-			0.25		Ask for an item the player knows about In a location the item is not in
-			0.25		Ask for an item the player does not know about In a location the character is currently in
-			0.25		Ask for an item the player does not know about In a location the character is not in
-			0.25		Ask for an item that the game does not know about	
-			0.25		Present an image of the item	
+O			0.25		Ask for an item the player knows about In a location the item is currently in
+O			0.25		Ask for an item the player knows about In a location the item is not in
+O			0.25		Ask for an item the player does not know about In a location the character is currently in
+O			0.25		Ask for an item the player does not know about In a location the character is not in
+O			0.25		Ask for an item that the game does not know about	
+O			0.25		Present an image of the item	
 
 	17-Mar	4
 O			0.5			Action Class: Display Text
@@ -159,11 +159,11 @@ O			1			Read In Actions from XML
 			0.25		When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
 			0.5			When investigating a room, the player is Able to leave, and change the room back to the current location
 O			1			When interogating, Change the “state” of the dialog box to ask about entities (characters or items)
-			0.25		When interogating, Every question to the character will take 5 in-game minutes to “interrogate”
-			0.5			When interogating, Ask them about an item
-			0.5			When interogating, Ask them about another character
-			0.25		When interogating, Leave the interrogation mode by saying goodbye, and going back to the location
-			0.25		Player Investigate an item, just display the text the item's current state is in
+O			0.25		When interogating, Every question to the character will take 5 in-game minutes to “interrogate”
+O			0.5			When interogating, Ask them about an item
+O			0.5			When interogating, Ask them about another character
+O			0.25		When interogating, Leave the interrogation mode by saying goodbye, and going back to the location
+O			0.25		Player Investigate an item, just display the text the item's current state is in
 
 	31-Mar	4
 			0.25		Journal class, press tab to display the journal
@@ -184,7 +184,7 @@ O			1			When interogating, Change the “state” of the dialog box to ask about
 	7-Apr	4.5
 O			0.25		from xml, Set Starting Location
 O			0.25		from xml, Set Scenario Name
-			0.25		from xml, Set startup event
+O			0.25		from xml, Set startup event
 O			0.25		from xml, Set starting time
 O			0.5			from xml, Intro message
 O			0.25		from xml, closed location default message
@@ -214,13 +214,13 @@ O			0.25		from xml, time cost for unknown command
 			0.5			Conditions to test based on a List of object states
 
 	14-Apr	4.75
-			0.25		Read in name
-			0.25		Read in solution
-			0.25		Read in mandatory continue
-			1			Read in list of optional scoring
-			1			Read in list optional variable scoring
-			1			Read in list of questions
-			1			Read in list of ending text
+			0.25		Ending class, Read in name
+			0.25		Ending class, Read in solution
+			0.25		Ending class, Read in mandatory continue
+			1			Ending class, Read in list of optional scoring
+			1			Ending class, Read in list optional variable scoring
+			1			Ending class, Read in list of questions
+			1			Ending class, Read in list of ending text
 
 	17-Apr	-			Ludum Dare Weekend
 

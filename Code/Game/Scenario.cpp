@@ -217,7 +217,11 @@ STATIC bool TravelToLocation(EventArgs& args)
 		{
 			current_scenario->SetLocation(new_loc);
 			current_scenario->SetInterest(nullptr);
-			current_scenario->AddGameTime(current_scenario->GetLocChangeTime(), 0);
+
+			if(new_loc->GetLocationState().m_addGameTime)
+			{
+				current_scenario->AddGameTime(current_scenario->GetLocChangeTime(), 0);
+			}
 		}
 		else
 		{
@@ -258,7 +262,11 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 		if (is_subject_here)
 		{
 			current_scenario->SetInterest(char_subject);
-			current_scenario->AddGameTime(current_scenario->GetInterrogateChangeTime(), 0);
+
+			if(char_subject->GetCharacterState().m_addGameTime)
+			{
+				current_scenario->AddGameTime(current_scenario->GetInterrogateChangeTime(), 0);
+			}
 		}
 		else
 		{
@@ -299,7 +307,11 @@ STATIC bool AskLocationForItem(EventArgs& args)
 		if (is_subject_here)
 		{
 			current_scenario->SetInterest(item_subject);
-			current_scenario->AddGameTime(current_scenario->GetExamineItemChangeTime(), 0);
+
+			if(item_subject->GetItemState().m_addGameTime)
+			{
+				current_scenario->AddGameTime(current_scenario->GetExamineItemChangeTime(), 0);
+			}
 		}
 		else
 		{
@@ -333,6 +345,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	if(current_interest == nullptr)
 	{
 		log += "> Cannot ask this now. Make sure to Talk to a character, then ask them a question.";
+		current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 	}
 	else
 	{
@@ -341,6 +354,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 		if (interest_card_type != CARD_CHARACTER)
 		{
 			log += "> Cannot ask this now. Make sure to Talk to a character, then ask them a question.";
+			current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 		}
 		else
 		{
@@ -352,6 +366,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 			if(interrogatee_state.m_contextMode == CONTEXT_NONE)
 			{
 				log += "> Cannot Interrogate this character right now.";
+				current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 			}
 			else
 			{
@@ -364,6 +379,11 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 				{
 					Character* about_char = current_scenario->GetCharacterFromList(card_itr->second);
 					interrogatee->AskAboutCharacter(log, cur_loc, about_char);
+
+					if(interrogatee->GetCharacterState().m_addGameTime)
+					{
+						current_scenario->AddGameTime(current_scenario->GetInterrogateChangeTime(), 0);
+					}
 				}
 				else 
 				{
@@ -373,10 +393,16 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 					{
 						Item* about_item = current_scenario->GetItemFromList(card_itr->second);
 						interrogatee->AskAboutItem(log, cur_loc, about_item);
+
+						if (interrogatee->GetCharacterState().m_addGameTime)
+						{
+							current_scenario->AddGameTime(current_scenario->GetInterrogateChangeTime(), 0);
+						}
 					}
 					else
 					{
 						log += "> Asking about an unknown item or card.";
+						current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 					}
 				}
 			}
