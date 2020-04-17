@@ -234,7 +234,7 @@ void ActionChangeCardState::Execute()
 		if (in_scenario)
 		{
 			Location* loc_card = m_theScenario->GetLocationFromList(loc_itr->second);
-			current_state = loc_card->GetLocationState().m_name;
+			current_state = StringToLower(loc_card->GetLocationState().m_name);
 
 			if (current_state == m_fromStateName)
 			{
@@ -250,7 +250,7 @@ void ActionChangeCardState::Execute()
 		if (in_scenario)
 		{
 			Character* char_card = m_theScenario->GetCharacterFromList(char_itr->second);
-			current_state = char_card->GetCharacterState().m_name;
+			current_state = StringToLower(char_card->GetCharacterState().m_name);
 
 			if (current_state == m_fromStateName)
 			{
@@ -266,7 +266,7 @@ void ActionChangeCardState::Execute()
 		if (in_scenario)
 		{
 			Item* item_card = m_theScenario->GetItemFromList(item_itr->second);
-			current_state = item_card->GetItemState().m_name;
+			current_state = StringToLower(item_card->GetItemState().m_name);
 
 			if (current_state == m_fromStateName)
 			{
