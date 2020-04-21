@@ -8,6 +8,8 @@ public:
 	bool	m_canMoveHere = false;
 	bool	m_addGameTime = false;
 	String	m_description = "";
+	
+	Material* m_roomMaterial = nullptr;
 };
 
 
@@ -39,23 +41,30 @@ public:
 	explicit Location(Scenario* the_setup, const XmlElement* element);
 	~Location();
 
+	void Render() const override;
+
 	// ACCESSORS
 	bool					IsCharacterInLocation(const Character* character) const;
 	bool					GetLocationDescription(String& out) const;
 	bool					IntroduceCharacter(String& out, const Character* character);
 	bool					IntroduceItem(String& out, const Item* item);
+	bool					CanInvestigateLocation();
+	bool					IsPlayerInvestigatingRoom();
 	const LocationState&	GetLocationState() const;
 
 	// MUTATORS
 	void AddCharacterToLocation(const Character* character);
 	void RemoveCharacterFromLocation(const Character* character);
 	void SetState(const String& starting_state);
+	void SetInvestigation(bool set);
 
 	void ImportLocationStatesFromXml(const XmlElement* element);
 	void ImportLocationIntroductions(const XmlElement* element, CardType type);
 
 private:
 	std::vector<const Character*> m_charsInLoc;
+
+	bool m_investigating = false;
 
 	LocationState			m_currentState;
 	LocStateList			m_states;
@@ -65,4 +74,7 @@ private:
 
 	const float LOC_CARD_HEIGHT = 30.0f;
 	const float LOC_CARD_ASPECT_RATIO = 2.2572855953372189841798501248959f;
+
+	Material* m_defaultRoomMaterial = nullptr; //can investigate will just check if this is not null
+	GPUMesh* m_defaultRoomMesh = nullptr;
 };

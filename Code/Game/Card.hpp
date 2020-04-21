@@ -18,9 +18,9 @@ public:
 	explicit Card(Scenario* the_setup, CardType type);
 	explicit Card(Scenario* the_setup, CardType type, const String& name, const StringList& list_of_nicknames,
 		const String& desc);
-	~Card();
+	virtual ~Card();
 
-	void Render() const;
+	virtual void Render() const;
 	
 	// ACCESSORS
 	bool		IsDiscovered() const;

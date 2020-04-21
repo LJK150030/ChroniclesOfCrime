@@ -96,9 +96,27 @@ Location::Location(Scenario* the_setup, const XmlElement* element) : Card(the_se
 			m_mesh = new GPUMesh(g_theRenderer);
 			m_mesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
 		}
-		else if (attribute_name == "roomdir")
+		else if (attribute_name == "defaultroomdir")
 		{
-			//todo present room;
+			String file_name = Stringf("%s_&s.mat", m_name.c_str(), attribute_name.c_str());
+			m_defaultRoomMaterial = g_theRenderer->CreateOrGetMaterial(file_name, false);
+			m_defaultRoomMaterial->SetShader("default_lit.hlsl");
+			m_defaultRoomMaterial->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
+
+			std::string texture_src = attribute->Value();
+			TextureView* texture(reinterpret_cast<TextureView*>(g_theRenderer->CreateOrGetTextureView2D(texture_src)));
+			m_defaultRoomMaterial->SetDiffuseMap(texture);
+
+			CPUMesh quad_mesh;
+			CpuMeshAddQuad(&quad_mesh,
+				AABB2(
+					-(LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT),
+					-LOC_CARD_HEIGHT,
+					LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT,
+					LOC_CARD_HEIGHT));
+			m_defaultRoomMesh = new GPUMesh(g_theRenderer);
+			m_defaultRoomMesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
+
 		}
 		else
 		{
@@ -149,6 +167,35 @@ Location::Location(Scenario* the_setup, const XmlElement* element) : Card(the_se
 Location::~Location()
 {
 	//debug does not track this step when saying =default
+}
+
+void Location::Render() const
+{
+	if (m_investigating)
+	{
+		if (m_currentState.m_roomMaterial != nullptr)
+		{
+			g_theRenderer->BindModelMatrix(m_modelMatrix);
+			g_theRenderer->BindMaterial(*m_currentState.m_roomMaterial);
+			g_theRenderer->DrawMesh(*m_mesh);
+		}
+		else if (m_defaultRoomMaterial != nullptr)
+		{
+			g_theRenderer->BindModelMatrix(m_modelMatrix);
+			g_theRenderer->BindMaterial(*m_defaultRoomMaterial);
+			g_theRenderer->DrawMesh(*m_mesh);
+		}
+		else
+		{
+			ERROR_AND_DIE("Cannot Investigate a room without a material or default material.")
+		}
+	}
+	else if (m_material != nullptr && m_mesh != nullptr)
+	{
+		g_theRenderer->BindModelMatrix(m_modelMatrix);
+		g_theRenderer->BindMaterial(*m_material);
+		g_theRenderer->DrawMesh(*m_mesh);
+	}
 }
 
 
@@ -349,6 +396,28 @@ bool Location::IntroduceItem(String& out, const Item* item)
 }
 
 
+bool Location::CanInvestigateLocation()
+{
+	if(m_currentState.m_roomMaterial != nullptr)
+	{
+		return true;
+	}
+
+	if(m_defaultRoomMaterial != nullptr)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+
+bool Location::IsPlayerInvestigatingRoom()
+{
+	return m_investigating;
+}
+
+
 const LocationState& Location::GetLocationState() const
 {
 	return m_currentState;
@@ -401,6 +470,12 @@ void Location::SetState(const String& starting_state)
 }
 
 
+void Location::SetInvestigation(const bool set)
+{
+	m_investigating = set;
+}
+
+
 void Location::ImportLocationStatesFromXml(const XmlElement* element)
 {
 	for (const XmlElement* child_element = element->FirstChildElement();
@@ -433,6 +508,16 @@ void Location::ImportLocationStatesFromXml(const XmlElement* element)
 			else if (atr_name == "description")
 			{
 				new_state.m_description = attribute->Value();
+			}
+			else if (atr_name == "roomdir")
+			{
+				ASSERT_OR_DIE(m_defaultRoomMaterial != nullptr, "Need to have a default room texture before setting the state room texture");
+				
+				String file_name = Stringf("%s_%s_&s.mat", m_name.c_str(), 
+					new_state.m_name.c_str(), atr_name.c_str());;
+				new_state.m_roomMaterial = g_theRenderer->CreateOrGetMaterial(file_name, false);
+				new_state.m_roomMaterial->SetShader("default_lit.hlsl");
+				new_state.m_roomMaterial->m_shader->SetDepth(COMPARE_LESS_EQUAL, true);
 			}
 		}
 

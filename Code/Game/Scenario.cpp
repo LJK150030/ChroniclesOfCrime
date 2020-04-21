@@ -202,6 +202,9 @@ STATIC bool TravelToLocation(EventArgs& args)
 	Scenario* current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 
+	Location* cur_loc = current_scenario->GetCurrentLocation();
+	cur_loc->SetInvestigation(false);
+	
 	//find the location in case the player uses a nick name
 	LookupItr loc_itr;
 	String log = "\t";
@@ -427,8 +430,10 @@ STATIC bool SayGoodbyToCharacter(EventArgs& args)
 }
 
 
-STATIC bool InvestigateItem(EventArgs& args)
-{
+// this was assuming that the items acted like characters and locations, in that we can
+// combine an item with something else to get more information
+// STATIC bool InvestigateItem(EventArgs& args)
+// {
 // 	// args will be card = "item name"
 // 	String name = args.GetValue("card", String("something and nothing"));
 // 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
@@ -450,6 +455,49 @@ STATIC bool InvestigateItem(EventArgs& args)
 // 
 // 	ds->AddLog(LOG_ITEM, log);
 // 	current_scenario->TestIncidents();
+// 
+// 	return true;
+// }
+
+
+
+STATIC bool InvestigateRoom(EventArgs& args)
+{
+	UNUSED(args);
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	Location* cur_location = current_scenario->GetCurrentLocation();
+
+	if(cur_location->CanInvestigateLocation())
+	{
+		cur_location->SetInvestigation(true);
+	}
+	else
+	{
+		ds->AddLog(LOG_MESSAGE, "> Cannot Investigate this location");
+	}
+
+	return true;
+}
+
+
+bool LeaveRoom(EventArgs& args)
+{
+	UNUSED(args);
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	Location* cur_location = current_scenario->GetCurrentLocation();
+
+	if (cur_location->CanInvestigateLocation() && cur_location->IsPlayerInvestigatingRoom())
+	{
+		cur_location->SetInvestigation(false);
+	}
+	else
+	{
+		ds->AddLog(LOG_MESSAGE, "> You're not investigating a room right now.");
+	}
 
 	return true;
 }
@@ -507,6 +555,11 @@ void Scenario::Startup()
 	// when the player is interacting with a character
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", SayGoodbyToCharacter);
+
+	// Investigating a room
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("investigate", InvestigateRoom);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("leave", LeaveRoom);
+
 
 	// when the player is interacting with an item
 	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("link", InvestigateItem);

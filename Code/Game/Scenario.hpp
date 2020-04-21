@@ -23,7 +23,9 @@ static bool AskLocationForCharacter(EventArgs& args);
 static bool AskLocationForItem(EventArgs& args);
 static bool InterrogateCharacter(EventArgs& args);
 static bool SayGoodbyToCharacter(EventArgs& args);
-static bool InvestigateItem(EventArgs& args);
+//static bool InvestigateItem(EventArgs& args);
+static bool InvestigateRoom(EventArgs& args);
+static bool LeaveRoom(EventArgs& args);
 
 static bool ClearCommandDs(EventArgs& args);
 static bool HelpCommandDs(EventArgs& args);

@@ -25,7 +25,7 @@
 	</Location>
 
 
-	<Location Name="Notting Hill" StartingState="Closed" ImageDir="Location/Notting Hill.png" RoomDir="Room/VrWipTutorial.png">
+	<Location Name="Notting Hill" StartingState="Closed" ImageDir="Location/Notting Hill.png" DefaultRoomDir="Room/VrWipTutorial.png">
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>
