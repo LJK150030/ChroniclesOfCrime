@@ -1,6 +1,6 @@
 <Incidents>
 	<Incident name="Tuto: interrogation mode" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is the Chief in state 2?">
 			<Conditions>
 				<ObjectStateCheck object="Chief Officer Doyle" type="character" operation="Is" State="State 2"/>
 			</Conditions>
@@ -12,7 +12,7 @@
 
 
 	<Incident name="Tuto: location" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is Notting hill open?">
 			<Conditions>
 				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Open"/>
 			</Conditions>
@@ -24,7 +24,7 @@
 
 
 	<Incident name="Tuto: Scan clue" type="OneShot" isEnabled="false">
-		<Trigger name="Trigger">
+		<Trigger name="Has 5 minutes passed since this event was active?">
 			<Conditions>
 				<TimePassed since="EventEnabled" daysPassed="0" hoursPassed="0" minutesPassed="5" />
 			</Conditions>
@@ -36,7 +36,7 @@
 
 
 	<Incident name="before search" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is the player in Notting Hill?">
 			<Conditions>
 				<LocationCheck location="Notting Hill" condition="Inside" />
 			</Conditions>
@@ -48,7 +48,7 @@
 
 
 	<Incident name="Tuto : Expert" type="Multiple" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Has the dead cat been found?">
 			<Conditions>
 				<ObjectStateCheck object="Animals" type="item" operation="Is" State="Found"/>
 			</Conditions>
@@ -57,7 +57,7 @@
 			</Actions>
 		</Trigger>
 
-		<Trigger name="Trigger">
+		<Trigger name="Has Anna been found?">
 			<Conditions>
 				<ObjectStateCheck object="Anna Taylor" type="character" operation="Is" State="Found"/>
 			</Conditions>
@@ -66,7 +66,7 @@
 			</Actions>
 		</Trigger>
 
-		<Trigger name="Trigger">
+		<Trigger name="Has the old phone been found?">
 			<Conditions>
 				<ObjectStateCheck object="Communication Device" type="item" operation="Is" State="Found"/>
 			</Conditions>
@@ -75,7 +75,7 @@
 			</Actions>
 		</Trigger>
 
-		<Trigger name="Trigger">
+		<Trigger name="Has the cake been found?">
 			<Conditions>
 				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
 			</Conditions>
@@ -84,7 +84,7 @@
 			</Actions>
 		</Trigger>
 
-		<Trigger name="Trigger">
+		<Trigger name="Has the bridge game been found?">
 			<Conditions>
 				<ObjectStateCheck object="Games &amp; Toys" type="item" operation="Is" State="Found"/>
 			</Conditions>
@@ -96,7 +96,7 @@
 
 
 	<Incident name="Tuto: Special item" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Has the Digitalis been found?">
 			<Conditions>
 				<ObjectStateCheck object="Digitalis" type="item" operation="Is" State="Found"/>
 			</Conditions>
@@ -108,16 +108,16 @@
 
 
 	<Incident name="Tuto:  attitude change" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is Rose in the Vrai Nature state?">
 			<Conditions>
-				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="Vrai Nature"/>
+				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="vrai nature"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="This letter makes you wonder if the suspect hasn't had a change of heart. Don't hesitate to re-interrogate him on certain subjects, he might be able to tell you more about them." />
+				<DisplayText type="Tutorial" message="This letter makes you wonder if the suspect hasn't had a change of heart. Don't hesitate to re-interrogate them on certain subjects, they might be able to tell you more about them." />
 			</Actions>
 		</Trigger>
 
-		<Trigger name="Trigger">
+		<Trigger name="Is Rose in the Guilty state?">
 			<Conditions>
 				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="Guilty"/>
 			</Conditions>
@@ -129,7 +129,7 @@
 
 
 	<Incident name="Tuto: end game" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Has a day, 11 hours, and 30 minutes passed since the game started?">
 			<Conditions>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="11" minutesPassed="30" />
 			</Conditions>
@@ -142,7 +142,7 @@
 
 
 	<Incident name="More clue hint" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Has a day, 10 hours, and 30 minutes passed since the game started?">
 			<Conditions>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="10" minutesPassed="30" />
 			</Conditions>
@@ -154,7 +154,7 @@
 
 
 	<Incident name="disable More clue hint" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Has any of the clues in the apartment been found?">
 			<Conditions>
 				<ObjectStateCheck object="Animals" type="item" operation="Is" State="Found"/>
 				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
@@ -170,7 +170,7 @@
 
 
 	<Incident name="Notting Hill change state" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is the player in Notting Hills?">
 			<Conditions>
 				<LocationCheck location="Notting Hill" condition="Inside" />
 			</Conditions>
@@ -183,7 +183,7 @@
 
 
 	<Incident name="Tuto: speak about herself" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is the player in Leicester Square?">
 			<Conditions>
 				<LocationCheck location="Leicester Square" condition="Inside" />
 			</Conditions>
@@ -195,7 +195,7 @@
 
 
 	<Incident name="Intro" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is the player in Scotland Yard?">
 			<Conditions>
 				<LocationCheck location="Scotland Yard" condition="Inside" />
 			</Conditions>
@@ -207,7 +207,7 @@
 
 
 	<Incident name="Help Bridge Club not found" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is Leicester Square still closed after a day and 11 hours?">
 			<Conditions>
 				<ObjectStateCheck object="Leicester Square" type="location" operation="Is" State="Closed"/>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="11" minutesPassed="00" />
@@ -221,9 +221,12 @@
 
 
 	<Incident name="Ending hint" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Is Rose in the end state?">
 			<Conditions>
 				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="end"/>
+				<ObjectStateCheck object="Games &amp; Toys" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Digitalis" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
 				<DisplayText type="Tutorial" message="You have enough elements to solve this case. Go back to the Scotland Yard to give your report." />
@@ -234,7 +237,7 @@
 
 
 	<Incident name="Tuto: Scan not understood" type="OneShot" isEnabled="true">
-		<Trigger name="Trigger">
+		<Trigger name="Has it been a day, 9 hours, and 5 min, the player has not found Notting Hill, and not talking to the Chief?">
 			<Conditions>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="9" minutesPassed="5" />
 				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Closed"/>
@@ -245,7 +248,7 @@
 			</Actions>
 		</Trigger>
 
-		<Trigger name="Trigger">
+		<Trigger name="Has it been a day, 9 hours, and 5 min, the player has not found Notting Hill, and is talking to the Chief?">
 			<Conditions>
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="9" minutesPassed="5" />
 				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Closed"/>

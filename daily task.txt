@@ -1,5 +1,6 @@
 4/23----------------------------------------------------------------
 time 	estimate	actual	task
+11:13	1.0					Debug game events via dev console messaging
 10:52	0.5			0.35	Scenario: present "Please press any buttont to close the game..." and then closed the game as such
 10:43	0.25		0.15	Scenario: present continue Investigation
 10:32	0.25		0.18	Scenario: present congratulations

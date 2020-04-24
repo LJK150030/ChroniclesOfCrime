@@ -1,4 +1,6 @@
 <VictoryConditions>
 	<Condition CardType="Character" CardName="Rose" CardState="end"/>
+	<Condition CardType="Item" CardName="Games &amp; Toys" CardState="Found"/>
+	<Condition CardType="Item" CardName="Food" CardState="Found"/>
 	<Condition CardType="Item" CardName="Digitalis" CardState="Found"/>
 </VictoryConditions>

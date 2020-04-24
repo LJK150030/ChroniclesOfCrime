@@ -11,6 +11,7 @@
 
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
+#include "Engine/Core/DevConsole.hpp"
 
 Action::Action(Scenario* the_setup) : m_theScenario(the_setup)
 {
@@ -100,6 +101,7 @@ ActionDisplayText::~ActionDisplayText()
 
 void ActionDisplayText::Execute()
 {
+	g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Displaying the message: %s", m_message.c_str()));
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 	ds->AddLog(LOG_LOCATION, m_message);
 }
@@ -223,6 +225,7 @@ void ActionChangeCardState::Execute()
 {
 	ASSERT_OR_DIE(m_cardType != UNKNOWN_CARD_TYPE, "Attempting to change the state of an unknown card type");
 
+
 	String current_state = "";
 
 	switch (m_cardType)
@@ -236,9 +239,14 @@ void ActionChangeCardState::Execute()
 			Location* loc_card = m_theScenario->GetLocationFromList(loc_itr->second);
 			current_state = StringToLower(loc_card->GetLocationState().m_name);
 
-			if (current_state == m_fromStateName)
+			if (m_fromStateName == "*" || current_state == m_fromStateName)
 			{
 				loc_card->SetState(m_toStateName);
+				g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Changing %s state from %s to %s", m_cardName.c_str(), m_fromStateName.c_str(), m_toStateName.c_str()));
+			}
+			else
+			{
+				g_theDevConsole->PrintString(Rgba::RED, Stringf("Could not change %s state from %s to %s", m_cardName.c_str(), m_fromStateName.c_str(), m_toStateName.c_str()));
 			}
 		}
 		break;
@@ -252,9 +260,14 @@ void ActionChangeCardState::Execute()
 			Character* char_card = m_theScenario->GetCharacterFromList(char_itr->second);
 			current_state = StringToLower(char_card->GetCharacterState().m_name);
 
-			if (current_state == m_fromStateName)
+			if (m_fromStateName == "*" || current_state == m_fromStateName)
 			{
 				char_card->SetState(m_toStateName);
+				g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Changing %s state from %s to %s", m_cardName.c_str(), m_fromStateName.c_str(), m_toStateName.c_str()));
+			}
+			else
+			{
+				g_theDevConsole->PrintString(Rgba::RED, Stringf("Could not change %s state from %s to %s", m_cardName.c_str(), m_fromStateName.c_str(), m_toStateName.c_str()));
 			}
 		}
 		break;
@@ -268,9 +281,14 @@ void ActionChangeCardState::Execute()
 			Item* item_card = m_theScenario->GetItemFromList(item_itr->second);
 			current_state = StringToLower(item_card->GetItemState().m_name);
 
-			if (current_state == m_fromStateName)
+			if (m_fromStateName == "*" || current_state == m_fromStateName)
 			{
 				item_card->SetState(m_toStateName);
+				g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Changing %s state from %s to %s", m_cardName.c_str(), m_fromStateName.c_str(), m_toStateName.c_str()));
+			}
+			else
+			{
+				g_theDevConsole->PrintString(Rgba::RED, Stringf("Could not change %s state from %s to %s", m_cardName.c_str(), m_fromStateName.c_str(), m_toStateName.c_str()));
 			}
 		}
 		break;
@@ -399,6 +417,11 @@ void ActionIncidentToggle::Execute()
 	{
 		Incident* inc = m_theScenario->GetIncidentFromList(inc_itr->second);
 		inc->SetActive(m_set);
+		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Setting %s, to %s", m_incidentName.c_str(), (m_set ? "enable" : "disable")));
+	}
+	else
+	{
+		g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Could not set %s, to %s", m_incidentName.c_str(), (m_set ? "enable" : "disable")));
 	}
 }
 

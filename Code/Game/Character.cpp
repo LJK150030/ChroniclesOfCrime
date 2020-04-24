@@ -220,19 +220,19 @@ void Character::ImportCharacterDialogueFromXml(const XmlElement* element, CardTy
 
 		switch (type)
 		{
-		case CARD_CHARACTER:
-		{
-			m_dialogueAboutCharacter.emplace_back();
-			new_dialog = &m_dialogueAboutCharacter.back();
+			case CARD_CHARACTER:
+			{
+				m_dialogueAboutCharacter.emplace_back();
+				new_dialog = &m_dialogueAboutCharacter.back();
 
-			break;
-		}
-		case CARD_ITEM:
-		{
-			m_dialogueAboutItem.emplace_back();
-			new_dialog = &m_dialogueAboutItem.back();
-			break;
-		}
+				break;
+			}
+			case CARD_ITEM:
+			{
+				m_dialogueAboutItem.emplace_back();
+				new_dialog = &m_dialogueAboutItem.back();
+				break;
+			}
 		}
 
 		new_dialog->m_cardType = type;
@@ -254,17 +254,39 @@ void Character::ImportCharacterDialogueFromXml(const XmlElement* element, CardTy
 			{
 				new_dialog->m_locationState = StringToLower(attribute->Value());
 			}
-			else if (atr_name == "char")
-			{
-				new_dialog->m_cardName = StringToLower(attribute->Value());
-			}
-			else if (atr_name == "charstate")
-			{
-				new_dialog->m_cardState = StringToLower(attribute->Value());
-			}
 			else if (atr_name == "line")
 			{
 				new_dialog->m_line = attribute->Value();
+			}
+			else
+			{
+				switch (type)
+				{
+					case CARD_CHARACTER:
+					{
+						if (atr_name == "char")
+						{
+							new_dialog->m_cardName = StringToLower(attribute->Value());
+						}
+						else if (atr_name == "charstate")
+						{
+							new_dialog->m_cardState = StringToLower(attribute->Value());
+						}
+
+						break;
+					}
+					case CARD_ITEM:
+					{
+						if (atr_name == "item")
+						{
+							new_dialog->m_cardName = StringToLower(attribute->Value());
+						}
+						else if (atr_name == "itemstate")
+						{
+							new_dialog->m_cardState = StringToLower(attribute->Value());
+						}
+					}
+				}
 			}
 		}
 
@@ -450,7 +472,7 @@ bool Character::AskAboutItem(String& out, const Location* location, const Item* 
 			{
 				score += 1;
 			}
-			else if (test_state.m_cardState == item_name)
+			else if (test_state.m_cardState == item_state)
 			{
 				score += 5;
 			}
