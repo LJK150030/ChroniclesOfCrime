@@ -47,7 +47,8 @@ public:
 	const CharacterState&	GetCharacterState() const;
 	bool					AskAboutCharacter(String& out, const Location* location, const Character* character);
 	bool					AskAboutItem(String& out, const Location* location, const Item* item);
-	
+	String					GetAsString() const;
+
 	// MUTATORS
 	void SetState(const String& starting_state);
 

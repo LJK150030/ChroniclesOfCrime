@@ -82,7 +82,9 @@
 			<Scan State="*" 	Character="Rose Butterfly" 		CharacterState="State 1" 		Line="We're practicing for a big Bridge tournament right now. How can I help you?" />
 			<Scan State="*" 	Character="Rose Butterfly" 		CharacterState="Guilty"  		Line="We're practicing for a big Bridge tournament right now. How can I help you?" />
 			<Scan State="*" 	Character="Rose Butterfly" 		CharacterState="vrai nature"	Line="So you've been told I couldn't stand Anna anymore. Well... if the masks are off, then I will speak straight." />
-			<Scan State="*" 	Character="Jenny May" 			CharacterState="*"				Line="I'm new to the club, but if I can help you, please let me know." />
+			<Scan State="*" 	Character="Jenny May" 			CharacterState="*"				Line="I'm new to the club, but if I can help you, please let me know.">
+				<SetCardState type="Character" name="Jenny May" fromState="Not Found" toState="State 1"/>
+			</Scan>
 		</IntroduceCharacter>
 		<IntroduceItem>
 			<Scan State="*"		Item="*"	ItemState="*"	Line="&gt; This object can't be picked up or used in this location." />

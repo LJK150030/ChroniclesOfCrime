@@ -1,6 +1,13 @@
+4/24----------------------------------------------------------------
+time 	estimate	actual	task
+5:09	0.5			0.20	Command "Journal" to bring up a list of all of the evidence we know so far in our investigation 
+4:30	0.5			0.63	Command "Journal Characters" to bring up a list of all valid Characters we know so far in our investigation 
+3:57	0.5			0.55	Command "Journal Items" to bring up a list of all valid Items we know so far in our investigation 
+3:00 	1.0			0.95	Command "Journal Locations" to bring up a list of all valid locations we know so far in our investigation 
+
 4/23----------------------------------------------------------------
 time 	estimate	actual	task
-11:13	1.0					Debug game events via dev console messaging
+11:13	1.0			1.38	Debug game events via dev console messaging
 10:52	0.5			0.35	Scenario: present "Please press any buttont to close the game..." and then closed the game as such
 10:43	0.25		0.15	Scenario: present continue Investigation
 10:32	0.25		0.18	Scenario: present congratulations
@@ -16,7 +23,6 @@ time 	estimate	actual	task
 
 4/21----------------------------------------------------------------
 time 	estimate	actual	task
-3:45	0.5					Edit the dialoge in the game from its original form to one that fits with my version of the game
 3:20	1.0			0.42	Play through game to spot bugs
 3:16	0.25		0.06	When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
 3:11	0.5			0.10	When investigating a room, the player is Able to leave, and change the room back to the current location

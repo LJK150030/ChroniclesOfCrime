@@ -23,10 +23,11 @@ static bool AskLocationForCharacter(EventArgs& args);
 static bool AskLocationForItem(EventArgs& args);
 static bool InterrogateCharacter(EventArgs& args);
 static bool SayGoodbyToCharacter(EventArgs& args);
-//static bool InvestigateItem(EventArgs& args);
 static bool InvestigateRoom(EventArgs& args);
 static bool LeaveRoom(EventArgs& args);
 static bool SolveScenario(EventArgs& args);
+
+static bool ListEvidence(EventArgs& args);
 
 static bool ClearCommandDs(EventArgs& args);
 static bool HelpCommandDs(EventArgs& args);
@@ -66,12 +67,17 @@ public:
 	String& GetSolution();
 	String& GetCongratulations();
 	String& GetContinueInvestigation();
+	
+	StringList GetListOfKnownLocations();
+	StringList GetListOfKnownItems();
+	StringList GetListOfKnownCharacters();
 
 	Location*	GetCurrentLocation();
 	Card*		GetCurrentInterest();
 
 	void	SetLocation(Location* loc);
 	void	SetInterest(Card* card);
+	void	SetSubject(Card* card);
 	void	ScenarioSolved();
 
 	void		AddGameTime(const uint mins, const uint hours);
@@ -109,8 +115,6 @@ private:
 
 	void ReadScenarioSettingsAttributes(const XmlElement* element);
 	void ReadScenarioTimeCostForActions(const XmlElement* element);
-	void ReadScenarioStarsScoreSettings(const XmlElement* element);
-	void ReadScenarioGameTimeScoreBonusAndPenalty(const XmlElement* element);
 	void ReadScenarioDefaultEnding(const XmlElement* element);
 	
 

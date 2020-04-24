@@ -409,6 +409,21 @@ const LocationState& Location::GetLocationState() const
 }
 
 
+String Location::GetAsString() const
+{
+	String m_line = Stringf("%s (aka ", m_name.c_str());
+
+	const uint num_nicknames = static_cast<uint>(m_nickNames.size());
+	for(uint nn_idx = 0; nn_idx < num_nicknames; ++nn_idx)
+	{
+		m_line += nn_idx != num_nicknames - 1 ? (m_nickNames[nn_idx] + ", ") : (m_nickNames[nn_idx]);
+	}
+	m_line += ")";
+	
+	return m_line;
+}
+
+
 void Location::AddCharacterToLocation(const Character* character)
 {
 	int num_char = static_cast<int>(m_charsInLoc.size());

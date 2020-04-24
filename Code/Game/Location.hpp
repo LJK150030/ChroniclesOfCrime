@@ -53,6 +53,7 @@ public:
 	bool					IsPlayerInvestigatingRoom() const;
 	bool					CanSolveCaseHere() const;
 	const LocationState&	GetLocationState() const;
+	String					GetAsString() const;
 
 	// MUTATORS
 	void AddCharacterToLocation(const Character* character);

@@ -95,6 +95,21 @@ const ItemState& Item::GetItemState() const
 }
 
 
+String Item::GetAsString() const
+{
+	String m_line = Stringf("%s (aka ", m_name.c_str());
+
+	const uint num_nicknames = static_cast<uint>(m_nickNames.size());
+	for (uint nn_idx = 0; nn_idx < num_nicknames; ++nn_idx)
+	{
+		m_line += nn_idx != num_nicknames - 1 ? (m_nickNames[nn_idx] + ", ") : (m_nickNames[nn_idx]);
+	}
+	m_line += ")";
+
+	return m_line;
+}
+
+
 void Item::SetState(const String& starting_state)
 {
 	int num_states = static_cast<int>(m_states.size());

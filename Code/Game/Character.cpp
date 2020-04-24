@@ -290,8 +290,10 @@ void Character::ImportCharacterDialogueFromXml(const XmlElement* element, CardTy
 			}
 		}
 
-		const XmlElement* grand_child_element = child_element->FirstChildElement();
-		if (grand_child_element != nullptr)
+		for (const XmlElement* grand_child_element = child_element->FirstChildElement();
+			grand_child_element;
+			grand_child_element = grand_child_element->NextSiblingElement()
+			)
 		{
 			element_name = StringToLower(grand_child_element->Name());
 
@@ -501,6 +503,21 @@ bool Character::AskAboutItem(String& out, const Location* location, const Item* 
 	}
 
 	return false;
+}
+
+
+String Character::GetAsString() const
+{
+	String m_line = Stringf("%s (aka ", m_name.c_str());
+
+	const uint num_nicknames = static_cast<uint>(m_nickNames.size());
+	for (uint nn_idx = 0; nn_idx < num_nicknames; ++nn_idx)
+	{
+		m_line += nn_idx != num_nicknames - 1 ? (m_nickNames[nn_idx] + ", ") : (m_nickNames[nn_idx]);
+	}
+	m_line += ")";
+
+	return m_line;
 }
 
 

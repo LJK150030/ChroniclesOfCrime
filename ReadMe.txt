@@ -246,7 +246,7 @@ O	VictoryCondition: Read in XML file for
 X	LocationVictoryConditions (solved by having just card class)
 X	CharacterVictoryConditions (solved by having just card class)
 X	ItemsVictoryConditions (solved by having just card class)
-	VictoryCondition: test if the condition is met
+O	VictoryCondition: test if the condition is met
 
 	24-Apr
 O	Scenario: Enter "solved" command to compleate the scenario
@@ -258,15 +258,13 @@ O	Scenario: if one of the conditions in not met
 O	Scenario: present a dialog to continue the investigation. 
 
 	25-Apr
-	Journal class: press tab to display the journal
-	Journal class: Show all know locations
-	Journal class: Have characters close to the location if the player last seen them there. 
-	Journal class: Have Characters in the middle of the journal if their location is unknown.
-	Journal class: Have a section for clues the player has found
-	Journal class: add open locations to the journal
-	Journal class: add "found" characters to the journal
-	Journal class: Add the item to the evidence section of the journal
+O	Journal command: "Journal" to bring up a list of all of the clues we know so far in the investigation 
+O	Journal command: "Journal locations" to bring up a list of all of the locations we know so far in the scenario
+O	Journal command: "Journal characters" to bring up a list of all of the characters we know so far in the scenario
+O	Journal command: "Journal items" to bring up a list of all of the items we know so far in the scenario
+
 	Bug testing
+	Help command explins what the command and paramaters do
 	Ensure that any text presented is based on the text adveture version of the game and not the board game version
 
 	30 Apr

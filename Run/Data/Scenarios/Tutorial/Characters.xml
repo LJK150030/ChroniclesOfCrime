@@ -11,6 +11,7 @@
 			<Scan State="*"	Loc="*"	LocState="*" Char="Chief Officer Doyle" CharState="*"	Line="We can talk once the case is closed. Stay focused on your task." />
 			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 		CharState="*"	Line="This woman's name is Anna Taylor. She's been found dead in her home in the Notting Hill district. Here's the address. Maybe you should go there and investigate…">
 				<SetCardState type="Location" name="Notting Hill" fromState="Closed" toState="Open"/>
+				<SetCardState type="Character" name="Anna Taylor" fromState="Not Found" toState="State 1"/>
 			</Scan>
 			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="To learn more about the personality of a suspect, it's good to ask other people what they think about them." />
 			<Scan State="*"	Loc="*"	LocState="*" Char="Jenny May" 			CharState="*"	Line="Did you think of asking her what she thinks about the victim?" />
@@ -21,18 +22,20 @@
 	</Character>
 
 
-	<Character Name="Anna Taylor" StartingState="State 1" StartLoc="Notting Hill" ImageDir="Character/Anna.png">
+	<Character Name="Anna Taylor" StartingState="Not Found" StartLoc="Notting Hill" ImageDir="Character/Anna.png">
 		<Nicknames List="Mrs. Taylor,Anna,Taylor,victim" />
 		<States>
+			<State Name="Not Found" AddGameTime="false" ContextMode="None" />
 			<State Name="State 1" AddGameTime="true" ContextMode="None" />
 			<State Name="Found" AddGameTime="true" ContextMode="None" />
 		</States>
 	</Character>
 
 
-	<Character Name="Rose Butterfly" StartingState="State 1" StartLoc="Leicester Square" ImageDir="Character/Rose.png">
+	<Character Name="Rose Butterfly" StartingState="Not Found" StartLoc="Leicester Square" ImageDir="Character/Rose.png">
 		<Nicknames List="Rose,Butterfly,Ms. Butterfly" />
 		<States>
+			<State Name="Not Found" AddGameTime="false" ContextMode="None" />
 			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
 			<State Name="vrai nature" AddGameTime="true" ContextMode="Interrogation" />
 			<State Name="Guilty" AddGameTime="true" ContextMode="Interrogation" />
@@ -71,14 +74,17 @@
 	</Character>
 
 
-	<Character Name="Jenny May" StartingState="State 1" StartLoc="Leicester Square" ImageDir="Character/Jenny.png">
+	<Character Name="Jenny May" StartingState="Not Found" StartLoc="Leicester Square" ImageDir="Character/Jenny.png">
 		<Nicknames List="Jenny,May,Ms. May" />
 		<States>
+			<State Name="Not Found" AddGameTime="true" ContextMode="Interrogation" />
 			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
 		</States>
 		<CharDialogue>
 			<Scan State="*"	Loc="*"	LocState="*" Char="*" 				CharState="*"	Line="I don't recognize this, should I?" />
-			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 	CharState="*"	Line="Anna was the president of the Bridge club, and we owe a lot to her. She was the teammate of one of our best players, Rose. Rose is here today." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 	CharState="*"	Line="Anna was the president of the Bridge club, and we owe a lot to her. She was the teammate of one of our best players, Rose. Rose is here today.">
+				<SetCardState type="Character" name="Rose Butterfly" fromState="Not Found" toState="State 1"/>
+			</Scan>
 			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 	CharState="*"	Line="Rose is competitive, and she often argued with Anna because they were losing more and more often. But they most likely reconciled because Rose sent a cake to Anna yesterday.">
 				<SetCardState type="Character" name="Rose Butterfly" fromState="*" toState="Guilty"/>
 			</Scan>
@@ -109,7 +115,9 @@
 			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 		CharState="*"	Line="A quick Internet search found that she was president of a Bridge club in Leicester Square.">
 				<SetCardState type="Location" name="Leicester Square" fromState="Closed" toState="Open"/>
 			</Scan>
-			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="She's registered for a Bridge tournament tomorrow with a big cash prize for the winner. Guess who was supposed to be her partner? BINGO! Our victim, Anna." />
+			<Scan State="*"	Loc="*"	LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="She's registered for a Bridge tournament tomorrow with a big cash prize for the winner. Guess who was supposed to be her partner? BINGO! Our victim, Anna.">
+				<SetCardState type="Character" name="Rose Butterfly" fromState="Not Found" toState="State 1"/>
+			</Scan>
 		</CharDialogue>
 		<ItemDialogue>
 			<Scan State="*"	Loc="*"	LocState="*" Item="*" 			ItemState="*"			Line="I'm not the one who can help you with this." />
@@ -117,7 +125,9 @@
 				<SetCardState type="Character" name="Rose Butterfly" fromState="*" toState="Guilty"/>
 			</Scan>
 			<Scan State="*"	Loc="*"	LocState="*" Item="Communication Device" 	ItemState="Not Found"	Line="You should pick up the phone first before I can analyze it. Press the &quot;Goodbye&quot; button and scan the &quot;Communication Devices&quot; card to pick up the phone as evidence." />
-			<Scan State="*"	Loc="*"	LocState="*" Item="Communication Device" 	ItemState="Found"		Line="I can't believe these old things still exist! Luckily it's linked to the network with the same usual wires. I was able to find the last call, yesterday at 6:15pm. It came from the phone of a lady named Rose Butterfly" />
+			<Scan State="*"	Loc="*"	LocState="*" Item="Communication Device" 	ItemState="Found"		Line="I can't believe these old things still exist! Luckily it's linked to the network with the same usual wires. I was able to find the last call, yesterday at 6:15pm. It came from the phone of a lady named Rose Butterfly">
+				<SetCardState type="Character" name="Rose Butterfly" fromState="Not Found" toState="State 1"/>
+			</Scan>
 		</ItemDialogue>
 	</Character>
 
@@ -152,6 +162,7 @@
 			<Scan State="*"	Loc="*"	LocState="*" Char="Chief Officer Doyle" CharState="*"	Line="Ah! The Chief Officer… There's so much to say about this man, but I'm pretty sure now's not the time." />
 			<Scan State="*" Loc="*" LocState="*" Char="Anna Taylor" 		CharState="*"	Line="An old lady who grew up during the war, and who was extremely stingy with her money." />
 			<Scan State="*" Loc="*" LocState="*" Char="Rose Butterfly" 		CharState="*"	Line="A compulsive fighter who will do whatever it takes to get what she wants. She makes her presence loud and clear with her extreme quirkiness. You will most likely find her at the Leicester Square Bridge Club.">
+				<SetCardState type="Character" name="Rose Butterfly" fromState="Not Found" toState="State 1"/>
 				<SetCardState type="Location" name="Leicester Square" fromState="Closed" toState="Open"/>
 			</Scan>
 			<Scan State="*" Loc="*" LocState="*" Char="Jenny May" 			CharState="*"	Line="A young lady, very serious, who works as a vet. You could say that she has succeeded in life. She is now looking to give a meaning to it." />

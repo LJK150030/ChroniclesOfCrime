@@ -195,8 +195,6 @@ STATIC bool DumpIncident(EventArgs& args)
 
 
 // Game Actions ---------------------------------------------------------
-
-
 STATIC bool TravelToLocation(EventArgs& args)
 {
 	// args will be card = "item name"
@@ -221,6 +219,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 		{
 			current_scenario->SetLocation(new_loc);
 			current_scenario->SetInterest(nullptr);
+			current_scenario->SetSubject(nullptr);
 
 			if(new_loc->GetLocationState().m_addGameTime)
 			{
@@ -348,6 +347,8 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 
 	String log = "\t";
 
+	current_scenario->SetSubject(nullptr);
+	
 	Card* current_interest = current_scenario->GetCurrentInterest();
 
 	if(current_interest == nullptr)
@@ -386,6 +387,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 				if(is_char)
 				{
 					Character* about_char = current_scenario->GetCharacterFromList(card_itr->second);
+					current_scenario->SetSubject(about_char);
 					interrogatee->AskAboutCharacter(log, cur_loc, about_char);
 
 					if(interrogatee->GetCharacterState().m_addGameTime)
@@ -400,6 +402,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 					if(is_item)
 					{
 						Item* about_item = current_scenario->GetItemFromList(card_itr->second);
+						current_scenario->SetSubject(about_item);
 						interrogatee->AskAboutItem(log, cur_loc, about_item);
 
 						if (interrogatee->GetCharacterState().m_addGameTime)
@@ -431,39 +434,10 @@ STATIC bool SayGoodbyToCharacter(EventArgs& args)
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
 
 	current_scenario->SetInterest(nullptr);
+	current_scenario->SetSubject(nullptr);
 
 	return true;
 }
-
-
-// this was assuming that the items acted like characters and locations, in that we can
-// combine an item with something else to get more information
-// STATIC bool InvestigateItem(EventArgs& args)
-// {
-// 	// args will be card = "item name"
-// 	String name = args.GetValue("card", String("something and nothing"));
-// 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
-// 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
-// 
-// 	LookupItr item_itr;
-// 	String log = "\t";
-// 	const bool is_in_list = current_scenario->IsItemInLookupTable(item_itr, String(name));
-// 
-// 	if (is_in_list)
-// 	{
-// 		current_scenario->GetItemFromList(item_itr->second)->SetDiscovery(true);
-// 		log += current_scenario->GetItemFromList(item_itr->second)->GetDescription();
-// 	}
-// 	else
-// 	{
-// 		log += current_scenario->GetUnknownItem();
-// 	}
-// 
-// 	ds->AddLog(LOG_ITEM, log);
-// 	current_scenario->TestIncidents();
-// 
-// 	return true;
-// }
 
 
 
@@ -541,6 +515,88 @@ STATIC bool SolveScenario(EventArgs& args)
 }
 
 
+STATIC bool ListEvidence(EventArgs& args)
+{
+	String		name = args.GetValue("card", String("something and nothing"));
+	String		name_lower = StringToLower(name);
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	String result;
+
+	if (name == "something and nothing")
+	{
+		result = "\t|-> Locations\n";
+
+		
+		StringList list = current_scenario->GetListOfKnownLocations();
+		uint num_lines = list.size();
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append("\t|" + list[line_idx] + "\n");
+		}
+
+		result.append("\t|\n\t|-> Characters\n");
+
+
+		list = current_scenario->GetListOfKnownCharacters();
+		num_lines = list.size();
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append("\t|" + list[line_idx] + "\n");
+		}
+
+		result.append("\t|\n\t|-> Items\n");
+
+		list = current_scenario->GetListOfKnownItems();
+		num_lines = list.size();
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append("\t|" + list[line_idx] + "\n");
+		}
+
+		result.append("\n");
+	}
+	else if (name_lower == "locations" || name_lower == "locs")
+	{
+		StringList list = current_scenario->GetListOfKnownLocations();
+		uint num_lines = list.size();
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append(list[line_idx] + "\n");
+		}
+
+		result.append("\n");
+	}
+	else if (name_lower == "characters" || name_lower == "chars")
+	{
+		StringList list = current_scenario->GetListOfKnownCharacters();
+		uint num_lines = list.size();
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append(list[line_idx] + "\n");
+		}
+
+		result.append("\n");
+	}
+	else if (name_lower == "items")
+	{
+		StringList list = current_scenario->GetListOfKnownItems();
+		uint num_lines = list.size();
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append(list[line_idx] + "\n");
+		}
+
+		result.append("\n");
+	}
+	
+	ds->AddLog(LOG_MESSAGE, result);
+
+	return true;
+}
+
+
 STATIC bool ClearCommandDs(EventArgs& args)
 {
 	UNUSED(args);
@@ -600,14 +656,11 @@ void Scenario::Startup()
 
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("solve", SolveScenario);
 
-
-	// when the player is interacting with an item
-	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("link", InvestigateItem);
-	//g_theDialogueEventSystem->SubscribeEventCallbackFunction("shelve", InvestigateItem);
-
+	
 	// Dialogue System helper functions	
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("notes", ListEvidence);
 
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
@@ -877,14 +930,83 @@ String& Scenario::GetSolution()
 	return m_solution;
 }
 
+
 String& Scenario::GetCongratulations()
 {
 	return m_congratulations;
 }
 
+
 String& Scenario::GetContinueInvestigation()
 {
 	return m_continueInvestigation;
+}
+
+
+StringList Scenario::GetListOfKnownLocations()
+{
+	//Journal Locations
+	//	|-> Scotland Yard (Station, Home, HQ)
+	//	|-> Notting Hill (Apartment,Victim's Apartment,Crime Scene)
+	//	|-> Leicester Square (Bridge Club,Club Meeting,Park,Bridge)
+
+	StringList list_of_locations;
+
+	const uint num_locs = static_cast<uint>(m_locations.size());
+	for(uint loc_idx = 0; loc_idx < num_locs; ++loc_idx)
+	{
+		if(!m_locations[loc_idx].GetLocationState().m_canMoveHere)
+		{
+			continue;
+		}
+		
+		String line = "\t|-> ";
+		line += m_locations[loc_idx].GetAsString();
+		list_of_locations.push_back(line);
+	}
+
+	return list_of_locations;
+}
+
+StringList Scenario::GetListOfKnownItems()
+{
+	StringList list_of_items;
+
+	const uint num_items = static_cast<uint>(m_items.size());
+	for (uint item_idx = 0; item_idx < num_items; ++item_idx)
+	{
+		if (m_items[item_idx].GetItemState().m_name != "found")
+		{
+			continue;
+		}
+
+		String line = "\t|-> ";
+		line += m_items[item_idx].GetAsString();
+		list_of_items.push_back(line);
+	}
+
+	return list_of_items;
+}
+
+
+StringList Scenario::GetListOfKnownCharacters()
+{
+	StringList list_of_characters;
+
+	const uint num_chars = static_cast<uint>(m_characters.size());
+	for (uint char_idx = 0; char_idx < num_chars; ++char_idx)
+	{
+		if (m_characters[char_idx].GetCharacterState().m_name == "not found")
+		{
+			continue;
+		}
+
+		String line = "\t|-> ";
+		line += m_characters[char_idx].GetAsString();
+		list_of_characters.push_back(line);
+	}
+
+	return list_of_characters;
 }
 
 
@@ -910,6 +1032,12 @@ void Scenario::SetInterest(Card* card)
 {
 	m_currentInterest = card;
 }
+
+void Scenario::SetSubject(Card* card)
+{
+	m_currentSubject = card;
+}
+
 
 void Scenario::ScenarioSolved()
 {
@@ -1233,14 +1361,6 @@ void Scenario::ReadSettingsXml(const String& file_path)
 		{
 			ReadScenarioTimeCostForActions(setup_element);
 		}
-		else if (element_name == "starsscoresettings")
-		{
-			ReadScenarioStarsScoreSettings(setup_element);
-		}
-		else if (element_name == "gametimescorebonusandpenalty")
-		{
-			ReadScenarioGameTimeScoreBonusAndPenalty(setup_element);
-		}
 		else if (element_name == "defaultending")
 		{
 			ReadScenarioDefaultEnding(setup_element);
@@ -1410,21 +1530,6 @@ void Scenario::ReadScenarioTimeCostForActions(const XmlElement* element)
 	}
 }
 
-
-void Scenario::ReadScenarioStarsScoreSettings(const XmlElement* element)
-{
-	UNUSED(element);
-	// TODO: set up scoring class
-	//ERROR_AND_DIE("ReadScenarioStarsScoreSettings has yet to be made");
-}
-
-
-void Scenario::ReadScenarioGameTimeScoreBonusAndPenalty(const XmlElement* element)
-{
-	UNUSED(element);
-	// TODO: set up scoring class
-	//ERROR_AND_DIE("ReadScenarioGameTimeScoreBonusAndPenalty has yet to be made");
-}
 
 void Scenario::ReadScenarioDefaultEnding(const XmlElement* element)
 {

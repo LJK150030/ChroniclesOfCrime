@@ -22,6 +22,7 @@ public:
 
 	// ACCESSORS
 	const ItemState& GetItemState() const;
+	String GetAsString() const;
 
 	// MUTATORS
 	void SetState(const String& starting_state);
