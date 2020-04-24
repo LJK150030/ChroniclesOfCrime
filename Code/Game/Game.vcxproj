@@ -212,6 +212,7 @@
     </ClCompile>
     <ClCompile Include="Scenario.cpp" />
     <ClCompile Include="Trigger.cpp" />
+    <ClCompile Include="VictoryCondition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Action.hpp" />
@@ -229,6 +230,7 @@
     <ClInclude Include="Location.hpp" />
     <ClInclude Include="Scenario.hpp" />
     <ClInclude Include="Trigger.hpp" />
+    <ClInclude Include="VictoryCondition.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="..\..\Run\Data\GameConfig.xml" />

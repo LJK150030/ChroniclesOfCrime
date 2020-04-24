@@ -206,7 +206,7 @@ void DialogueSystem::UpdateHistory()
 		const char* item = m_items[i]->m_message.c_str();
 		ImVec4 color(m_items[i]->m_color.x, m_items[i]->m_color.y, m_items[i]->m_color.z, m_items[i]->m_color.w);
 		ImGui::PushStyleColor(ImGuiCol_Text, color);
-		ImGui::TextUnformatted(item);
+		ImGui::TextWrapped(item);
 		ImGui::PopStyleColor();
 	}
 

@@ -4,12 +4,12 @@
 		<Nicknames List="Station,Home,HQ" />
 		<States>
 			<State Name="Closed" 		CanMoveHere="false" AddGameTime="true"/>
-			<State Name="Open" 			CanMoveHere="true" 	AddGameTime="true" 	Description="If you need any help, the Chief Officer's office (char=33) is open." />
-			<State Name="Close case" 	CanMoveHere="true" 	AddGameTime="true" 	SpcialAction="FinishScenario" Description="The person you are looking for isn't here. Try to move to a location where that person is located." />
+			<State Name="Open" 			CanMoveHere="true" 	AddGameTime="true"  SpcialAction="FinishScenario" Description="&gt; If you need any help, the Chief Officer's office is open." />
+			<State Name="Close case" 	CanMoveHere="true" 	AddGameTime="true" 	SpcialAction="FinishScenario" Description="&gt; The person you are looking for isn't here. Try to move to a location where that person is located." />
 		</States>
 		<IntroduceCharacter>
 			<Scan State="*" Character="*" 					CharacterState="*" 			Line="&gt; The person you are looking for isn't here. Try to move to a location where that person is located."/>
-			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Chief Officer Doyle: &quot;Ah, at last you're here. I have a case for you! An old woman (char=07) has been found dead. I need you to find out if it's a natural death or an homicide.&quot;" >
+			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Chief Officer Doyle: &quot;Ah, at last you're here. I have a case for you! An old woman, Anna Taylor, has been found dead. I need you to find out if it's a natural death or an homicide.&quot;" >
 				<SetCardState type="Character" name="Chief Officer Doyle" fromState="State 1" toState="State 2"/>
 			</Scan>
 			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 2" 	Line="Chief Officer Doyle: &quot;If you are lost, my office is always open. I will guide you as much as I can. What do you want to talk about?&quot;"/>
@@ -29,7 +29,7 @@
 		<Nicknames List="Apartment,Victim's Apartment,Crime Scene" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>
-			<State Name="Open" 		CanMoveHere="true" 	AddGameTime="true" SpcialAction="InvestigateLocation" Description="(ui=Tutorial)You are now in Notting Hill, inside the victim's apartment, as indicated at the top of the screen." />
+			<State Name="Open" 		CanMoveHere="true" 	AddGameTime="true" SpcialAction="InvestigateLocation" Description="&gt; You are now in Notting Hill, inside the victim's apartment, as indicated at the top left of the screen." />
 			<State Name="2ndpass" 	CanMoveHere="true" 	AddGameTime="true" SpcialAction="InvestigateLocation" Description="You are back in Notting Hill, inside the victim's apartment."/>
 		</States>
 		<IntroduceCharacter>
@@ -57,7 +57,7 @@
 			<Scan State="*"		Item="Communication Device"			ItemState="*"	Line="&gt; An old corded telephone that still works.">
 				<SetCardState type="Item" name="Communication Device" fromState="Not Found" toState="Found"/>
 			</Scan>
-			<Scan State="*"		Item="Papers"					ItemState="*"	Line="&gt; A letter with the following text: (b)(i)&quot;Give up on the tournament! You are not as strong as you were before. For the good of the club, leave your spot to someone younger.&quot; (/i)(/b)">
+			<Scan State="*"		Item="Papers"					ItemState="*"	Line="&gt; A letter with the following text: &quot;Give up on the tournament! You are not as strong as you were before. For the good of the club, leave your spot to someone younger.&quot;">
 				<SetCardState type="Item" name="Papers" fromState="Not Found" toState="Found"/>
 			</Scan>
 			<Scan State="*"		Item="Furniture"				ItemState="*"	Line="&gt; Well tried, but the furniture here is old and uninteresting." />
@@ -71,7 +71,7 @@
 		<Nicknames List="Bridge Club,Club Meeting,Park,Bridge" />
 		<States>
 			<State Name="Closed" 	CanMoveHere="false" AddGameTime="true"/>
-			<State Name="Open" 		CanMoveHere="true" 	AddGameTime="true" Description="A woman (char=04) welcomes you at the Bridge club."/>
+			<State Name="Open" 		CanMoveHere="true" 	AddGameTime="true" Description="Jenny welcomes you at the Bridge club."/>
 		</States>
 		<IntroduceCharacter>
 			<Scan State="*"		Character="*"					CharacterState="*"				Line="&gt; The person you are looking for isn't here. Try to move to a location where that person is located."/>

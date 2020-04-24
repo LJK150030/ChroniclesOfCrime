@@ -10,6 +10,7 @@
 #include "Game/Trigger.hpp"
 #include "Game/Condition.hpp"
 #include "Game/Action.hpp"
+#include "Game/VictoryCondition.hpp"
 
 #include "Engine/Core/ErrorWarningAssert.hpp"
 #include "Engine/Core/StringUtils.hpp"
@@ -239,6 +240,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 
 	ds->AddLog(LOG_LOCATION, log);
 	current_scenario->TestIncidents();
+	current_scenario->TestVictoryConditions();
 
 	return true;
 }
@@ -284,6 +286,7 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 
 	ds->AddLog(LOG_CHARACTER, log);
 	current_scenario->TestIncidents();
+	current_scenario->TestVictoryConditions();
 
 	return false;
 }
@@ -329,6 +332,8 @@ STATIC bool AskLocationForItem(EventArgs& args)
 
 	ds->AddLog(LOG_ITEM, log);
 	current_scenario->TestIncidents();
+	current_scenario->TestVictoryConditions();
+
 
 	return false;
 }
@@ -414,6 +419,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 
 	ds->AddLog(LOG_CHARACTER, log);
 	current_scenario->TestIncidents();
+	current_scenario->TestVictoryConditions();
 
 	return true;
 }
@@ -482,7 +488,7 @@ STATIC bool InvestigateRoom(EventArgs& args)
 }
 
 
-bool LeaveRoom(EventArgs& args)
+STATIC bool LeaveRoom(EventArgs& args)
 {
 	UNUSED(args);
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
@@ -498,6 +504,38 @@ bool LeaveRoom(EventArgs& args)
 	{
 		ds->AddLog(LOG_MESSAGE, "> You're not investigating a room right now.");
 	}
+
+	return true;
+}
+
+
+STATIC bool SolveScenario(EventArgs& args)
+{
+	UNUSED(args);
+	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+
+	Location* cur_location = current_scenario->GetCurrentLocation();
+
+	if(cur_location->CanSolveCaseHere())
+	{
+		if(current_scenario->AreAllVictoryConditionsMet())
+		{
+			ds->AddLog(LOG_MESSAGE, "\t > " + current_scenario->GetCongratulations());
+			ds->AddLog(LOG_MESSAGE, "\t > " + current_scenario->GetSolution());
+			ds->AddLog(LOG_MESSAGE, "\t > Press any button to close the game...");
+			current_scenario->ScenarioSolved();
+		}
+		else
+		{
+			ds->AddLog(LOG_MESSAGE, "> " + current_scenario->GetContinueInvestigation());
+		}
+	}
+	else
+	{
+		ds->AddLog(LOG_MESSAGE, "> You cannot solve the case here, head back to HQ.");
+	}
+
 
 	return true;
 }
@@ -559,6 +597,8 @@ void Scenario::Startup()
 	// Investigating a room
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("investigate", InvestigateRoom);
 	g_theDialogueEventSystem->SubscribeEventCallbackFunction("leave", LeaveRoom);
+
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction("solve", SolveScenario);
 
 
 	// when the player is interacting with an item
@@ -697,6 +737,9 @@ void Scenario::LoadInScenarioFile(const char* folder_dir)
 	const String incidents_file = String(folder_dir) + "/Incidents.xml";
 	ReadIncidentsXml(incidents_file);
 	SetupIncidentLookupTable();
+
+	const String victory_conditions_file = String(folder_dir) + "/VictoryConditions.xml";
+	ReadVictoryConditionsXml(victory_conditions_file);
 }
 
 
@@ -829,6 +872,21 @@ String& Scenario::GetUnknownItem()
 	return m_unknownItemLine[random_dialog_idx];
 }
 
+String& Scenario::GetSolution()
+{
+	return m_solution;
+}
+
+String& Scenario::GetCongratulations()
+{
+	return m_congratulations;
+}
+
+String& Scenario::GetContinueInvestigation()
+{
+	return m_continueInvestigation;
+}
+
 
 Location* Scenario::GetCurrentLocation()
 {
@@ -851,6 +909,11 @@ void Scenario::SetLocation(Location* loc)
 void Scenario::SetInterest(Card* card)
 {
 	m_currentInterest = card;
+}
+
+void Scenario::ScenarioSolved()
+{
+	m_solved = true;
 }
 
 
@@ -911,6 +974,39 @@ void Scenario::TestIncidents()
 	{
 		m_incidents[inc_idx].TestTriggers();
 	}
+}
+
+
+void Scenario::TestVictoryConditions()
+{
+	const uint num_conditions = static_cast<uint>(m_victoryConditions.size());
+
+	for(uint condition_idx = 0; condition_idx < num_conditions; ++condition_idx)
+	{
+		m_victoryConditions[condition_idx].TestCondition();
+	}
+}
+
+
+bool Scenario::AreAllVictoryConditionsMet() const
+{
+	const uint num_conditions = static_cast<uint>(m_victoryConditions.size());
+
+	for (uint condition_idx = 0; condition_idx < num_conditions; ++condition_idx)
+	{
+		if(m_victoryConditions[condition_idx].HasConditionsBeenMet() == false)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+
+bool Scenario::IsScenarioSolved() const
+{
+	return m_solved;
 }
 
 
@@ -1145,6 +1241,10 @@ void Scenario::ReadSettingsXml(const String& file_path)
 		{
 			ReadScenarioGameTimeScoreBonusAndPenalty(setup_element);
 		}
+		else if (element_name == "defaultending")
+		{
+			ReadScenarioDefaultEnding(setup_element);
+		}
 	}
 
 }
@@ -1166,12 +1266,38 @@ void Scenario::ReadIncidentsXml(const String& file_path)
 
 	m_incidents.reserve(incident_count);
 
-	for (const XmlElement* item_element = root_incidents->FirstChildElement();
-		item_element;
-		item_element = item_element->NextSiblingElement()
+	for (const XmlElement* incident_element = root_incidents->FirstChildElement();
+		incident_element;
+		incident_element = incident_element->NextSiblingElement()
 		)
 	{
-		m_incidents.emplace_back(this, item_element);
+		m_incidents.emplace_back(this, incident_element);
+	}
+}
+
+
+void Scenario::ReadVictoryConditionsXml(const String& file_path)
+{
+	tinyxml2::XMLDocument incidents_doc;
+	OpenXmlFile(&incidents_doc, file_path);
+	XmlElement* root_incidents = incidents_doc.RootElement();
+	uint conditions_count = 0;
+
+	for (const XmlElement* child = root_incidents->FirstChildElement();
+		child;
+		child = child->NextSiblingElement())
+	{
+		conditions_count++;
+	}
+
+	m_victoryConditions.reserve(conditions_count);
+
+	for (const XmlElement* condition_element = root_incidents->FirstChildElement();
+		condition_element;
+		condition_element = condition_element->NextSiblingElement()
+		)
+	{
+		m_victoryConditions.emplace_back(this, condition_element);
 	}
 }
 
@@ -1298,6 +1424,35 @@ void Scenario::ReadScenarioGameTimeScoreBonusAndPenalty(const XmlElement* elemen
 	UNUSED(element);
 	// TODO: set up scoring class
 	//ERROR_AND_DIE("ReadScenarioGameTimeScoreBonusAndPenalty has yet to be made");
+}
+
+void Scenario::ReadScenarioDefaultEnding(const XmlElement* element)
+{
+	for (const XmlAttribute* attribute = element->FirstAttribute();
+		attribute;
+		attribute = attribute->Next()
+		)
+	{
+		String attribute_name = StringToLower(attribute->Name());
+
+		if (attribute_name == "congratulations")
+		{
+			m_congratulations = attribute->Value();
+		}
+		else if(attribute_name == "solution")
+		{
+			m_solution = attribute->Value();
+		}
+		else if (attribute_name == "continueinvestigation")
+		{
+			m_continueInvestigation = attribute->Value();
+		}
+		else
+		{
+			ERROR_AND_DIE(Stringf("Error in settings xml, %s is an unknown DefaultEnding attibute", attribute->Name()))
+		}
+	}
+
 }
 
 

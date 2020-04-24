@@ -1,4 +1,5 @@
 #include "Game/Game.hpp"
+#include "Game/App.hpp"
 #include "Game/GameCommon.hpp"
 #include "Game/Scenario.hpp"
 #include "Game/DialogueSystem.hpp"
@@ -122,9 +123,25 @@ bool Game::HandleKeyPressed(const unsigned char key_code)
 {
 	switch (key_code)
 	{
-	default:
-		return false;
+		default:
+		{
+			if(m_currentScenario->IsScenarioSolved())
+			{
+				g_theApp->HandleQuitRequested();
+			}
+			if (g_imGUI != nullptr)
+			{
+				const ImGuiIO& io = ImGui::GetIO();
+				if (io.WantCaptureKeyboard)
+				{
+					return true;
+				}
+			}
+		}
 	}
+
+
+	return false;
 }
 
 
@@ -132,9 +149,20 @@ bool Game::HandleKeyReleased(const unsigned char key_code)
 {
 	switch (key_code)
 	{
-	default:
-		return false;
+		default:	
+		{
+			if (g_imGUI != nullptr)
+			{
+				const ImGuiIO& io = ImGui::GetIO();
+				if (io.WantCaptureKeyboard)
+				{
+					return true;
+				}
+			}
+		}
 	}
+
+	return false;
 }
 
 

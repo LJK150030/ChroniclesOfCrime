@@ -26,9 +26,11 @@ static bool SayGoodbyToCharacter(EventArgs& args);
 //static bool InvestigateItem(EventArgs& args);
 static bool InvestigateRoom(EventArgs& args);
 static bool LeaveRoom(EventArgs& args);
+static bool SolveScenario(EventArgs& args);
 
 static bool ClearCommandDs(EventArgs& args);
 static bool HelpCommandDs(EventArgs& args);
+
 
 class Scenario
 {
@@ -61,12 +63,16 @@ public:
 	String& GetUnknownLocation();
 	String& GetUnknownCharacter();
 	String& GetUnknownItem();
+	String& GetSolution();
+	String& GetCongratulations();
+	String& GetContinueInvestigation();
 
 	Location*	GetCurrentLocation();
 	Card*		GetCurrentInterest();
 
 	void	SetLocation(Location* loc);
 	void	SetInterest(Card* card);
+	void	ScenarioSolved();
 
 	void		AddGameTime(const uint mins, const uint hours);
 	GameTime	GetCurrentTime() const;
@@ -75,6 +81,9 @@ public:
 	uint		GetInterrogateChangeTime() const;
 	uint		GetWastingTime() const;
 	void		TestIncidents();
+	void		TestVictoryConditions();
+	bool		AreAllVictoryConditionsMet() const;
+	bool		IsScenarioSolved() const;
 
 
 	//Helpper
@@ -96,11 +105,14 @@ private:
 	void ReadItemsXml(const String& file_path);
 	void ReadSettingsXml(const String& file_path);
 	void ReadIncidentsXml(const String& file_path);
+	void ReadVictoryConditionsXml(const String& file_path);
 
 	void ReadScenarioSettingsAttributes(const XmlElement* element);
 	void ReadScenarioTimeCostForActions(const XmlElement* element);
 	void ReadScenarioStarsScoreSettings(const XmlElement* element);
 	void ReadScenarioGameTimeScoreBonusAndPenalty(const XmlElement* element);
+	void ReadScenarioDefaultEnding(const XmlElement* element);
+	
 
 	// Database manipulation
 	void SetupLocationLookupTable();
@@ -120,14 +132,18 @@ private:
 private:
 	// Owner
 	Game*	m_theGame = nullptr;
-
+	String	m_solution;
+	String	m_congratulations;
+	String	m_continueInvestigation;
+	bool	m_solved = false;
+	
 	// Game state data
 	String		m_name = "";
 	GameTime	m_gameTime;
 	Location*	m_currentLocation = nullptr;
 	Card*		m_currentInterest = nullptr;	// the card we are talking to, interacting with (aka context)
 	Card*		m_currentSubject = nullptr;		// the card we are asking about, relevant to
-
+	
 	// Scenario constants
 	uint		m_costToMoveToLocation = 20;
 	uint		m_costToInvestigateLocation = 5;
@@ -137,10 +153,11 @@ private:
 
 
 	// Physical representation of Entities in the game
-	LocationList	m_locations;
-	CharacterList	m_characters;
-	ItemList		m_items;
-	IncidentList	m_incidents;
+	LocationList		m_locations;
+	CharacterList		m_characters;
+	ItemList			m_items;
+	IncidentList		m_incidents;
+	VictoryConditions	m_victoryConditions;
 
 
 	// To quickly lookup where an item is in it's respective list

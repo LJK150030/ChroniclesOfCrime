@@ -106,17 +106,6 @@ Location::Location(Scenario* the_setup, const XmlElement* element) : Card(the_se
 			std::string texture_src = attribute->Value();
 			TextureView* texture(reinterpret_cast<TextureView*>(g_theRenderer->CreateOrGetTextureView2D(texture_src)));
 			m_defaultRoomMaterial->SetDiffuseMap(texture);
-
-			CPUMesh quad_mesh;
-			CpuMeshAddQuad(&quad_mesh,
-				AABB2(
-					-(LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT),
-					-LOC_CARD_HEIGHT,
-					LOC_CARD_ASPECT_RATIO * LOC_CARD_HEIGHT,
-					LOC_CARD_HEIGHT));
-			m_defaultRoomMesh = new GPUMesh(g_theRenderer);
-			m_defaultRoomMesh->CreateFromCPUMesh<Vertex_Lit>(quad_mesh); // we won't be updated this;
-
 		}
 		else
 		{
@@ -166,12 +155,12 @@ Location::Location(Scenario* the_setup, const XmlElement* element) : Card(the_se
 
 Location::~Location()
 {
-	//debug does not track this step when saying =default
+	
 }
 
 void Location::Render() const
 {
-	if (m_investigating)
+	if (CanInvestigateLocation() && m_investigating)
 	{
 		if (m_currentState.m_roomMaterial != nullptr)
 		{
@@ -396,25 +385,21 @@ bool Location::IntroduceItem(String& out, const Item* item)
 }
 
 
-bool Location::CanInvestigateLocation()
+bool Location::CanInvestigateLocation() const
 {
-	if(m_currentState.m_roomMaterial != nullptr)
-	{
-		return true;
-	}
-
-	if(m_defaultRoomMaterial != nullptr)
-	{
-		return true;
-	}
-
-	return false;
+	return m_currentState.m_specialAction == LSA_INVESTIGATE_LOC;
 }
 
 
-bool Location::IsPlayerInvestigatingRoom()
+bool Location::IsPlayerInvestigatingRoom() const
 {
 	return m_investigating;
+}
+
+
+bool Location::CanSolveCaseHere() const
+{
+	return m_currentState.m_specialAction == LSA_FINISH_SCENARIO;
 }
 
 
@@ -508,6 +493,27 @@ void Location::ImportLocationStatesFromXml(const XmlElement* element)
 			else if (atr_name == "description")
 			{
 				new_state.m_description = attribute->Value();
+			}
+			else if (atr_name == "spcialaction")
+			{
+				String value = StringToLower(attribute->Value());
+
+				if (value == "none")
+				{
+					new_state.m_specialAction = LSA_NONE;
+				}
+				else if (value == "finishscenario")
+				{
+					new_state.m_specialAction = LSA_FINISH_SCENARIO;
+				}
+				else if (value == "investigatelocation")
+				{
+					new_state.m_specialAction = LSA_INVESTIGATE_LOC;
+				}
+				else
+				{
+					ERROR_AND_DIE(Stringf("Error in Location file. %s is not a valid special action", attribute->Value()))
+				}
 			}
 			else if (atr_name == "roomdir")
 			{

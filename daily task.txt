@@ -1,3 +1,27 @@
+4/23----------------------------------------------------------------
+time 	estimate	actual	task
+10:52	0.5			0.35	Scenario: present "Please press any buttont to close the game..." and then closed the game as such
+10:43	0.25		0.15	Scenario: present continue Investigation
+10:32	0.25		0.18	Scenario: present congratulations
+10:19	0.5			0.22	Scenario: present a recap of the solution.
+10:15	0.25		0.06	Scenario: present a dialog to continue the investigation. 
+10:13	0.25		0.03	Scenario: if one of the conditions in not met
+10:06	0.25		0.12	Scenario: present a dialog to congradualte the player
+9:57	0.25		0.10	Scenario: if all conditions in locations, actors, and items are met
+9:49	0.25		0.13	Scenario: Enter "solved" command to compleate the scenario
+9:32	0.5			0.28	VictoryCondition: test if the condition is met
+8:38 	1.0			0.90	VictoryCondition: Read in XML file for
+8:00	0.5			0.63	VictoryCondition: Class for user define victory conditions (if any state changes to satify a condition, it is considered met. Even if the state changes later on in the game)
+
+4/21----------------------------------------------------------------
+time 	estimate	actual	task
+3:45	0.5					Edit the dialoge in the game from its original form to one that fits with my version of the game
+3:20	1.0			0.42	Play through game to spot bugs
+3:16	0.25		0.06	When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
+3:11	0.5			0.10	When investigating a room, the player is Able to leave, and change the room back to the current location
+3:01	1.0			0.16	When investigating a room, Change the “state” of the dialog box to ask for evidence in the location
+2:45 	0.25		0.26 	When investigating a room, Change the background to the room image
+
 4/17----------------------------------------------------------------
 time	estimate	actual	task
 5:20	0.25		0.18	When interogating, Every question to the character will take 5 in-game minutes to “interrogate”

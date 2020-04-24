@@ -117,6 +117,7 @@ class Incident;
 class Trigger;
 class Condition;
 class Action;
+class VictoryCondition;
 
 
 typedef std::string							String;
@@ -136,6 +137,7 @@ typedef std::vector<Trigger*>				TriggerList;
 typedef std::vector<Condition*>				ConditionList;
 typedef std::vector<Action*>				ActionList;
 typedef std::vector<CharacterDialogue>		CharacterDialogueList;
+typedef std::vector<VictoryCondition>		VictoryConditions;
 
 inline char g_locationHeader[] = "Heading to: ";
 inline char g_characterHeader[] = "Interrogating: ";
@@ -212,6 +214,15 @@ enum ConditionType
 	NUM_CONDITION_TYPES
 };
 
+enum LocationSpecialAction
+{
+	LSA_NONE = -1,
+
+	LSA_INVESTIGATE_LOC,
+	LSA_FINISH_SCENARIO,
+
+	NUM_LOC_SPEC_ACTS
+};
 
 struct GameTime
 {

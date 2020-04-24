@@ -67,14 +67,6 @@ bool WindowsMessageHandlingProcedure(void* window_handle, const uint32_t wm_mess
 				g_theApp->HandleQuitRequested();
 				return true; // "Consumes" this message (tells Windows "okay, we handled it")
 			}
-			if(g_imGUI != nullptr)
-			{
-				const ImGuiIO& io = ImGui::GetIO();
-				if(io.WantCaptureKeyboard)
-				{
-					return false;
-				}
-			}
 			if(g_theApp->HandleKeyPressed(asKey))
 				return true;
 			break;
@@ -83,14 +75,6 @@ bool WindowsMessageHandlingProcedure(void* window_handle, const uint32_t wm_mess
 		case WM_KEYUP:
 		{
 			unsigned char asKey = (unsigned char)w_param;
-			if(g_imGUI != nullptr)
-			{
-				const ImGuiIO& io = ImGui::GetIO();
-				if(io.WantCaptureKeyboard)
-				{
-					return false;
-				}
-			}
 			if(g_theApp->HandleKeyReleased(asKey))
 				return true;
 			break;
@@ -104,14 +88,14 @@ bool WindowsMessageHandlingProcedure(void* window_handle, const uint32_t wm_mess
 					return true;
 				break;
 			}
-			if(g_imGUI != nullptr)
-			{
-				const ImGuiIO& io = ImGui::GetIO();
-				if(io.WantCaptureKeyboard)
-				{
-					return false;
-				}
-			}
+// 			if(g_imGUI != nullptr)
+// 			{
+// 				const ImGuiIO& io = ImGui::GetIO();
+// 				if(io.WantCaptureKeyboard)
+// 				{
+// 					return false;
+// 				}
+// 			}
 		}
 		case WM_RBUTTONDBLCLK:
 		case WM_LBUTTONDOWN:
@@ -126,9 +110,9 @@ bool WindowsMessageHandlingProcedure(void* window_handle, const uint32_t wm_mess
 				if(g_imGUI != nullptr)
 				{
 					const ImGuiIO& io = ImGui::GetIO();
-					if(io.WantCaptureKeyboard)
+					if(io.WantCaptureMouse)
 					{
-						return false;
+						return true;
 					}
 				}
 			}

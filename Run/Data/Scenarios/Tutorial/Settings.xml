@@ -1,9 +1,9 @@
 <ScenarioSettings 
 	Name="Your first case"
-	IntroMessage="(ui=Tutorial) Welcome to the Chronicles of Crime tutorial. Disclaimer: This scenario is an introduction to the game, which explains how to play without giving you a real investigation challenge. Press next to start."
-	ClosedLocationDefaultMessage="Location cards represent London's districts. Without an address or a precise goal you cannot go there."
-	SameLocationMessage="You are already in this location. The location is indicated in the top left corner."
-	UnknownCommand="That is not a valid command from the game."
+	IntroMessage="&gt; Welcome to the Chronicles of Crime tutorial. This scenario is an introduction to the game, which explains how to play without giving you a real investigation challenge."
+	ClosedLocationDefaultMessage="&gt; Location cards represent London's districts. Without an address or a precise goal you cannot go there."
+	SameLocationMessage="&gt; You are already in this location. The location is indicated in the top Left corner."
+	UnknownCommand="&gt; That is not a valid command from the game."
 	StartingLocation="Scotland Yard"
 	StartupEvent=""
 	StartingTimeInMilitary="09:00"
@@ -25,6 +25,14 @@
 		Star3="40"
 		Star4="60"
 		Star5="80"
+	/>
+
+	<DefaultEnding
+		Congratulations="Well done, You just completed this Tutorial successfully!@ The answers you give at the end can send you back to the investigation or provoke a different ending. Press the &quot;Solution&quot; button to learn everything about this case."
+
+		Solution="Anna Taylor was president of the Bridge Club, but also a terrible player. Her partner, Rose Butterfly, is a true competitor. To stop Anna from participating in the tournament (and therefore to get a new partner) Rose offered Anna a cake with a trace of digitalis, hoping to make her temporarily sick. But Anna wasn't young anymore, and her body couldn't support the quantity of the digitalis found in the cake. Nor could her cats, by the way. Rose, on the other hand, will be able to start her own Bridge club... in prison."
+
+		ContinueInvestigation="The Chief Officer doesn't believe your theory. He would like you to continue your investigation. Find the crime weapon and who could have used it."
 	/>
 
 

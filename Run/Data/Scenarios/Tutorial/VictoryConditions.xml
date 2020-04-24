@@ -1,0 +1,4 @@
+<VictoryConditions>
+	<Condition CardType="Character" CardName="Rose" CardState="end"/>
+	<Condition CardType="Item" CardName="Digitalis" CardState="Found"/>
+</VictoryConditions>

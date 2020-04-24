@@ -61,6 +61,9 @@
     <ClCompile Include="Action.cpp">
       <Filter>General\Events</Filter>
     </ClCompile>
+    <ClCompile Include="VictoryCondition.cpp">
+      <Filter>General</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.hpp">
@@ -107,6 +110,9 @@
     </ClInclude>
     <ClInclude Include="Action.hpp">
       <Filter>General\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="VictoryCondition.hpp">
+      <Filter>General</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

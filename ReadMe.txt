@@ -101,7 +101,7 @@ O			0.25		Print the number of game days if the player goes over
 O			0.5			When changing locations, change the background to the location image
 O			0.25		Add 20 in-game minutes when going to a different location
 O			0.25		When talking to a character, present the text as if reading from a script - Chief: “Glad you can make it…”
-?			0.25		When interacting with an item, italicizes the text as if perform and thinking	
+X			0.25		When interacting with an item, italicizes the text as if perform and thinking	
 O			0.25		When the computer is talking to the player, use arrowhead - > Talking to Chief
 
 	13-Mar	3				
@@ -120,22 +120,22 @@ O			0.25		Present an image of the item
 
 	17-Mar	4
 O			0.5			Action Class: Display Text
-			0.5			Action Class: Set Context
+X			0.5			Action Class: Set Context
 O			0.5			Action Class: Enable/Disable Event
 O			0.5			Action Class: Set object state
-			0.5			Action Class: change game time
-			0.5			Action Class: Trigger ending
-			0.5			Action Class: Set variable value
-			0.5			Action Class: set intro text
+X			0.5			Action Class: change game time
+X			0.5			Action Class: Trigger ending
+X			0.5			Action Class: Set variable value
+X			0.5			Action Class: set intro text
 
 	20-Mar	5.25
 O			0.75		Condition Class: Time passed
 O			0.75		Condition Class: in/notin location
 O			0.75		Condition Class: Object state check
-			0.75		Condition Class: Object scanned
+X			0.75		Condition Class: Object scanned
 O			0.75		Condition Class: Check current context
-			0.75		Condition Class: Check a variable value
-			0.75		Condition Class: in/out interrogation mode
+X			0.75		Condition Class: Check a variable value
+X			0.75		Condition Class: in/out interrogation mode
 
 	24-Mar	2.5
 O			0.25		Trigger class: Set name
@@ -154,10 +154,10 @@ O			1			Read in Conditions from XML
 O			1			Read In Actions from XML
 
 	27-Mar	4.75
-			0.25		When investigating a room, Change the background to the room image
-			1			When investigating a room, Change the “state” of the dialog box to ask for evidence in the location
-			0.25		When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
-			0.5			When investigating a room, the player is Able to leave, and change the room back to the current location
+O			0.25		When investigating a room, Change the background to the room image
+O			1			When investigating a room, Change the “state” of the dialog box to ask for evidence in the location
+O			0.25		When investigating a room, Every question to the room will take 5 in game minutes to “investigate”
+O			0.5			When investigating a room, the player is Able to leave, and change the room back to the current location
 O			1			When interogating, Change the “state” of the dialog box to ask about entities (characters or items)
 O			0.25		When interogating, Every question to the character will take 5 in-game minutes to “interrogate”
 O			0.5			When interogating, Ask them about an item
@@ -171,14 +171,17 @@ O			0.25		Player Investigate an item, just display the text the item's current s
 			1			Journal class, Have characters close to the location if the player last seen them there. 
 			1			Journal class, Have Characters in the middle of the journal if their location is unknown.
 			1			Journal class, Have a section for clues the player has found
+			0.5			add the location to the journal
+			0.5			If we only know about a character, then add them to the unknown location of the journal
+			0.5			Add the item to the evidence section of the journal
 
 	3-Apr	3.5	
-			0.5			Highlight the title of the location in the dialog box
+X			0.5			Highlight the title of the location in the dialog box
 			0.5			add the location to the journal
-			0.5			Highlight the character’s name in the dialog box
-			0.5			Just a character, then add to the unknown location of the journal
-			0.5			If we mention a character and location, then add the location to the journal, and the character into the location
-			0.5			Highlight the Item’s name as evidence in the dialog box
+X			0.5			Highlight the character’s name in the dialog box
+			0.5			If we only know about a character, then add them to the unknown location of the journal
+X			0.5			If we mention a character and location, then add the location to the journal, and the character into the location
+X			0.5			Highlight the Item’s name as evidence in the dialog box
 			0.5			Add the item to the evidence section of the journal
 
 	7-Apr	4.5
@@ -222,13 +225,50 @@ O			0.25		from xml, time cost for unknown command
 			1			Ending class, Read in list of questions
 			1			Ending class, Read in list of ending text
 
-	17-Apr	-			Ludum Dare Weekend
+O	17-Apr	-			Ludum Dare Weekend
 
 	21-Apr	2
-			1			List of custom variables to track
-			1			Read in custome variables from xml
+X			1			List of custom variables to track
+X			1			Read in custome variables from xml
 			
-	24-Apr	4		Polish
-	28-Apr	4		Polish
+X	24-Apr	4		Polish
+X	28-Apr	4		Polish
 	1-Mar 	4		Present final project
+
+
+Tasks that I have left
+	23-Apr
+O	VictoryCondition: Class for user define victory conditions (if any state changes to satify a condition, it is considered met. Even if the state changes later on in the game)
+X	LocationVictoryConditions: a class that holds conditions to test the state of locaitons (solved by having just card class)
+X	CharacterVictoryConditions: a class that holds conditions to test the state of actors (solved by having just card class)
+X	ItemsVictoryConditions: a class that holds conditions to test the state of  items (solved by having just card class)
+O	VictoryCondition: Read in XML file for
+X	LocationVictoryConditions (solved by having just card class)
+X	CharacterVictoryConditions (solved by having just card class)
+X	ItemsVictoryConditions (solved by having just card class)
+	VictoryCondition: test if the condition is met
+
+	24-Apr
+O	Scenario: Enter "solved" command to compleate the scenario
+O	Scenario: if all conditions in locations, actors, and items are met
+O	Scenario: present a dialog to congradualte the player
+O	Scenario: present a recap of the solution.
+O	Scenario: present "Please press any buttont to close the game..." and then closed the game as such
+O	Scenario: if one of the conditions in not met
+O	Scenario: present a dialog to continue the investigation. 
+
+	25-Apr
+	Journal class: press tab to display the journal
+	Journal class: Show all know locations
+	Journal class: Have characters close to the location if the player last seen them there. 
+	Journal class: Have Characters in the middle of the journal if their location is unknown.
+	Journal class: Have a section for clues the player has found
+	Journal class: add open locations to the journal
+	Journal class: add "found" characters to the journal
+	Journal class: Add the item to the evidence section of the journal
+	Bug testing
+	Ensure that any text presented is based on the text adveture version of the game and not the board game version
+
+	30 Apr
+	Present final project
 

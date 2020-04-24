@@ -8,8 +8,9 @@ public:
 	bool	m_canMoveHere = false;
 	bool	m_addGameTime = false;
 	String	m_description = "";
-	
-	Material* m_roomMaterial = nullptr;
+
+	LocationSpecialAction	m_specialAction = LSA_NONE;
+	Material*				m_roomMaterial = nullptr;
 };
 
 
@@ -48,8 +49,9 @@ public:
 	bool					GetLocationDescription(String& out) const;
 	bool					IntroduceCharacter(String& out, const Character* character);
 	bool					IntroduceItem(String& out, const Item* item);
-	bool					CanInvestigateLocation();
-	bool					IsPlayerInvestigatingRoom();
+	bool					CanInvestigateLocation() const;
+	bool					IsPlayerInvestigatingRoom() const;
+	bool					CanSolveCaseHere() const;
 	const LocationState&	GetLocationState() const;
 
 	// MUTATORS
