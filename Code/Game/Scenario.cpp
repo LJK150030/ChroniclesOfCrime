@@ -517,8 +517,8 @@ STATIC bool SolveScenario(EventArgs& args)
 
 STATIC bool ListEvidence(EventArgs& args)
 {
-	String		name = args.GetValue("card", String("something and nothing"));
-	String		name_lower = StringToLower(name);
+	const String		name = args.GetValue("card", String("something and nothing"));
+	const String		name_lower = StringToLower(name);
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 
@@ -530,7 +530,7 @@ STATIC bool ListEvidence(EventArgs& args)
 
 		
 		StringList list = current_scenario->GetListOfKnownLocations();
-		uint num_lines = list.size();
+		uint num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append("\t|" + list[line_idx] + "\n");
@@ -540,7 +540,7 @@ STATIC bool ListEvidence(EventArgs& args)
 
 
 		list = current_scenario->GetListOfKnownCharacters();
-		num_lines = list.size();
+		num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append("\t|" + list[line_idx] + "\n");
@@ -549,7 +549,7 @@ STATIC bool ListEvidence(EventArgs& args)
 		result.append("\t|\n\t|-> Items\n");
 
 		list = current_scenario->GetListOfKnownItems();
-		num_lines = list.size();
+		num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append("\t|" + list[line_idx] + "\n");
@@ -560,7 +560,7 @@ STATIC bool ListEvidence(EventArgs& args)
 	else if (name_lower == "locations" || name_lower == "locs")
 	{
 		StringList list = current_scenario->GetListOfKnownLocations();
-		uint num_lines = list.size();
+		const uint num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append(list[line_idx] + "\n");
@@ -571,7 +571,7 @@ STATIC bool ListEvidence(EventArgs& args)
 	else if (name_lower == "characters" || name_lower == "chars")
 	{
 		StringList list = current_scenario->GetListOfKnownCharacters();
-		uint num_lines = list.size();
+		const uint num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append(list[line_idx] + "\n");
@@ -582,7 +582,7 @@ STATIC bool ListEvidence(EventArgs& args)
 	else if (name_lower == "items")
 	{
 		StringList list = current_scenario->GetListOfKnownItems();
-		uint num_lines = list.size();
+		const uint num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append(list[line_idx] + "\n");
@@ -612,13 +612,12 @@ STATIC bool HelpCommandDs(EventArgs& args)
 	UNUSED(args);
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 	StringList event_names;
-	g_theDialogueEventSystem->GetSubscribedEventsList(event_names);
 
 	String log = "Valid Commands: \n";
-	int num_events = static_cast<int>(event_names.size());
-	for (int name_id = 0; name_id < num_events; ++name_id)
+	
+	for (int name_id = 0; name_id < NUM_COMMANDS; ++name_id)
 	{
-		log += "\t" + StringToUpper(event_names[name_id]) + "\n";
+		log += Stringf("\t %s %s \n", g_validCommands[name_id], g_commandDescriptions[name_id]);
 	}
 
 	ds->AddLog(LOG_MESSAGE, log);
@@ -642,25 +641,25 @@ void Scenario::Startup()
 	g_theDialogueEventSystem = new EventSystem();
 
 	// when the player is interacting with a location
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goto", TravelToLocation);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("talk", AskLocationForCharacter);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("view", AskLocationForItem);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[GOTO_LOCATION], TravelToLocation);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[TALK_TO_CHARACTER], AskLocationForCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[VIEW_ITEM], AskLocationForItem);
 
 	// when the player is interacting with a character
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("ask", InterrogateCharacter);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("goodbye", SayGoodbyToCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[ASK_CHARACTER], InterrogateCharacter);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[SAY_GOODBYE], SayGoodbyToCharacter);
 
 	// Investigating a room
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("investigate", InvestigateRoom);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("leave", LeaveRoom);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[INVESTIGATE_ROOM], InvestigateRoom);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[LEAVE_ROOM], LeaveRoom);
 
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("solve", SolveScenario);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[SOLVE_SCENARIO], SolveScenario);
 
 	
 	// Dialogue System helper functions	
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("clear", ClearCommandDs);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("help", HelpCommandDs);
-	g_theDialogueEventSystem->SubscribeEventCallbackFunction("notes", ListEvidence);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[LOOK_OVER_NOTES], ListEvidence);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[CLEAR_CONSOLE], ClearCommandDs);
+	g_theDialogueEventSystem->SubscribeEventCallbackFunction(g_validCommands[CONSOLE_HELP], HelpCommandDs);
 
 
 	Vec2 frame_resolution = g_gameConfigBlackboard.GetValue(
@@ -739,12 +738,15 @@ void Scenario::Update(const double delta_seconds)
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_subject.c_str());
 	ImGui::End();
 
+	if(m_currentLocation->CanInvestigateLocation())
+	{
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Search for clues!");
+	}
 }
 
 
 void Scenario::Render() const
 {
-
 	//render game assets
 	m_currentLocation->Render();
 

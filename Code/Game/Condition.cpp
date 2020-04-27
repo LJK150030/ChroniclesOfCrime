@@ -24,7 +24,6 @@ Condition::~Condition()
 bool Condition::Test()
 {
 	ERROR_AND_DIE("Have not setup the Trigger::Execute() function");
-	return false;
 }
 
 

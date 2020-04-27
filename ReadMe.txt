@@ -265,7 +265,7 @@ O	Journal command: "Journal items" to bring up a list of all of the items we kno
 
 	Bug testing
 	Help command explins what the command and paramaters do
-	Ensure that any text presented is based on the text adveture version of the game and not the board game version
+O	Ensure that any text presented is based on the text adventure version of the game and not the board game version
 
 	30 Apr
 	Present final project

@@ -54,14 +54,14 @@ Trigger::Trigger(Incident* scenario_event, const XmlElement* element) : m_scenar
 
 Trigger::~Trigger()
 {
-	uint num_actions = m_actions.size();
+	const uint num_actions = static_cast<uint>(m_actions.size());
 	for (uint act_idx = 0; act_idx < num_actions; ++act_idx)
 	{
 		delete m_actions[act_idx];
 		m_actions[act_idx] = nullptr;
 	}
 
-	uint num_conditions = m_conditions.size();
+	const uint num_conditions = static_cast<uint>(m_conditions.size());
 	for (uint cond_idx = 0; cond_idx < num_conditions; ++cond_idx)
 	{
 		delete m_conditions[cond_idx];

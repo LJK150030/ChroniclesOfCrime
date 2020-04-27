@@ -5,7 +5,7 @@
 				<ObjectStateCheck object="Chief Officer Doyle" type="character" operation="Is" State="State 2"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="You are currently in Interrogation Mode. The image and name of the person you are interrogating will appear at the top. You can interrogate this person on any subject, by using any card at your disposal. You just have to scan it. There are no wrong questions-- all combinations are possible. You should now have on your board. Ask the Chief Officer what he knows about that woman." />
+				<DisplayText type="Tutorial" message="&gt; You are currently in Interrogation Mode. The image and name of the person you are interrogating will appear at the top left. You can interrogate this person on any subject by notes you collected during the case. You just have to type it into the console. There are no wrong questions-- all combinations are possible. Ask the Chief Officer what he knows about that woman." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -17,7 +17,7 @@
 				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Open"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="Look for the Notting Hill District among the London district cards and position it on the side of your Evidence Board. Now that you have the address, you can go there. Tap the &quot;Goodbye&quot; button to end the conversation and move to Notting Hill by scanning the Location Card." />
+				<DisplayText type="Tutorial" message="&gt; Now that you have the address, you can go to the Notting Hills District. Type in &quot;Goodbye&quot; to end the conversation and move to Notting Hill by typing &quot;Goto Notting Hills&quot;." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -29,7 +29,7 @@
 				<TimePassed since="EventEnabled" daysPassed="0" hoursPassed="0" minutesPassed="5" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="Did you spot any clues? Scan the &quot;Evidence Category&quot; cards (the ones with a magnifying glass icon) that correspond to what you saw, or continue to observe the scene to find more evidence." />
+				<DisplayText type="Tutorial" message="&gt; Did you spot any clues? Type in &quot;View (Item)&quot; that corresponds to what you see." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -47,61 +47,60 @@
 	</Incident>
 
 
-	<Incident name="Tuto : Expert" type="Multiple" isEnabled="true">
+	<Incident name="Tuto : Doctor and cat" type="OneShot" isEnabled="true">
 		<Trigger name="Has the dead cat been found?">
 			<Conditions>
 				<ObjectStateCheck object="Animals" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="The Doctor can help you by doing an autopsy and making medical observations. Scan the Doctor to call him, then scan the subject you want to discuss with him." />
+				<DisplayText type="Tutorial" message="&gt; The Doctor can help you by doing an autopsy and making medical observations. Type in &quot;Talk Doctor&quot; to call him, then type &quot;Ask (item)&quot; on the item you want to discuss with him." />
 			</Actions>
 		</Trigger>
+	</Incident>
 
+	<Incident name="Tuto : Doctor and Anna" type="OneShot" isEnabled="true">
 		<Trigger name="Has Anna been found?">
 			<Conditions>
 				<ObjectStateCheck object="Anna Taylor" type="character" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="The Doctor can help you by doing an autopsy and making medical observations. Scan the doctor to call him, then scan the subject you want to discuss with him." />
-			</Actions>
-		</Trigger>
-
-		<Trigger name="Has the old phone been found?">
-			<Conditions>
-				<ObjectStateCheck object="Communication Device" type="item" operation="Is" State="Found"/>
-			</Conditions>
-			<Actions>
-				<DisplayText type="Tutorial" message="The Hacker can help you with his technical knowledge and by doing information research. Scan the Hacker to call him, then scan the subject you want to discuss with him." />
-			</Actions>
-		</Trigger>
-
-		<Trigger name="Has the cake been found?">
-			<Conditions>
-				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
-			</Conditions>
-			<Actions>
-				<DisplayText type="Tutorial" message="The Scientist can help you by doing a laboratory analysis or with scientific research. Scan the Scientist, then scan the subject you want to discuss with her." />
-			</Actions>
-		</Trigger>
-
-		<Trigger name="Has the bridge game been found?">
-			<Conditions>
-				<ObjectStateCheck object="Games &amp; Toys" type="item" operation="Is" State="Found"/>
-			</Conditions>
-			<Actions>
-				<DisplayText type="Tutorial" message="The Criminologist can help you establish the psychological profile of a suspect or can aid you in putting an object into its sociological context. Scan the Criminologist to call him, then scan the subject you want to discuss with him." />
+				<DisplayText type="Tutorial" message="&gt; The Doctor can help you by doing an autopsy and making medical observations. Type in &quot;Talk Doctor&quot; to call him, then type &quot;Ask (character)&quot; for the person you'd like him to examine." />
 			</Actions>
 		</Trigger>
 	</Incident>
 
 
-	<Incident name="Tuto: Special item" type="OneShot" isEnabled="true">
-		<Trigger name="Has the Digitalis been found?">
+	<Incident name="Tuto : Hacker and phone" type="OneShot" isEnabled="true">
+		<Trigger name="Has the old phone been found?">
 			<Conditions>
-				<ObjectStateCheck object="Digitalis" type="item" operation="Is" State="Found"/>
+				<ObjectStateCheck object="Communication Device" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="The symbol indicates that you have found a special subject of conversation. Find it in the &quot;special item&quot; deck and reveal it."/>
+				<DisplayText type="Tutorial" message="&gt; The Hacker can help you with his technical knowledge and by doing information research. Type in &quot;Talk Hacker&quot; to call him, then type &quot;Ask (item)&quot; on the subject you want to discuss with him." />
+			</Actions>
+		</Trigger>
+	</Incident>
+		
+
+	<Incident name="Tuto : Scientist and cake" type="OneShot" isEnabled="true">
+		<Trigger name="Has the cake been found?">
+			<Conditions>
+				<ObjectStateCheck object="Food" type="item" operation="Is" State="Found"/>
+			</Conditions>
+			<Actions>
+				<DisplayText type="Tutorial" message="&gt; The Scientist can help you by doing a laboratory analysis or with scientific research. Type in &quot;Talk Scientist&quot;, then type &quot;Ask (Item)&quot; on the subject you want to discuss with her." />
+			</Actions>
+		</Trigger>
+	</Incident>
+
+		
+	<Incident name="Tuto : Criminologist and card game" type="OneShot" isEnabled="true">
+		<Trigger name="Has the bridge game been found?">
+			<Conditions>
+				<ObjectStateCheck object="Games &amp; Toys" type="item" operation="Is" State="Found"/>
+			</Conditions>
+			<Actions>
+				<DisplayText type="Tutorial" message="&gt; The Criminologist can help you establish the psychological profile of a suspect or can aid you in putting an object into its sociological context. Type &quot;Talk Criminologist&quot; to call him, then type &quot;Ask (Item)&quot; on the subject you want to discuss with him." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -113,7 +112,7 @@
 				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="vrai nature"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="This letter makes you wonder if the suspect hasn't had a change of heart. Don't hesitate to re-interrogate them on certain subjects, they might be able to tell you more about them." />
+				<DisplayText type="Tutorial" message="&gt; This letter makes you wonder if the suspect hasn't had a change of heart. Don't hesitate to re-interrogate them on specific subjects. They might be able to tell you more about them." />
 			</Actions>
 		</Trigger>
 
@@ -122,7 +121,7 @@
 				<ObjectStateCheck object="Rose Butterfly" type="character" operation="Is" State="Guilty"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="Some texts will give you information that will alter the attitude of some suspects. Come back to interrogate them when you think you have made an important finding." />
+				<DisplayText type="Tutorial" message="&gt; Some texts will give you information that will alter the attitude of some suspects. Come back to interrogate them when you think you have made an important finding." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -134,7 +133,7 @@
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="11" minutesPassed="30" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="Good start. When you're sure of your suspicions, go back to the Scotland Yard to give your report, and answer the questions to close the case." />
+				<DisplayText type="Tutorial" message="&gt; Good start. When you're sure of your suspicions, go back to the Scotland Yard to give your report, To give your report, type &quot;Solve&quot;." />
 				<SetCardState type="location" name="Scotland Yard" fromState="*" toState="Close case"/>
 			</Actions>
 		</Trigger>
@@ -147,7 +146,7 @@
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="10" minutesPassed="30" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="There are still many clues to be found at the crime scene. Don't hesitate to observe closer, and to turn around and look at your feet. Don't forget to scan the &quot;Evidence Category&quot; cards afterward in order to pick them up!" />
+				<DisplayText type="Tutorial" message="&gt; There are still many clues to be found at the crime scene. Don't hesitate to observe carefully. Don't forget to type &quot;View (Item)&quot; to pick them up!" />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -176,7 +175,7 @@
 			</Conditions>
 			<Actions>
 				<SetCardState type="location" name="Notting Hill" fromState="Open" toState="2ndpass"/>
-				<DisplayText type="Tutorial" message="Select your actions carefully because time is running out. Each scan makes the clock in the upper-right corner move forward, and going to a location takes even longer. Some locations can be searched. In those situations a &quot;Search for clues&quot; button appears, indicating there is the possibility to search for clues in Virtual Reality. The victim's apartment has this button, so let's try it!" />
+				<DisplayText type="Tutorial" message="&gt; Select your actions carefully because time is running out. Each command makes the clock in the upper-left corner move forward, and going to a location takes even longer. Some locations can be searched. In those situations a &quot;Search for clues&quot; option appears in the top left, indicating there is the possibility to find clues. The victim's apartment has this, so let's try it! Type in the &quot;Search&quot; command to look for clues in the apartment." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -188,7 +187,7 @@
 				<LocationCheck location="Leicester Square" condition="Inside" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="Scan the character once at the location to enter &quot;interrogation&quot; mode. Scan the interrogated character card again during interrogation mode to have him speak about himself." />
+				<DisplayText type="Tutorial" message="&gt; Type in &quot;Talk (character)&quot; at the location to enter &quot;interrogation&quot; mode. Type in &quot;Ask (interrogating character)&quot; during interrogation mode to have her speak about herself." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -200,7 +199,7 @@
 				<LocationCheck location="Scotland Yard" condition="Inside" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="This game is a cooperative game where all players play together to solve a police investigation. Set up your Evidence Board, distribute the forensic contacts amongst all players and let's start! The Chief Officer is the character 33, signaled by. Pull him from the character deck and place him in the Scotland Yard. You should now go and talk to him. To do this you just have to scan the code on the character's card." />
+				<DisplayText type="Tutorial" message="&gt; This game is a cooperative game where all players play together to solve a police investigation. The Chief Officer is waiting for you, so you should go and talk to him. To do this, you have to type in &quot;Talk Chief Officer&quot;. He also goes by &quot;Chief&quot; or &quot;Doyle&quot;, so you can also type in &quot;Talk Chief&quot; or &quot;Talk Doyle&quot;. Try it out!" />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -213,7 +212,7 @@
 				<TimePassed since="AbsoluteGameTime" daysPassed="1" hoursPassed="11" minutesPassed="00" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="The neighborhood investigation just finished. We learned that Anna Taylor was a Bridge player, often practicing in a club on Leicester Square" />
+				<DisplayText type="Tutorial" message="&gt; The neighborhood investigation just finished. We learned that Anna Taylor was a Bridge player, often practicing in a club on Leicester Square." />
 				<SetCardState type="location" name="Leicester Square" fromState="Closed" toState="Open"/>
 			</Actions>
 		</Trigger>
@@ -229,7 +228,7 @@
 				<ObjectStateCheck object="Digitalis" type="item" operation="Is" State="Found"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="You have enough elements to solve this case. Go back to the Scotland Yard to give your report." />
+				<DisplayText type="Tutorial" message="&gt; You have enough elements to solve this case. Go back to the Scotland Yard to give your report. To give your report, type &quot;Solve&quot; once you get to Scotland Yard." />
 				<SetCardState type="location" name="Scotland Yard" fromState="*" toState="Close case"/>
 			</Actions>
 		</Trigger>
@@ -244,7 +243,7 @@
 				<ContextCheck object="Chief Officer Doyle" type="character" condition="Is Not" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="To ask the police chief about the victim. First scan the Police chief, then scan the victim . He will tell you what he knows about her." />
+				<DisplayText type="Tutorial" message="&gt; If you want to ask the police chief about the victim. First, type in &quot;Talk Chief&quot;, then type &quot;Ask Anna&quot;. He will tell you what he knows about her." />
 			</Actions>
 		</Trigger>
 
@@ -255,7 +254,7 @@
 				<ContextCheck object="Chief Officer Doyle" type="character" condition="Is" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="To ask the police chief about the victim. Scan the victim. He will tell you what he knows about her." />
+				<DisplayText type="Tutorial" message="&gt; To ask the police chief about the victim, type &quot;Ask Anna&quot;. He will tell you what he knows about her." />
 			</Actions>
 		</Trigger>
 	</Incident>

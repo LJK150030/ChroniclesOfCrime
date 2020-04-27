@@ -1,3 +1,8 @@
+4/27----------------------------------------------------------------
+time 	estimate	actual	task
+12:50	0.5			1.00	Help command explins what the command and paramaters do
+11:00	2.0			1.83	Ensure that any text presented is based on the text adventure version of the game and not the board game version
+
 4/24----------------------------------------------------------------
 time 	estimate	actual	task
 5:09	0.5			0.20	Command "Journal" to bring up a list of all of the evidence we know so far in our investigation 

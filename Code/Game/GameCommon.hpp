@@ -224,9 +224,59 @@ enum LocationSpecialAction
 	NUM_LOC_SPEC_ACTS
 };
 
+enum ValidCommands
+{
+	UNKNOWN_COMMAND = -1,
+	
+	GOTO_LOCATION,
+	TALK_TO_CHARACTER,
+	ASK_CHARACTER,
+	SAY_GOODBYE,
+	INVESTIGATE_ROOM,
+	VIEW_ITEM,
+	LEAVE_ROOM,
+	LOOK_OVER_NOTES,
+	SOLVE_SCENARIO,
+	CLEAR_CONSOLE,
+	CONSOLE_HELP,
+
+	NUM_COMMANDS
+};
+
+static const char* g_validCommands[NUM_COMMANDS] =
+{
+	"goto",
+	"talk",
+	"ask",
+	"goodbye",
+	"search",
+	"view",
+	"leave",
+	"notes",
+	"solve",
+	"clear",
+	"help",
+};
+
+static const char* g_commandDescriptions[NUM_COMMANDS] =
+{
+	"(location) - Travel to a valid location. \t ex. Goto Scotland Yard",
+	"(character) - Talk to a character at a location. \t ex. TALK Chief Officer Doyle",
+	"(item or character) - Asking a character about an entity when in interrogation mode. \t ex. Ask Anna Taylor or Ask Gun",
+	"- Leaving interrogation mode.",
+	"- Look around a room when a location has a 'Search for Clues' option.",
+	"(item) - view an item in a room. \t ex. View Gun",
+	"- Exit a room when done searching for clues.",
+	"*empty*/Locations/Characters/Items - Listing all of the evidence you've found so far in the investigation. \t ex. Notes, Notes Locations, Notes Characters, Notes Items",
+	"- Attempt to solve the scenario.",
+	"- Clears the history of text in the console.",
+	"- Presents all of the valid commands you can type in the console.",
+};
+
 struct GameTime
 {
 	uint		m_min = 0;	// 0 - 60
 	uint		m_hour = 0; // in military 0-23
 	uint		m_day = 0; // 1 - inf
 };
+

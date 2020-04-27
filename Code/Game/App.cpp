@@ -152,7 +152,6 @@ bool App::HandleQuitRequested()
 	return true;
 }
 
-TODO("Need to make sure I am deleting everything, otherwise i get a nasty crash")
 void App::HardRestart()
 {
 	Shutdown();

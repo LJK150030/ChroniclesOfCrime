@@ -73,7 +73,7 @@ Incident::Incident(Scenario* the_setup, const XmlElement* element) : m_theScenar
 
 Incident::~Incident()
 {
-	uint num_triggers = m_triggers.size();
+	const uint num_triggers = static_cast<uint>(m_triggers.size());
 	for (uint trigger_idx = 0; trigger_idx < num_triggers; ++trigger_idx)
 	{
 		delete m_triggers[trigger_idx];
