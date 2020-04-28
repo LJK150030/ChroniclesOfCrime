@@ -150,32 +150,32 @@ void DialogueSystem::AddLog(LogType type, const String& log_message)
 	{
 		case LOG_ERROR:
 		{
-			color = Vec4(0.95686275f, 0.10980392f, 0.32941176f, 1.0f);
+			color = Vec4(242.0f / 255.0f, 156.0f / 255.0f, 156.0f / 255.0f, 1.0f);
 			break;
 		}
 		case LOG_MESSAGE:
 		{
-			color = Vec4(0.80000000f, 0.80000000f, 0.80000000f, 1.0f);
+			color = Vec4(242.0f / 255.0f, 228.0f / 255.0f, 154.0f / 255.0f, 1.0f);
 			break;
 		}
 		case LOG_ECHO:
 		{
-			color = Vec4(1.00000000f, 0.62352941f, 0.00000000f, 1.0f);
+			color = Vec4(242.0f / 255.0f, 181.0f / 255.0f, 154.0f / 255.0f, 1.0f);
 			break;
 		}
 		case LOG_LOCATION:
 		{
-			color = Vec4(0.98431373f, 0.83529412f, 0.02352941f, 1.0f);
+			color = Vec4(158.0f / 255.0f, 223.0f / 255.0f, 246.0f / 255.0f, 1.0f);
 			break;
 		}
 		case LOG_CHARACTER:
 		{
-			color = Vec4(0.65882353f, 0.74901961f, 0.07058824f, 1.0f);
+			color = Vec4(158.0f / 255.0f, 223.0f / 255.0f, 246.0f / 255.0f, 1.0f);
 			break;
 		}
 		case LOG_ITEM:
 		{
-			color = Vec4(0.00000000f, 0.66666667f, 0.70980392f, 1.0f);
+			color = Vec4(158.0f / 255.0f, 223.0f / 255.0f, 246.0f / 255.0f, 1.0f);
 			break;
 		}
 		default:
