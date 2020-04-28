@@ -149,9 +149,12 @@ inline String g_sameLocationMessage = "You are already here.";
 inline String g_unknownCommandMessage = "unknown command.";
 
 static float FONT_SCALE = 1.32f;
-static float CURSOR_POS = 32.0f;
+static float CURSOR_POS = 32.0f * FONT_SCALE;
 static float TEXT_WRAP_BACKUP_VAL = 0.0f;
-static float TEXT_WRAP_POS = 1575.0f - (CURSOR_POS * FONT_SCALE);
+static float TEXT_WRAP_POS = 1575.0f - (CURSOR_POS);
+
+static float ENTITY_POS_X = 72.0f;
+static float ENTITY_POS_Y = 24.5f;
 
 enum CardType
 {

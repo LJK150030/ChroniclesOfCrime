@@ -262,7 +262,8 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 		Character* char_subject = current_scenario->GetCharacterFromList(char_itr->second);
 
 		const bool is_subject_here = cur_loc->IntroduceCharacter(log, char_subject);
-
+		char_subject->SetPosition(Vec2(ENTITY_POS_X, ENTITY_POS_Y));
+		
 		if (is_subject_here)
 		{
 			current_scenario->SetInterest(char_subject);
@@ -308,6 +309,7 @@ STATIC bool AskLocationForItem(EventArgs& args)
 		Item* item_subject = current_scenario->GetItemFromList(item_itr->second);
 
 		const bool is_subject_here = cur_loc->IntroduceItem(log, item_subject);
+		item_subject->SetPosition(Vec2(ENTITY_POS_X, ENTITY_POS_Y));
 
 		if (is_subject_here)
 		{
@@ -534,40 +536,7 @@ STATIC bool ListEvidence(EventArgs& args)
 
 	String result;
 
-	if (name == "something and nothing")
-	{
-		result = "|-> Locations\n";
-
-		
-		StringList list = current_scenario->GetListOfKnownLocations();
-		uint num_lines = static_cast<uint>(list.size());
-		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
-		{
-			result.append("|" + list[line_idx] + "\n");
-		}
-
-		result.append("|\n\t|-> Characters\n");
-
-
-		list = current_scenario->GetListOfKnownCharacters();
-		num_lines = static_cast<uint>(list.size());
-		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
-		{
-			result.append("|" + list[line_idx] + "\n");
-		}
-
-		result.append("|\n\t|-> Items\n");
-
-		list = current_scenario->GetListOfKnownItems();
-		num_lines = static_cast<uint>(list.size());
-		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
-		{
-			result.append("|" + list[line_idx] + "\n");
-		}
-
-		result.append("\n");
-	}
-	else if (name_lower == "locations" || name_lower == "locs")
+	if (name_lower == "locations" || name_lower == "location" || name_lower == "locs")
 	{
 		StringList list = current_scenario->GetListOfKnownLocations();
 		const uint num_lines = static_cast<uint>(list.size());
@@ -578,7 +547,7 @@ STATIC bool ListEvidence(EventArgs& args)
 
 		result.append("\n");
 	}
-	else if (name_lower == "characters" || name_lower == "chars")
+	else if (name_lower == "characters" || name_lower == "character" || name_lower == "chars")
 	{
 		StringList list = current_scenario->GetListOfKnownCharacters();
 		const uint num_lines = static_cast<uint>(list.size());
@@ -589,13 +558,46 @@ STATIC bool ListEvidence(EventArgs& args)
 
 		result.append("\n");
 	}
-	else if (name_lower == "items")
+	else if (name_lower == "items" || name_lower == "item")
 	{
 		StringList list = current_scenario->GetListOfKnownItems();
 		const uint num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
 			result.append(list[line_idx] + "\n");
+		}
+
+		result.append("\n");
+	}
+	else
+	{
+		result = "|-> Locations\n";
+
+
+		StringList list = current_scenario->GetListOfKnownLocations();
+		uint num_lines = static_cast<uint>(list.size());
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append("|\t" + list[line_idx] + "\n");
+		}
+
+		result.append("|\n|-> Characters\n");
+
+
+		list = current_scenario->GetListOfKnownCharacters();
+		num_lines = static_cast<uint>(list.size());
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append("|\t" + list[line_idx] + "\n");
+		}
+
+		result.append("|\n|-> Items\n");
+
+		list = current_scenario->GetListOfKnownItems();
+		num_lines = static_cast<uint>(list.size());
+		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
+		{
+			result.append("|\t" + list[line_idx] + "\n");
 		}
 
 		result.append("\n");

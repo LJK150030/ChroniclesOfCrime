@@ -84,7 +84,7 @@ Item::Item(Scenario* the_setup, const XmlElement* element) : Card(the_setup, CAR
 		}
 	}
 
-	m_modelMatrix = m_modelMatrix.MakeTranslation2D(Vec2(55.0f, 10.0f));
+	m_modelMatrix = m_modelMatrix.MakeTranslation2D(Vec2(ENTITY_POS_X, ENTITY_POS_Y));
 	SetState(current_state);
 }
 

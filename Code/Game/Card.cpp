@@ -74,3 +74,8 @@ void Card::SetDiscovery(const bool discovered)
 {
 	m_found = discovered;
 }
+
+void Card::SetPosition(const Vec2& pos)
+{
+	m_modelMatrix = m_modelMatrix.MakeTranslation2D(pos);
+}

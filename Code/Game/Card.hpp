@@ -31,6 +31,7 @@ public:
 	
 	// MUTATORS
 	void SetDiscovery(bool discovered);
+	void SetPosition(const Vec2& pos);
 
 protected:
 	//void ImportStatesFromXml(const XmlElement* element);
