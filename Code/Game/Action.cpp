@@ -103,7 +103,7 @@ void ActionDisplayText::Execute()
 {
 	g_theDevConsole->PrintString(Rgba::GREEN, Stringf("Displaying the message: %s", m_message.c_str()));
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
-	ds->AddLog(LOG_LOCATION, m_message);
+	ds->AddLog(LOG_MESSAGE, m_message);
 }
 
 

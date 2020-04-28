@@ -97,15 +97,15 @@ bool ConditionTimePassed::Test()
 			Scenario* the_scenario = m_trigger->GetOwner()->GetOwner();
 			GameTime relative_time = the_scenario->GetCurrentTime();
 
-			int relative_time_in_minutes = relative_time.m_min;
-			relative_time_in_minutes += 60 * relative_time.m_hour;
-			relative_time_in_minutes += 1440 * relative_time.m_day;
+			int relative_time_in_minutes = static_cast<int>(relative_time.m_min);
+			relative_time_in_minutes += 60 * static_cast<int>(relative_time.m_hour);
+			relative_time_in_minutes += 1440 * static_cast<int>(relative_time.m_day);
 
-			int time_set_in_minutes = m_timePassed.m_min;
-			time_set_in_minutes += 60 * m_timePassed.m_hour;
-			time_set_in_minutes += 1440 * m_timePassed.m_day;
+			int time_set_in_minutes = static_cast<int>(m_timePassed.m_min);
+			time_set_in_minutes += 60 * static_cast<int>(m_timePassed.m_hour);
+			time_set_in_minutes += 1440 * static_cast<int>(m_timePassed.m_day);
 
-			const int time_remaining_in_minutes = time_set_in_minutes - relative_time_in_minutes;
+			const uint time_remaining_in_minutes = time_set_in_minutes - relative_time_in_minutes;
 
 			if(time_remaining_in_minutes <= 0)
 			{
@@ -117,23 +117,23 @@ bool ConditionTimePassed::Test()
 		case INCIDENT_ENABLED:
 		{
 			Scenario* the_scenario = m_trigger->GetOwner()->GetOwner();
-			GameTime relative_time = the_scenario->GetCurrentTime();
+			const GameTime relative_time = the_scenario->GetCurrentTime();
 
-			int relative_time_in_minutes = relative_time.m_min;
-			relative_time_in_minutes += 60 * relative_time.m_hour;
-			relative_time_in_minutes += 1440 * relative_time.m_day;
+			int relative_time_in_minutes = static_cast<int>(relative_time.m_min);
+			relative_time_in_minutes += 60 * static_cast<int>(relative_time.m_hour);
+			relative_time_in_minutes += 1440 * static_cast<int>(relative_time.m_day);
 				
 			Incident* the_event = m_trigger->GetOwner();
-			GameTime time_event_active = the_event->GetActivatedTime();
-			int active_in_minutes = time_event_active.m_min;
-			active_in_minutes += 60 * time_event_active.m_hour;
-			active_in_minutes += 1440 *  time_event_active.m_day;
+			const GameTime time_event_active = the_event->GetActivatedTime();
+			int active_in_minutes = static_cast<int>(time_event_active.m_min);
+			active_in_minutes += 60 * static_cast<int>(time_event_active.m_hour);
+			active_in_minutes += 1440 * static_cast<int>(time_event_active.m_day);
 
 			const int time_remaining_in_minutes = relative_time_in_minutes - active_in_minutes;
 				
-			int time_threshold_minutes = m_timePassed.m_min;
-			time_threshold_minutes += 60 * m_timePassed.m_hour;
-			time_threshold_minutes += 1440 * m_timePassed.m_day;
+			int time_threshold_minutes = static_cast<int>(m_timePassed.m_min);
+			time_threshold_minutes += 60 * static_cast<int>(m_timePassed.m_hour);
+			time_threshold_minutes += 1440 * static_cast<int>(m_timePassed.m_day);
 
 			if (time_remaining_in_minutes >= time_threshold_minutes)
 			{

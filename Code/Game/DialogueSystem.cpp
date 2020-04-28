@@ -7,6 +7,7 @@
 #include "Game/DialogueSystem.hpp"
 #include "Game/Game.hpp"
 #include "Game/Scenario.hpp"
+#include "ThirdParty/imGUI/imgui_internal.h"
 
 
 DialogueSystem::DialogueSystem(Game* owner) : m_theGame(owner)
@@ -65,6 +66,8 @@ void DialogueSystem::Update(double delta_seconds)
 		ImVec2(0.0f, m_gameResolution[1] - m_dialogWindowSize[1] * 0.75f),
 		ImGuiCond_Always
 	);
+
+	ImGui::SetWindowFontScale(FONT_SCALE);
 
 	if (!m_imguiError)
 	{
@@ -141,6 +144,7 @@ void DialogueSystem::AddLog(LogType type, const String& log_message)
 	LogEntry* log = new LogEntry();
 	
 	log->m_message = log_message;
+	log->m_type = type;
 	Vec4 color;
 	switch(type)
 	{
@@ -198,6 +202,14 @@ void DialogueSystem::UpdateHistory()
 		ImGuiWindowFlags_HorizontalScrollbar
 	);
 
+	
+// 	ImGui::DragFloat("font scale", &FONT_SCALE, 0.001f, 0.1f, 5.0f);
+// 	ImGui::DragFloat("cursor pos", &CURSOR_POS, 1.0f, 1.0f, 2000.0f);
+// 	ImGui::DragFloat("text wrap backup", &TEXT_WRAP_BACKUP_VAL, 1.0f, 1.0f, 2000.0f);
+// 	ImGui::DragFloat("text wrap positi", &TEXT_WRAP_POS, 1.0f, 1.0f, 2000.0f);
+// 	TEXT_WRAP_POS = 1575.0f - (CURSOR_POS * FONT_SCALE);
+	
+	
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(4, 1));
 
 	// for loop through each "Card Dialogue Type"
@@ -206,7 +218,17 @@ void DialogueSystem::UpdateHistory()
 		const char* item = m_items[i]->m_message.c_str();
 		ImVec4 color(m_items[i]->m_color.x, m_items[i]->m_color.y, m_items[i]->m_color.z, m_items[i]->m_color.w);
 		ImGui::PushStyleColor(ImGuiCol_Text, color);
-		ImGui::TextWrapped(item);
+
+		if(m_items[i]->m_type != LOG_ECHO)
+		{
+			ImGui::SetCursorPosX(CURSOR_POS);
+		}
+		else
+		{
+			ImGui::SetCursorPosX(0.0f);
+		}
+		
+		TextWrapped(item);
 		ImGui::PopStyleColor();
 	}
 
@@ -235,6 +257,7 @@ void DialogueSystem::UpdateInput()
 			)
 		)
 	{
+
 		char* s = m_inputBuf;
 		StringTrim(s);
 		
@@ -303,3 +326,27 @@ void DialogueSystem::ExecuteCommand(const char* command_line)
 	m_scrollToBottom = true;
 }
 
+
+void DialogueSystem::TextWrapped(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	TextWrappedV(fmt, args);
+	va_end(args);
+}
+
+void DialogueSystem::TextWrappedV(const char* fmt, const va_list args)
+{
+	ImGuiWindow* window = ImGui::GetCurrentWindow();
+	const bool need_backup = (window->DC.TextWrapPos < TEXT_WRAP_BACKUP_VAL);
+	if (need_backup)
+	{
+		//ImGui::PushTextWrapPos(TEXT_WRAP_POS);
+		ImGui::PushTextWrapPos(ImGui::GetCursorPos().x + TEXT_WRAP_POS);
+	}
+	ImGui::TextV(fmt, args);
+	if (need_backup)
+	{
+		ImGui::PopTextWrapPos();
+	}
+}

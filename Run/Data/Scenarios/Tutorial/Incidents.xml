@@ -5,7 +5,7 @@
 				<ObjectStateCheck object="Chief Officer Doyle" type="character" operation="Is" State="State 2"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="&gt; You are currently in Interrogation Mode. The image and name of the person you are interrogating will appear at the top left. You can interrogate this person on any subject by notes you collected during the case. You just have to type it into the console. There are no wrong questions-- all combinations are possible. Ask the Chief Officer what he knows about that woman." />
+				<DisplayText type="Tutorial" message="&gt; You are currently in Interrogation Mode. The image of the person you are interrogating will appear at the top right, and their name at the top left. You can interrogate this person on any subject from the notes you collected during the case. You just have to type it into the console. There are no wrong questions-- all combinations are possible. Ask the Chief Officer what he knows about that woman. To do this, type in &quot;Ask Anna&quot;"/>
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -17,7 +17,7 @@
 				<ObjectStateCheck object="Notting Hill" type="location" operation="Is" State="Open"/>
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="&gt; Now that you have the address, you can go to the Notting Hills District. Type in &quot;Goodbye&quot; to end the conversation and move to Notting Hill by typing &quot;Goto Notting Hills&quot;." />
+				<DisplayText type="Tutorial" message="&gt; Now that you have the address, you can go to the Notting Hill District. Type in &quot;Goodbye&quot; to end the conversation and move to Notting Hill by typing &quot;Goto Notting Hill&quot;." />
 			</Actions>
 		</Trigger>
 	</Incident>
@@ -169,7 +169,7 @@
 
 
 	<Incident name="Notting Hill change state" type="OneShot" isEnabled="true">
-		<Trigger name="Is the player in Notting Hills?">
+		<Trigger name="Is the player in Notting Hill?">
 			<Conditions>
 				<LocationCheck location="Notting Hill" condition="Inside" />
 			</Conditions>
@@ -199,7 +199,7 @@
 				<LocationCheck location="Scotland Yard" condition="Inside" />
 			</Conditions>
 			<Actions>
-				<DisplayText type="Tutorial" message="&gt; This game is a cooperative game where all players play together to solve a police investigation. The Chief Officer is waiting for you, so you should go and talk to him. To do this, you have to type in &quot;Talk Chief Officer&quot;. He also goes by &quot;Chief&quot; or &quot;Doyle&quot;, so you can also type in &quot;Talk Chief&quot; or &quot;Talk Doyle&quot;. Try it out!" />
+				<DisplayText type="Tutorial" message="&gt; The Chief Officer is waiting for you, so you should go and talk to him. To do this, you have to type in &quot;Talk Chief Officer&quot;. He also goes by &quot;Chief&quot; or &quot;Doyle&quot;, so you can also type in &quot;Talk Chief&quot; or &quot;Talk Doyle&quot;. Try it out!" />
 			</Actions>
 		</Trigger>
 	</Incident>

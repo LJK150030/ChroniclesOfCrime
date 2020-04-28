@@ -9,7 +9,7 @@
 		</States>
 		<IntroduceCharacter>
 			<Scan State="*" Character="*" 					CharacterState="*" 			Line="&gt; The person you are looking for isn't here. Try to move to a location where that person is located."/>
-			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Chief Officer Doyle: &quote;Ah, at last, you're here. I have a case for you! An older woman, Anna Taylor, has been found dead. I need you to find out if it's a natural death or a homicide.&quote;" >
+			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 1" 	Line="Chief Officer Doyle: &quot;Ah, at last, you're here. I have a case for you! An older woman, Anna Taylor, has been found dead. I need you to find out if it's a natural death or a homicide.&quot;" >
 				<SetCardState type="Character" name="Chief Officer Doyle" fromState="State 1" toState="State 2"/>
 			</Scan>
 			<Scan State="*" Character="Chief Officer Doyle" CharacterState="State 2" 	Line="Chief Officer Doyle: &quot;If you are lost, my office is always open. I will guide you as much as I can. What do you want to talk about?&quot;"/>

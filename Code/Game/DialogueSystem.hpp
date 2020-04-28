@@ -31,6 +31,8 @@ private:
 	
 	void	AddCardTypeCommand(CardType type,  const char* command);
 	void	ExecuteCommand(const char* command_line);
+	void	TextWrapped(const char* fmt, ...);
+	void	TextWrappedV(const char* fmt, va_list args);
 
 private:
 	// Owner
@@ -50,4 +52,5 @@ private:
 	char	m_locationCommand[MAX_COMMAND_LENGTH];
  	char	m_characterCommand[MAX_COMMAND_LENGTH];
  	char	m_itemCommand[MAX_COMMAND_LENGTH];
+
 }; 

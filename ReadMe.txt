@@ -231,42 +231,43 @@ O	17-Apr	-			Ludum Dare Weekend
 X			1			List of custom variables to track
 X			1			Read in custome variables from xml
 			
-X	24-Apr	4		Polish
-X	28-Apr	4		Polish
-	1-Mar 	4		Present final project
+	23-Apr	5.0
+O			0.5			VictoryCondition: Class for user define victory conditions (if any state changes to satify a condition, it is considered met. Even if the state changes later on in the game)
+X			0.5			LocationVictoryConditions: a class that holds conditions to test the state of locaitons (solved by having just card class)
+X			0.5			CharacterVictoryConditions: a class that holds conditions to test the state of actors (solved by having just card class)
+X			0.5			ItemsVictoryConditions: a class that holds conditions to test the state of  items (solved by having just card class)
+O			1.0			VictoryCondition: Read in XML file for
+X			0.5			LocationVictoryConditions (solved by having just card class)
+X			0.5			CharacterVictoryConditions (solved by having just card class)
+X			0.5			ItemsVictoryConditions (solved by having just card class)
+O			0.5			VictoryCondition: test if the condition is met
+
+	24-Apr	1.75
+O			0.25		Scenario: Enter "solved" command to compleate the scenario
+O			0.25		Scenario: if all conditions in locations, actors, and items are met
+O			0.25		Scenario: present a dialog to congradualte the player
+O			0.50		Scenario: present a recap of the solution.
+O			0.50		Scenario: present "Please press any buttont to close the game..." and then closed the game as such
+O			0.25		Scenario: if one of the conditions in not met
+O			0.25		Scenario: present a dialog to continue the investigation. 
+
+	25-Apr	2.50
+O			0.50		Journal command: "Journal" to bring up a list of all of the clues we know so far in the investigation 
+O			1.00		Journal command: "Journal locations" to bring up a list of all of the locations we know so far in the scenario
+O			0.50		Journal command: "Journal characters" to bring up a list of all of the characters we know so far in the scenario
+O			0.50		Journal command: "Journal items" to bring up a list of all of the items we know so far in the scenario
+
+	26-Apr 	2.50
+O			0.50		Help command explins what the command and paramaters do
+O			2.00		Ensure that any text presented is based on the text adventure version of the game and not the board game version
 
 
-Tasks that I have left
-	23-Apr
-O	VictoryCondition: Class for user define victory conditions (if any state changes to satify a condition, it is considered met. Even if the state changes later on in the game)
-X	LocationVictoryConditions: a class that holds conditions to test the state of locaitons (solved by having just card class)
-X	CharacterVictoryConditions: a class that holds conditions to test the state of actors (solved by having just card class)
-X	ItemsVictoryConditions: a class that holds conditions to test the state of  items (solved by having just card class)
-O	VictoryCondition: Read in XML file for
-X	LocationVictoryConditions (solved by having just card class)
-X	CharacterVictoryConditions (solved by having just card class)
-X	ItemsVictoryConditions (solved by having just card class)
-O	VictoryCondition: test if the condition is met
 
-	24-Apr
-O	Scenario: Enter "solved" command to compleate the scenario
-O	Scenario: if all conditions in locations, actors, and items are met
-O	Scenario: present a dialog to congradualte the player
-O	Scenario: present a recap of the solution.
-O	Scenario: present "Please press any buttont to close the game..." and then closed the game as such
-O	Scenario: if one of the conditions in not met
-O	Scenario: present a dialog to continue the investigation. 
+O	28-Apr	4.0			Polish and Bug testing
+						Type in a command wrong, give an example of a proper use of the command
 
-	25-Apr
-O	Journal command: "Journal" to bring up a list of all of the clues we know so far in the investigation 
-O	Journal command: "Journal locations" to bring up a list of all of the locations we know so far in the scenario
-O	Journal command: "Journal characters" to bring up a list of all of the characters we know so far in the scenario
-O	Journal command: "Journal items" to bring up a list of all of the items we know so far in the scenario
+	30 Apr 	4.0			Present final project
+					
 
-	Bug testing
-	Help command explins what the command and paramaters do
-O	Ensure that any text presented is based on the text adventure version of the game and not the board game version
 
-	30 Apr
-	Present final project
 

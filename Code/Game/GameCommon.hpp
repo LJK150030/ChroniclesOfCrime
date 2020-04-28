@@ -143,16 +143,15 @@ inline char g_locationHeader[] = "Heading to: ";
 inline char g_characterHeader[] = "Interrogating: ";
 inline char g_itemHeader[] = "Found Item: ";
 
-
-inline char g_locationCommand[] = "GOTO";
-inline char g_characterCommand[] = "ASK";
-inline char g_itemCommand[] = "VIEW";
-
 inline String g_introMessage = "Welcome!";
 inline String g_closedLocationMessage = "This location is closed.";
 inline String g_sameLocationMessage = "You are already here.";
 inline String g_unknownCommandMessage = "unknown command.";
 
+static float FONT_SCALE = 1.32f;
+static float CURSOR_POS = 32.0f;
+static float TEXT_WRAP_BACKUP_VAL = 0.0f;
+static float TEXT_WRAP_POS = 1575.0f - (CURSOR_POS * FONT_SCALE);
 
 enum CardType
 {
@@ -260,14 +259,14 @@ static const char* g_validCommands[NUM_COMMANDS] =
 
 static const char* g_commandDescriptions[NUM_COMMANDS] =
 {
-	"(location) - Travel to a valid location. \t ex. Goto Scotland Yard",
-	"(character) - Talk to a character at a location. \t ex. TALK Chief Officer Doyle",
-	"(item or character) - Asking a character about an entity when in interrogation mode. \t ex. Ask Anna Taylor or Ask Gun",
+	"(location) - Travel to a valid location. --- ex. Goto Scotland Yard",
+	"(character) - Talk to a character at a location. --- ex. TALK Chief Officer Doyle",
+	"(item or character) - Asking a character about an entity when in interrogation mode. --- ex. Ask Anna Taylor or Ask Gun",
 	"- Leaving interrogation mode.",
 	"- Look around a room when a location has a 'Search for Clues' option.",
-	"(item) - view an item in a room. \t ex. View Gun",
+	"(item) - view an item in a room. --- ex. View Gun",
 	"- Exit a room when done searching for clues.",
-	"*empty*/Locations/Characters/Items - Listing all of the evidence you've found so far in the investigation. \t ex. Notes, Notes Locations, Notes Characters, Notes Items",
+	"*empty*/Locations/Characters/Items - Listing all of the evidence you've found so far in the investigation. --- ex. Notes, Notes Locations, Notes Characters, Notes Items",
 	"- Attempt to solve the scenario.",
 	"- Clears the history of text in the console.",
 	"- Presents all of the valid commands you can type in the console.",

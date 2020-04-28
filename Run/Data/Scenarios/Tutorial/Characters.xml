@@ -1,7 +1,7 @@
 <Characters>
 
 	<Character  Name="Chief Officer Doyle" StartingState="State 1" StartLoc="Scotland Yard" ImageDir="Character/Chief.png">
-		<Nicknames List="Chief,Doyle" />
+		<Nicknames List="Chief,Doyle,Chief Officer" />
 		<States>
 			<State Name="State 1" AddGameTime="true" ContextMode="Interrogation" />
 			<State Name="State 2" AddGameTime="true" ContextMode="Interrogation" />
@@ -9,7 +9,7 @@
 		<CharDialogue>
 			<Scan State="*"	Loc="*"	LocState="*" Char="*" 					CharState="*"	Line="Chief Officer Doyle: &quot;I can help you with many things, but this is not one of them.&quot;" />
 			<Scan State="*"	Loc="*"	LocState="*" Char="Chief Officer Doyle" CharState="*"	Line="Chief Officer Doyle: &quot;We can talk once the case is closed. Stay focused on your task.&quot;" />
-			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 		CharState="*"	Line="Chief Officer Doyle: &quot;The woman's name is Anna Taylor. She was found dead in her home in the Notting Hill district. Here's the address. Maybe you should go there and investigate.&quote;">
+			<Scan State="*"	Loc="*"	LocState="*" Char="Anna Taylor" 		CharState="*"	Line="Chief Officer Doyle: &quot;The woman's name is Anna Taylor. She was found dead in her home in the Notting Hill district. Here's the address. Maybe you should go there and investigate.&quot;">
 				<SetCardState type="Location" name="Notting Hill" fromState="Closed" toState="Open"/>
 				<SetCardState type="Character" name="Anna Taylor" fromState="Not Found" toState="State 1"/>
 			</Scan>

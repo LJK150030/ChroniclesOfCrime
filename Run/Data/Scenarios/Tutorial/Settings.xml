@@ -1,6 +1,6 @@
 <ScenarioSettings 
 	Name="Your first case"
-	IntroMessage="&gt; Welcome to the Chronicles of Crime tutorial. This scenario is an introduction to the game, which explains how to play the base game."
+	IntroMessage="&gt; Welcome to the Chronicles of Crime tutorial. This scenario is an introduction to the game, which explains how to play the base game. If you don't know what a command does, just type HELP to get a description"
 	ClosedLocationDefaultMessage="&gt; Location cards represent London's districts. Without an address or a precise goal, you cannot go there."
 	SameLocationMessage="&gt; You are already in this location. The top left corner indicates your current location."
 	UnknownCommand="&gt; That is not a valid command for the game."
@@ -15,7 +15,7 @@
 		InvestigateLocation="5"
 		ExamineItem="5"
 		InterrogateCharacter="5"
-		UnknownCommand="0"
+		UnknownCommand="5"
 	/>
 
 

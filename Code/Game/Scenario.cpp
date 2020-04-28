@@ -206,7 +206,7 @@ STATIC bool TravelToLocation(EventArgs& args)
 	
 	//find the location in case the player uses a nick name
 	LookupItr loc_itr;
-	String log = "\t";
+	String log;
 	String loc_name = args.GetValue("card", String("something and nothing"));
 	const bool is_in_list = current_scenario->IsLocationInLookupTable(loc_itr, String(loc_name));
 
@@ -255,7 +255,7 @@ STATIC bool AskLocationForCharacter(EventArgs& args)
 	LookupItr char_itr;
 	const bool is_char_in_list = current_scenario->IsCharacterInLookupTable(char_itr, String(char_name));
 
-	String log = "\t";
+	String log;
 	if (is_char_in_list)
 	{
 		Location* cur_loc = current_scenario->GetCurrentLocation();
@@ -301,7 +301,7 @@ STATIC bool AskLocationForItem(EventArgs& args)
 	LookupItr item_itr;
 	const bool is_item_in_list = current_scenario->IsItemInLookupTable(item_itr, String(char_name));
 
-	String log = "\t";
+	String log;
 	if (is_item_in_list)
 	{
 		Location* cur_loc = current_scenario->GetCurrentLocation();
@@ -345,7 +345,7 @@ STATIC bool InterrogateCharacter(EventArgs& args)
 	Scenario*	current_scenario = g_theApp->GetTheGame()->GetCurrentScenario();
 	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
 
-	String log = "\t";
+	String log;
 
 	current_scenario->SetSubject(nullptr);
 	
@@ -436,6 +436,9 @@ STATIC bool SayGoodbyToCharacter(EventArgs& args)
 	current_scenario->SetInterest(nullptr);
 	current_scenario->SetSubject(nullptr);
 
+	current_scenario->TestIncidents();
+	current_scenario->TestVictoryConditions();
+
 	return true;
 }
 
@@ -457,6 +460,11 @@ STATIC bool InvestigateRoom(EventArgs& args)
 	{
 		ds->AddLog(LOG_MESSAGE, "> Cannot Investigate this location");
 	}
+
+	current_scenario->AddGameTime(current_scenario->GetExamineItemChangeTime(), 0);
+
+	current_scenario->TestIncidents();
+	current_scenario->TestVictoryConditions();
 
 	return true;
 }
@@ -495,9 +503,9 @@ STATIC bool SolveScenario(EventArgs& args)
 	{
 		if(current_scenario->AreAllVictoryConditionsMet())
 		{
-			ds->AddLog(LOG_MESSAGE, "\t > " + current_scenario->GetCongratulations());
-			ds->AddLog(LOG_MESSAGE, "\t > " + current_scenario->GetSolution());
-			ds->AddLog(LOG_MESSAGE, "\t > Press any button to close the game...");
+			ds->AddLog(LOG_MESSAGE, "> " + current_scenario->GetCongratulations());
+			ds->AddLog(LOG_MESSAGE, "> " + current_scenario->GetSolution());
+			ds->AddLog(LOG_MESSAGE, "> Press any button to close the game...");
 			current_scenario->ScenarioSolved();
 		}
 		else
@@ -509,6 +517,8 @@ STATIC bool SolveScenario(EventArgs& args)
 	{
 		ds->AddLog(LOG_MESSAGE, "> You cannot solve the case here, head back to HQ.");
 	}
+
+	current_scenario->AddGameTime(current_scenario->GetWastingTime(), 0);
 
 
 	return true;
@@ -526,33 +536,33 @@ STATIC bool ListEvidence(EventArgs& args)
 
 	if (name == "something and nothing")
 	{
-		result = "\t|-> Locations\n";
+		result = "|-> Locations\n";
 
 		
 		StringList list = current_scenario->GetListOfKnownLocations();
 		uint num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
-			result.append("\t|" + list[line_idx] + "\n");
+			result.append("|" + list[line_idx] + "\n");
 		}
 
-		result.append("\t|\n\t|-> Characters\n");
+		result.append("|\n\t|-> Characters\n");
 
 
 		list = current_scenario->GetListOfKnownCharacters();
 		num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
-			result.append("\t|" + list[line_idx] + "\n");
+			result.append("|" + list[line_idx] + "\n");
 		}
 
-		result.append("\t|\n\t|-> Items\n");
+		result.append("|\n\t|-> Items\n");
 
 		list = current_scenario->GetListOfKnownItems();
 		num_lines = static_cast<uint>(list.size());
 		for (uint line_idx = 0; line_idx < num_lines; ++line_idx)
 		{
-			result.append("\t|" + list[line_idx] + "\n");
+			result.append("|" + list[line_idx] + "\n");
 		}
 
 		result.append("\n");
@@ -617,7 +627,7 @@ STATIC bool HelpCommandDs(EventArgs& args)
 	
 	for (int name_id = 0; name_id < NUM_COMMANDS; ++name_id)
 	{
-		log += Stringf("\t %s %s \n", g_validCommands[name_id], g_commandDescriptions[name_id]);
+		log += Stringf("%s %s \n", g_validCommands[name_id], g_commandDescriptions[name_id]);
 	}
 
 	ds->AddLog(LOG_MESSAGE, log);
@@ -672,6 +682,10 @@ void Scenario::Startup()
 	m_dialogWindowSize[0] = m_gameResolution[0] * 0.25f;
 	m_dialogWindowSize[1] = m_gameResolution[1] * 0.25f;
 
+
+	DialogueSystem* ds = g_theApp->GetTheGame()->GetDialogueSystem();
+	ds->AddLog(LOG_MESSAGE, g_introMessage);
+	
 	TestIncidents();
 }
 
@@ -706,10 +720,12 @@ void Scenario::Update(const double delta_seconds)
 		ImGuiCond_Always
 	);
 
+	ImGui::SetWindowFontScale(FONT_SCALE);
+
 	//render game state
-	String current_scenario = "Scenario: " + m_name;
-	String current_location = "Location: " + m_currentLocation->GetName();
-	String current_time = Stringf("On Day %01d at %02d:%02d", m_gameTime.m_day, m_gameTime.m_hour, m_gameTime.m_min);
+	const String current_scenario = "Scenario: " + m_name;
+	const String current_location = "Location: " + m_currentLocation->GetName();
+	const String current_time = Stringf("On Day %01d at %02d:%02d", m_gameTime.m_day, m_gameTime.m_hour, m_gameTime.m_min);
 
 	String current_interest = "Interested in: ";
 	if (m_currentInterest == nullptr)
@@ -731,17 +747,21 @@ void Scenario::Update(const double delta_seconds)
 		current_subject += m_currentSubject->GetName();
 	}
 
+	String can_search;
+	if (m_currentLocation->CanInvestigateLocation())
+	{
+		can_search = "Search for clues!";
+	}
+	
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_scenario.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_location.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_time.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_interest.c_str());
 	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", current_subject.c_str());
+	ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "%s", can_search.c_str());
+	
 	ImGui::End();
 
-	if(m_currentLocation->CanInvestigateLocation())
-	{
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 1.0f, 1.0f), "Search for clues!");
-	}
 }
 
 
@@ -962,7 +982,7 @@ StringList Scenario::GetListOfKnownLocations()
 			continue;
 		}
 		
-		String line = "\t|-> ";
+		String line = "|-> ";
 		line += m_locations[loc_idx].GetAsString();
 		list_of_locations.push_back(line);
 	}
@@ -982,7 +1002,7 @@ StringList Scenario::GetListOfKnownItems()
 			continue;
 		}
 
-		String line = "\t|-> ";
+		String line = "|-> ";
 		line += m_items[item_idx].GetAsString();
 		list_of_items.push_back(line);
 	}
@@ -1003,7 +1023,7 @@ StringList Scenario::GetListOfKnownCharacters()
 			continue;
 		}
 
-		String line = "\t|-> ";
+		String line = "|-> ";
 		line += m_characters[char_idx].GetAsString();
 		list_of_characters.push_back(line);
 	}

@@ -85,6 +85,8 @@ Incident::~Incident()
 void Incident::SetActive(const bool enable)
 {
 	m_isEnabled = enable;
+
+	m_timeAtActive = m_theScenario->GetCurrentTime();
 }
 
 
